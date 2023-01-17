@@ -1,0 +1,375 @@
+#C- Programming Language's BNF/ZRF
+
+WhiteSpace:	
+	+"&#x0009;"
+	+"&#x000B;"
+	+"&#x000C;"
+	+"&#x0020;"
+	+"&#x00A0;"
+	+"&#+Zs;"
+	
+LineTerminator:	
+	+"&#x000A;"
+	+"&#x000D;"
+	+"&#x2028;"
+	+"&#x2029;"
+	+"&#x0085;" 
+
+SingleLineCommentChar:	
+	+"&#+Lu;"
+	+"&#+Ll;"
+	+"&#+Lt;"
+	+"&#+Lm;"
+	+"&#+Lo;"
+	+"&#+Mn;"
+	+"&#+Mc;"
+	+"&#+Me;"
+	+"&#+Nd;"
+	+"&#+Nl;"
+	+"&#+No;"
+	+"&#+Zs;"
+	+"&#+Zl;"
+	+"&#+Zp;"
+	+"&#+Cc;"
+	+"&#+Cf;"
+	+"&#+Cs;"
+	+"&#+Co;"
+	+"&#+Pc;"
+	+"&#+Pd;"
+	+"&#+Ps;"
+	+"&#+Pe;"
+	+"&#+Pi;"
+	+"&#+Po;"
+	+"&#+Sm;"
+	+"&#+Pf;"
+	+"&#+Sc;"
+	+"&#+Sk;"
+	+"&#+So;"
+	+"&#+Cn;"
+	-"&#x000D;"
+	-"&#x000A;"
+	-"&#x0085;"
+	-"&#x2028;"
+
+	
+MultiLineCommentChar:
+	+"&#+__;"
+
+MultiLineCommentHead:
+	"/*"
+	MultiLineCommentHead MultiLineCommentChar
+
+MultiLineComment:
+	"/*/" #This is not valid, but we accept it here to make things easier
+	MultiLineCommentHead "*/"
+
+
+SingleLineCommentCore:
+	"//"
+	SingleLineCommentCore SingleLineCommentChar
+
+SingleLineComment:
+	SingleLineCommentCore
+
+DocumentLineComment:
+	"///"
+	DocumentLineComment SingleLineCommentChar
+
+Comment:
+	MultiLineComment
+	SingleLineComment
+	DocumentLineComment
+
+Space:
+	WhiteSpace
+	LineTerminator
+	Comment
+_:	
+	_? Space
+
+UnicodeLetter:	
+		+"&#+Lu;"
+		+"&#+Ll;"
+		+"&#+Lt;"
+		+"&#+Lm;"
+		+"&#+Lo;"
+		+"&#+Nl;"
+
+UnicodeCombiningMark:	
+		+"&#+Mn;"
+		+"&#+Mc;"
+
+UnicodeDigit:	
+		+"&#+Nd;"
+
+UnicodeConnectorPunctuation:	
+		+"&#+Pc;"
+
+UnicodeEscapeSequence:	
+	"\u" HexDigit HexDigit HexDigit HexDigit
+	"\U" HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit HexDigit
+
+Identifier:	
+	"_"
+	UnicodeLetter
+	UnicodeEscapeSequence
+	Identifier "_"
+	Identifier UnicodeLetter
+	Identifier UnicodeEscapeSequence
+	Identifier UnicodeCombiningMark
+	Identifier UnicodeDigit
+	Identifier UnicodeConnectorPunctuation
+
+HexDigit:
+	"0"
+	"1"
+	"2"
+	"3"
+	"4"
+	"5"
+	"6"
+	"7"
+	"8"
+	"9"
+	"A"
+	"B"
+	"C"
+	"D"
+	"E"
+	"F"
+	"a"
+	"b"
+	"c"
+	"d"
+	"e"
+	"f"
+
+DecimalDigit:
+    "0"
+    "1"
+    "2"
+    "3"
+    "4"
+    "5"
+    "6"
+    "7"
+    "8"
+    "9"
+
+SignedInteger:	
+	DecimalDigit
+	"+" DecimalDigit
+	"-" DecimalDigit
+	SignedInteger DecimalDigit
+
+HexInteger:	
+	"0x" HexDigit
+	"0X" HexDigit
+	HexInteger HexDigit
+
+BinaryInteger:
+	"0b" BinaryDigit
+	"0B" BinaryDigit
+	BinaryInteger BinaryDigit
+
+BinaryDigit:
+	"0"
+	"1"
+	"_"
+
+NumberLiteral:
+	SignedInteger
+	HexInteger
+	BinaryInteger
+
+BooleanLiteral:
+	"true"
+	"false"
+
+StringLiteral:
+	StringLiteralHead  '"'
+
+StringLiteralHead:
+	'"'
+	StringLiteralHead StringLiteralChar
+
+CharLiteral:
+	"'" CharLiteralChar "'"
+
+StringLiteralChar:
+	+"&#+__"
+	-'"'
+
+CharLiteralChar:
+	+"&#+__;"
+	-"'"
+NullLiteral:
+	"null"
+
+Literal:
+	NumberLiteral
+	BooleanLiteral
+	StringLiteral
+	CharLiteral
+	NullLiteral
+
+#Keyword:
+#	"void"
+#	"int"
+#	"if"
+#	"else"
+#	"while"
+#	"do"
+#	"return"
+#	"string"
+#	"bool"
+#	"true"
+#	"false"
+#	"null"
+
+TypeSpecifier:
+	"void"
+	"int"
+	"string"
+	"bool"
+
+ArrayIdentifier:
+	Identifier _? "[" _? "]"
+
+SimpleVariable:
+	Identifier
+
+IndexExpression:
+	Expression
+
+ArrayVariable:
+	Identifier _? "[" _? IndexExpression _? "]"
+
+Variable:
+	SimpleVariable
+	ArrayVariable
+
+Argument:
+	Expression
+
+Arguments:
+	Argument
+	Arguments _? "," _? Argument
+
+Call:
+	FunctionName _? "(" _? Arguments _? ")"
+
+Factor:
+	"(" _? Expression _? ")"
+	Literal
+	Variable
+	Call
+
+Term:
+	Term _?  "*" _?  Factor
+	Term _?  "/" _?  Factor
+	Factor
+
+AdditiveExpression:
+	AdditiveExpression _?  "+" _?  Term
+	AdditiveExpression _?  "-" _?  Term
+	Term
+
+SimpleExpression:
+	AdditiveExpression _?  "<=" _?  AdditiveExpression
+	AdditiveExpression _?  "<"  _?  AdditiveExpression
+	AdditiveExpression _?  ">=" _?  AdditiveExpression
+	AdditiveExpression _?  ">"  _?  AdditiveExpression
+	AdditiveExpression _?  "==" _?  AdditiveExpression
+	AdditiveExpression _?  "!=" _?  AdditiveExpression
+	AdditiveExpression
+
+AssignExpression:
+	Variable _? "=" _? Expression
+	
+Expression:
+	SimpleExpression
+	AssignExpression
+
+ExpressionStatement:
+	Expression _?  ";"
+
+LocalDeclarationStatement:
+	VariableDeclaration ";"
+
+IfStatement:
+	"if" _? "(" _? Expression _? ")" _? Statement
+	"if" _? "(" _? Expression _? ")" _? Statement _? "else" _? Statement
+
+WhileStatement:
+	"while" _? "(" _? Expression _? ")" _? Statement
+
+DoWhileStatement:
+	"do" _? Statement _? "while" _? "(" _? Expression _? ")" _? ";"
+
+ReturnStatement:
+	"return" _? ";"
+	"return" _? Expression _? ";"
+
+EmptyStatement:
+	";"
+
+Statement:
+	EmptyStatement
+	ExpressionStatement
+	LocalDeclarationStatement
+	BlockStatement
+	IfStatement
+	WhileStatement
+	DoWhileStatement
+	ReturnStatement
+
+Statements:
+	Statement
+	Statements _? Statement
+
+BlockStatement:
+	"{" _? Statements _? "}"
+
+PlanParameterDeclaration:
+	TypeSpecifier _ Identifier
+
+ArrayParameterDeclaration:
+	TypeSpecifier _ ArrayIdentifier
+
+ParameterDeclaration:
+	PlanParameterDeclaration
+	ArrayParameterDeclaration
+
+ParameterDeclarations:
+	ParameterDeclaration
+	ParameterDeclarations _? "," _? ParameterDeclaration
+
+FunctionImplementation:
+	TypeSpecifier _ Identifier _? "(" _? ParameterDeclarations? _? ")" _? BlockStatement
+
+FunctionDeclaration:
+	TypeSpecifier _ Identifier _? "(" _? ParameterDeclarations? _? ")" _? ";"
+
+PlanVariableDeclaration:
+	TypeSpecifier _ Identifier _? ";"
+
+ArrayVariableDeclaration:
+	TypeSpecifier _ Identifier _ ArrayIdentifier _? ";"
+
+VariableDeclaration:
+	PlanVariableDeclaration
+	ArrayVariableDeclaration
+
+Declaration:
+	VariableDeclaration
+	FunctionDeclaration
+	FunctionImplementation
+
+Declarations:
+	Declaration
+	Declarations _? Declaration
+
+Program:
+	_?
+	_? Declarations _?

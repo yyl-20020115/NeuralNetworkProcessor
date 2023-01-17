@@ -1,0 +1,75 @@
+﻿# ZRF OF EXPRESSION 
+WhiteSpace:
+    '&#x0009;'
+    '&#x000B;'
+    '&#x000C;'
+    '&#x0020;'
+    '&#x00A0;'
+    '&#+Zs;'
+    
+LineTerminator:	
+    '&#x000A;'
+    '&#x000D;'
+    '&#x2028;'
+    '&#x2029;'
+    '&#x0085;' 
+
+Space:
+    WhiteSpace
+    LineTerminator
+
+_:	
+    Space
+    _ Space
+
+Digit:
+    "0"
+    "1"
+    "2"
+    "3"
+    "4"
+    "5"
+    "6"
+    "7"
+    "8"
+    "9"
+
+Integer:
+    Digit
+    Integer Digit
+
+LParen:
+    _? "("
+
+RParen:
+    _? ")"
+
+Factor:
+    LParen _? Expression RParen
+    Integer
+
+Mul:
+    _? "*"
+
+Div:
+    _? "/"
+
+Add:
+    _? "+"
+
+Sub:
+    _? "-"
+
+Term:
+    Term Mul _? Factor
+    Term Div _? Factor
+    Factor
+
+Expression:
+    Expression Add _? Term
+    Expression Sub _? Term
+    Term
+
+Top:
+    _?
+    _? Expression _?

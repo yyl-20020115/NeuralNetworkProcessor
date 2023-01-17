@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+	 <LangVersion>Preview</LangVersion>
+    <PackageProjectUrl>http://elfsharp.it/</PackageProjectUrl>
+    <PackageReleaseNotes>Fixed reading NOBITS section. Detailed changelog available at: https://github.com/konrad-kruczynski/elfsharp/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <Summary>C# library for reading binary ELF, UImage, Mach-O files</Summary>
+    <PackageTags>ELF UImage Mach-O</PackageTags>
+    <Title>ELFSharp</Title>
+    <Description>C# library for reading binary ELF, UImage, Mach-O files</Description>
+    <PackageId>ELFSharp</PackageId>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>

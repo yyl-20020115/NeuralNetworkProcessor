@@ -1,0 +1,583 @@
+!Results
+patterns:
+- Pattern
+  serial: 30
+  symbolExtractions:
+  - !TextSpan
+    uTF32: -1
+    accompanyResults: !Results
+      patterns:
+      - !Pattern
+        serial: 29
+        symbolExtractions:
+        - !TextSpan
+          uTF32: -1
+          accompanyResults: !Results
+            patterns:
+            - !Pattern
+              serial: 18
+              symbolExtractions:
+              - !TextSpan
+                uTF32: -1
+                accompanyResults: !Results
+                  patterns:
+                  - !Pattern
+                    serial: 17
+                    symbolExtractions:
+                    - !TextSpan
+                      uTF32: -1
+                      accompanyResults: !Results
+                        patterns:
+                        - !Pattern
+                          serial: 15
+                          symbolExtractions:
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 8
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: -1
+                                  accompanyResults: !Results
+                                    patterns:
+                                    - !Pattern
+                                      serial: 1
+                                      symbolExtractions:
+                                      - !TextSpan
+                                        uTF32: -1
+                                        accompanyResults: !Results
+                                          patterns:
+                                          - !Pattern
+                                            serial: 0
+                                            symbolExtractions:
+                                            - !TextSpan
+                                              uTF32: 49
+                                              accompanyResults: 
+                                              text: 1
+                                              position: 0
+                                              length: 1
+                                            position: 0
+                                            length: 1
+                                          position: 0
+                                          length: 1
+                                        text: Digit
+                                        position: 0
+                                        length: 1
+                                      position: 0
+                                      length: 1
+                                    position: 0
+                                    length: 1
+                                  text: Integer
+                                  position: 0
+                                  length: 1
+                                - !TextSpan
+                                  uTF32: -1
+                                  accompanyResults: !Results
+                                    patterns:
+                                    - !Pattern
+                                      serial: 6
+                                      symbolExtractions:
+                                      - !TextSpan
+                                        uTF32: 50
+                                        accompanyResults: 
+                                        text: 2
+                                        position: 1
+                                        length: 1
+                                      position: 1
+                                      length: 1
+                                    position: 1
+                                    length: 1
+                                  text: Digit
+                                  position: 1
+                                  length: 1
+                                position: 0
+                                length: 2
+                              position: 0
+                              length: 2
+                            text: Integer
+                            position: 0
+                            length: 2
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 13
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: 51
+                                  accompanyResults: 
+                                  text: 3
+                                  position: 2
+                                  length: 1
+                                position: 2
+                                length: 1
+                              position: 2
+                              length: 1
+                            text: Digit
+                            position: 2
+                            length: 1
+                          position: 0
+                          length: 3
+                        position: 0
+                        length: 3
+                      text: Integer
+                      position: 0
+                      length: 3
+                    position: 0
+                    length: 3
+                  - !Pattern
+                    serial: 9
+                    symbolExtractions:
+                    - !TextSpan
+                      uTF32: -1
+                      accompanyResults: !Results
+                        patterns:
+                        - !Pattern
+                          serial: 8
+                          symbolExtractions:
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 1
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: -1
+                                  accompanyResults: !Results
+                                    patterns:
+                                    - !Pattern
+                                      serial: 0
+                                      symbolExtractions:
+                                      - !TextSpan
+                                        uTF32: 49
+                                        accompanyResults: 
+                                        text: 1
+                                        position: 0
+                                        length: 1
+                                      position: 0
+                                      length: 1
+                                    position: 0
+                                    length: 1
+                                  text: Digit
+                                  position: 0
+                                  length: 1
+                                position: 0
+                                length: 1
+                              position: 0
+                              length: 1
+                            text: Integer
+                            position: 0
+                            length: 1
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 6
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: 50
+                                  accompanyResults: 
+                                  text: 2
+                                  position: 1
+                                  length: 1
+                                position: 1
+                                length: 1
+                              position: 1
+                              length: 1
+                            text: Digit
+                            position: 1
+                            length: 1
+                          position: 0
+                          length: 2
+                        position: 0
+                        length: 2
+                      text: Integer
+                      position: 0
+                      length: 2
+                    position: 0
+                    length: 2
+                  - !Pattern
+                    serial: 9
+                    symbolExtractions:
+                    - !TextSpan
+                      uTF32: -1
+                      accompanyResults: !Results
+                        patterns:
+                        - !Pattern
+                          serial: 8
+                          symbolExtractions:
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 1
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: -1
+                                  accompanyResults: !Results
+                                    patterns:
+                                    - !Pattern
+                                      serial: 0
+                                      symbolExtractions:
+                                      - !TextSpan
+                                        uTF32: 49
+                                        accompanyResults: 
+                                        text: 1
+                                        position: 0
+                                        length: 1
+                                      position: 0
+                                      length: 1
+                                    position: 0
+                                    length: 1
+                                  text: Digit
+                                  position: 0
+                                  length: 1
+                                position: 0
+                                length: 1
+                              position: 0
+                              length: 1
+                            text: Integer
+                            position: 0
+                            length: 1
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 6
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: 50
+                                  accompanyResults: 
+                                  text: 2
+                                  position: 1
+                                  length: 1
+                                position: 1
+                                length: 1
+                              position: 1
+                              length: 1
+                            text: Digit
+                            position: 1
+                            length: 1
+                          position: 0
+                          length: 2
+                        position: 0
+                        length: 2
+                      text: Integer
+                      position: 0
+                      length: 2
+                    position: 0
+                    length: 2
+                  position: 0
+                  length: 3
+                text: Factor
+                position: 0
+                length: 3
+              position: 0
+              length: 3
+            - !Pattern
+              serial: 10
+              symbolExtractions:
+              - !TextSpan
+                uTF32: -1
+                accompanyResults: !Results
+                  patterns:
+                  - !Pattern
+                    serial: 9
+                    symbolExtractions:
+                    - !TextSpan
+                      uTF32: -1
+                      accompanyResults: !Results
+                        patterns:
+                        - !Pattern
+                          serial: 8
+                          symbolExtractions:
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 1
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: -1
+                                  accompanyResults: !Results
+                                    patterns:
+                                    - !Pattern
+                                      serial: 0
+                                      symbolExtractions:
+                                      - !TextSpan
+                                        uTF32: 49
+                                        accompanyResults: 
+                                        text: 1
+                                        position: 0
+                                        length: 1
+                                      position: 0
+                                      length: 1
+                                    position: 0
+                                    length: 1
+                                  text: Digit
+                                  position: 0
+                                  length: 1
+                                position: 0
+                                length: 1
+                              position: 0
+                              length: 1
+                            text: Integer
+                            position: 0
+                            length: 1
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 6
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: 50
+                                  accompanyResults: 
+                                  text: 2
+                                  position: 1
+                                  length: 1
+                                position: 1
+                                length: 1
+                              position: 1
+                              length: 1
+                            text: Digit
+                            position: 1
+                            length: 1
+                          position: 0
+                          length: 2
+                        position: 0
+                        length: 2
+                      text: Integer
+                      position: 0
+                      length: 2
+                    position: 0
+                    length: 2
+                  position: 0
+                  length: 2
+                text: Factor
+                position: 0
+                length: 2
+              position: 0
+              length: 2
+            - !Pattern
+              serial: 10
+              symbolExtractions:
+              - !TextSpan
+                uTF32: -1
+                accompanyResults: !Results
+                  patterns:
+                  - !Pattern
+                    serial: 9
+                    symbolExtractions:
+                    - !TextSpan
+                      uTF32: -1
+                      accompanyResults: !Results
+                        patterns:
+                        - !Pattern
+                          serial: 8
+                          symbolExtractions:
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 1
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: -1
+                                  accompanyResults: !Results
+                                    patterns:
+                                    - !Pattern
+                                      serial: 0
+                                      symbolExtractions:
+                                      - !TextSpan
+                                        uTF32: 49
+                                        accompanyResults: 
+                                        text: 1
+                                        position: 0
+                                        length: 1
+                                      position: 0
+                                      length: 1
+                                    position: 0
+                                    length: 1
+                                  text: Digit
+                                  position: 0
+                                  length: 1
+                                position: 0
+                                length: 1
+                              position: 0
+                              length: 1
+                            text: Integer
+                            position: 0
+                            length: 1
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 6
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: 50
+                                  accompanyResults: 
+                                  text: 2
+                                  position: 1
+                                  length: 1
+                                position: 1
+                                length: 1
+                              position: 1
+                              length: 1
+                            text: Digit
+                            position: 1
+                            length: 1
+                          position: 0
+                          length: 2
+                        position: 0
+                        length: 2
+                      text: Integer
+                      position: 0
+                      length: 2
+                    position: 0
+                    length: 2
+                  position: 0
+                  length: 2
+                text: Factor
+                position: 0
+                length: 2
+              position: 0
+              length: 2
+            position: 0
+            length: 3
+          text: Term
+          position: 0
+          length: 3
+        - !TextSpan
+          uTF32: -1
+          accompanyResults: !Results
+            patterns:
+            - !Pattern
+              serial: 23
+              symbolExtractions:
+              - !TextSpan
+                uTF32: -1
+                accompanyResults: !Results
+                  patterns:
+                  - !Pattern
+                    serial: 22
+                    symbolExtractions:
+                    - !TextSpan
+                      uTF32: -1
+                      accompanyResults: !Results
+                        patterns:
+                        - !Pattern
+                          serial: 21
+                          symbolExtractions:
+                          - !TextSpan
+                            uTF32: 43
+                            accompanyResults: 
+                            text: +
+                            position: 3
+                            length: 1
+                          position: 3
+                          length: 1
+                        position: 3
+                        length: 1
+                      text: _'+'
+                      position: 3
+                      length: 1
+                    position: 3
+                    length: 1
+                  position: 3
+                  length: 1
+                text: '"+"'
+                position: 3
+                length: 1
+              position: 3
+              length: 1
+            position: 3
+            length: 1
+          text: Add
+          position: 3
+          length: 1
+        - !TextSpan
+          uTF32: -1
+          accompanyResults: !Results
+            patterns:
+            - !Pattern
+              serial: 27
+              symbolExtractions:
+              - !TextSpan
+                uTF32: -1
+                accompanyResults: !Results
+                  patterns:
+                  - !Pattern
+                    serial: 26
+                    symbolExtractions:
+                    - !TextSpan
+                      uTF32: -1
+                      accompanyResults: !Results
+                        patterns:
+                        - !Pattern
+                          serial: 25
+                          symbolExtractions:
+                          - !TextSpan
+                            uTF32: -1
+                            accompanyResults: !Results
+                              patterns:
+                              - !Pattern
+                                serial: 24
+                                symbolExtractions:
+                                - !TextSpan
+                                  uTF32: 52
+                                  accompanyResults: 
+                                  text: 4
+                                  position: 4
+                                  length: 1
+                                position: 4
+                                length: 1
+                              position: 4
+                              length: 1
+                            text: Digit
+                            position: 4
+                            length: 1
+                          position: 4
+                          length: 1
+                        position: 4
+                        length: 1
+                      text: Integer
+                      position: 4
+                      length: 1
+                    position: 4
+                    length: 1
+                  position: 4
+                  length: 1
+                text: Factor
+                position: 4
+                length: 1
+              position: 4
+              length: 1
+            position: 4
+            length: 1
+          text: Term
+          position: 4
+          length: 1
+        position: 0
+        length: 5
+      position: 0
+      length: 5
+    text: Expression
+    position: 0
+    length: 5
+  position: 0
+  length: 5
+position: 0
+length: 5

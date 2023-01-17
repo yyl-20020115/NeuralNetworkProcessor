@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>preview</LangVersion>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Samples\LUA\**" />
+    <Compile Remove="Utils\**" />
+    <EmbeddedResource Remove="Samples\LUA\**" />
+    <EmbeddedResource Remove="Utils\**" />
+    <None Remove="Samples\LUA\**" />
+    <None Remove="Utils\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="code.cs" />
+    <Compile Remove="Core\GroupStacks.cs" />
+    <Compile Remove="Core\Serializer.cs" />
+    <Compile Remove="Core\TrendStacks.cs" />
+    <Compile Remove="NT\ConcurrentTaskCollection.cs" />
+    <Compile Remove="ZRF\YamlParser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="net.yml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ikvm\reflect\IKVM.Reflection.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\YamlDotNet\YamlDotNet.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Resources\EXP.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\EXP.ZRF">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

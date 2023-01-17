@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controls\DragBehaviour.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GraphSharp\GraphSharp.csproj" />
+    <ProjectReference Include="..\QuickGraph\QuickGraph.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WPFExtensions">
+      <HintPath>..\DLL\WPFExtensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

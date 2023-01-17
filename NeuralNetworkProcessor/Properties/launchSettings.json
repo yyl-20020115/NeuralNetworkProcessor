@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NeuralNetworkProcessor": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Working\\NeuralNetworkProcessor\\NeuralNetworkProcessor\\\\"
+    }
+  }
+}

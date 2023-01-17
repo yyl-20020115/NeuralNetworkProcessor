@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+	<LangVersion>preview</LangVersion>
+	<UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="SEdit.xaml.cs" />
+    <Compile Remove="SEditControl.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="SEdit.xaml" />
+    <Page Remove="SEditControl.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GraphSharp.Controls\GraphSharp.Controls.csproj" />
+    <ProjectReference Include="..\GraphSharp\GraphSharp.csproj" />
+    <ProjectReference Include="..\NeuralNetworkProcessor\NeuralNetworkProcessor.csproj" />
+    <ProjectReference Include="..\QuickGraph\QuickGraph.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WPFExtensions">
+      <HintPath>..\DLL\WPFExtensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,1195 @@
+&o9 !NeuralNetworkProcessor.Core.Aggregation
+name: Calculator
+knowledge: !NeuralNetworkProcessor.ZRF.Knowledge
+  topic: Calculator
+  definitions:
+  - &o240 !NeuralNetworkProcessor.ZRF.Definition
+    name: WhiteSpace
+    descriptions:
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#x0009;'
+        name: ''
+        optional: false
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#x000B;'
+        name: ''
+        optional: false
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#x000C;'
+        name: ''
+        optional: false
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#x0020;'
+        name: ''
+        optional: false
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o0 !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#x00A0;'
+        name: ''
+        optional: false
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#+Zs;'
+        name: ''
+        optional: false
+  - &o237 !NeuralNetworkProcessor.ZRF.Definition
+    name: LineTerminator
+    descriptions:
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#x000A;'
+        name: ''
+        optional: false
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#x000D;'
+        name: ''
+        optional: false
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#x2028;'
+        name: ''
+        optional: false
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#x2029;'
+        name: ''
+        optional: false
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - *o0
+    - !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - !NeuralNetworkProcessor.ZRF.Phrase
+        text: +'&#x0085;'
+        name: ''
+        optional: false
+  - &o226 !NeuralNetworkProcessor.ZRF.Definition
+    name: Space
+    descriptions:
+    - &o235 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o232 !NeuralNetworkProcessor.ZRF.Phrase
+        text: WhiteSpace
+        name: ''
+        optional: false
+    - &o230 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o227 !NeuralNetworkProcessor.ZRF.Phrase
+        text: LineTerminator
+        name: ''
+        optional: false
+  - &o213 !NeuralNetworkProcessor.ZRF.Definition
+    name: _
+    descriptions:
+    - &o224 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o221 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Space
+        name: ''
+        optional: false
+    - &o219 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o214 !NeuralNetworkProcessor.ZRF.Phrase
+        text: _
+        name: Item1
+        optional: false
+      - &o217 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Space
+        name: Item2
+        optional: false
+  - &o170 !NeuralNetworkProcessor.ZRF.Definition
+    name: Digit
+    descriptions:
+    - &o211 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o208 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"0"'
+        name: ''
+        optional: false
+    - &o207 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o204 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"1"'
+        name: ''
+        optional: false
+    - &o203 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o200 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"2"'
+        name: ''
+        optional: false
+    - &o199 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o196 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"3"'
+        name: ''
+        optional: false
+    - &o195 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o192 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"4"'
+        name: ''
+        optional: false
+    - &o191 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o188 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"5"'
+        name: ''
+        optional: false
+    - &o187 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o184 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"6"'
+        name: ''
+        optional: false
+    - &o183 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o180 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"7"'
+        name: ''
+        optional: false
+    - &o179 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o176 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"8"'
+        name: ''
+        optional: false
+    - &o174 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o171 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"9"'
+        name: ''
+        optional: false
+  - &o157 !NeuralNetworkProcessor.ZRF.Definition
+    name: Integer
+    descriptions:
+    - &o168 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o165 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Digit
+        name: ''
+        optional: false
+    - &o163 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o158 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Integer
+        name: Item1
+        optional: false
+      - &o161 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Digit
+        name: Item2
+        optional: false
+  - &o149 !NeuralNetworkProcessor.ZRF.Definition
+    name: LParen
+    descriptions:
+    - &o154 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o1 !NeuralNetworkProcessor.ZRF.Phrase
+        text: _
+        name: Item1
+        optional: true
+      - &o2 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '")"'
+        name: Item2
+        optional: false
+  - &o141 !NeuralNetworkProcessor.ZRF.Definition
+    name: RParen
+    descriptions:
+    - &o146 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - *o1
+      - *o2
+  - &o123 !NeuralNetworkProcessor.ZRF.Definition
+    name: Factor
+    descriptions:
+    - &o139 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o129 !NeuralNetworkProcessor.ZRF.Phrase
+        text: LParen
+        name: Item1
+        optional: false
+      - &o132 !NeuralNetworkProcessor.ZRF.Phrase
+        text: _
+        name: Item2
+        optional: true
+      - &o135 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Expression
+        name: Item3
+        optional: false
+      - &o137 !NeuralNetworkProcessor.ZRF.Phrase
+        text: RParen
+        name: Item4
+        optional: false
+    - &o127 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o124 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Integer
+        name: ''
+        optional: false
+  - &o114 !NeuralNetworkProcessor.ZRF.Definition
+    name: Mul
+    descriptions:
+    - &o120 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - *o1
+      - &o117 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"*"'
+        name: Item2
+        optional: false
+  - &o105 !NeuralNetworkProcessor.ZRF.Definition
+    name: Div
+    descriptions:
+    - &o111 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - *o1
+      - &o108 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"/"'
+        name: Item2
+        optional: false
+  - &o96 !NeuralNetworkProcessor.ZRF.Definition
+    name: Add
+    descriptions:
+    - &o102 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - *o1
+      - &o99 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"+"'
+        name: Item2
+        optional: false
+  - &o87 !NeuralNetworkProcessor.ZRF.Definition
+    name: Sub
+    descriptions:
+    - &o93 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - *o1
+      - &o90 !NeuralNetworkProcessor.ZRF.Phrase
+        text: '"-"'
+        name: Item2
+        optional: false
+  - &o64 !NeuralNetworkProcessor.ZRF.Definition
+    name: Term
+    descriptions:
+    - &o85 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o3 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Term
+        name: Item1
+        optional: false
+      - &o80 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Mul
+        name: Item2
+        optional: false
+      - &o4 !NeuralNetworkProcessor.ZRF.Phrase
+        text: _
+        name: Item3
+        optional: true
+      - &o5 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Factor
+        name: Item4
+        optional: false
+    - &o77 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - *o3
+      - &o72 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Div
+        name: Item2
+        optional: false
+      - *o4
+      - *o5
+    - &o68 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o65 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Factor
+        name: ''
+        optional: false
+  - &o41 !NeuralNetworkProcessor.ZRF.Definition
+    name: Expression
+    descriptions:
+    - &o62 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o6 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Expression
+        name: Item1
+        optional: false
+      - &o57 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Add
+        name: Item2
+        optional: false
+      - *o4
+      - &o7 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Term
+        name: Item4
+        optional: false
+    - &o54 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - *o6
+      - &o49 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Sub
+        name: Item2
+        optional: false
+      - *o4
+      - *o7
+    - &o45 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o42 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Term
+        name: ''
+        optional: false
+  - &o26 !NeuralNetworkProcessor.ZRF.Definition
+    name: Top
+    descriptions:
+    - &o39 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - &o36 !NeuralNetworkProcessor.ZRF.Phrase
+        text: _
+        name: ''
+        optional: true
+    - &o34 !NeuralNetworkProcessor.ZRF.Description
+      phrases:
+      - *o1
+      - &o29 !NeuralNetworkProcessor.ZRF.Phrase
+        text: Expression
+        name: Item2
+        optional: false
+      - *o4
+clusters:
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 45
+  definition: &o10 !NeuralNetworkProcessor.ZRF.Definition
+    name: ''
+    descriptions: []
+  name: -_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 43
+  definition: *o10
+  name: +_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 47
+  definition: *o10
+  name: /_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 42
+  definition: *o10
+  name: '*_'
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 41
+  definition: *o10
+  name: )_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 41
+  definition: *o10
+  name: )_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 57
+  definition: *o10
+  name: 9_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 56
+  definition: *o10
+  name: 8_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 55
+  definition: *o10
+  name: 7_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 54
+  definition: *o10
+  name: 6_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 53
+  definition: *o10
+  name: 5_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 52
+  definition: *o10
+  name: 4_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 51
+  definition: *o10
+  name: 3_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 50
+  definition: *o10
+  name: 2_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 49
+  definition: *o10
+  name: 1_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.CharacterCluster
+  templateChar: 48
+  definition: *o10
+  name: 0_
+  trends: []
+  index: -1
+  trendFlowsList: []
+  patterns: []
+- &o35 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o26
+  name: Top
+  trends:
+  - !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o1
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Expression
+      phrase: *o29
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o4
+      index: 0
+    description: *o34
+    index: 0
+  - &o32 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Expression
+      phrase: *o29
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o4
+      index: 0
+    description: *o34
+    index: 0
+  - &o27 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o1
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Expression
+      phrase: *o29
+      index: 0
+    description: *o34
+    index: 0
+  - &o30 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Expression
+      phrase: *o29
+      index: 0
+    description: *o34
+    index: 0
+  - &o37 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o36
+      index: 0
+    description: *o39
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o46 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o41
+  name: Expression
+  trends:
+  - &o43 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Term
+      phrase: *o42
+      index: 0
+    description: *o45
+    index: 0
+  - &o51 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Expression
+      phrase: *o6
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Sub
+      phrase: *o49
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o4
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Term
+      phrase: *o7
+      index: 0
+    description: *o54
+    index: 0
+  - &o47 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Expression
+      phrase: *o6
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Sub
+      phrase: *o49
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Term
+      phrase: *o7
+      index: 0
+    description: *o54
+    index: 0
+  - &o59 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Expression
+      phrase: *o6
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Add
+      phrase: *o57
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o4
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Term
+      phrase: *o7
+      index: 0
+    description: *o62
+    index: 0
+  - &o55 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Expression
+      phrase: *o6
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Add
+      phrase: *o57
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Term
+      phrase: *o7
+      index: 0
+    description: *o62
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o69 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o64
+  name: Term
+  trends:
+  - &o66 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Factor
+      phrase: *o65
+      index: 0
+    description: *o68
+    index: 0
+  - &o74 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Term
+      phrase: *o3
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Div
+      phrase: *o72
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o4
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Factor
+      phrase: *o5
+      index: 0
+    description: *o77
+    index: 0
+  - &o70 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Term
+      phrase: *o3
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Div
+      phrase: *o72
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Factor
+      phrase: *o5
+      index: 0
+    description: *o77
+    index: 0
+  - &o82 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Term
+      phrase: *o3
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Mul
+      phrase: *o80
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o4
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Factor
+      phrase: *o5
+      index: 0
+    description: *o85
+    index: 0
+  - &o78 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Term
+      phrase: *o3
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Mul
+      phrase: *o80
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Factor
+      phrase: *o5
+      index: 0
+    description: *o85
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o94 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o87
+  name: Sub
+  trends:
+  - &o88 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o1
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"-"'
+      phrase: *o90
+      index: 0
+    description: *o93
+    index: 0
+  - &o91 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"-"'
+      phrase: *o90
+      index: 0
+    description: *o93
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o103 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o96
+  name: Add
+  trends:
+  - &o97 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o1
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"+"'
+      phrase: *o99
+      index: 0
+    description: *o102
+    index: 0
+  - &o100 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"+"'
+      phrase: *o99
+      index: 0
+    description: *o102
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o112 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o105
+  name: Div
+  trends:
+  - &o106 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o1
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"/"'
+      phrase: *o108
+      index: 0
+    description: *o111
+    index: 0
+  - &o109 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"/"'
+      phrase: *o108
+      index: 0
+    description: *o111
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o121 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o114
+  name: Mul
+  trends:
+  - &o115 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o1
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"*"'
+      phrase: *o117
+      index: 0
+    description: *o120
+    index: 0
+  - &o118 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"*"'
+      phrase: *o117
+      index: 0
+    description: *o120
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o128 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o123
+  name: Factor
+  trends:
+  - &o125 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Integer
+      phrase: *o124
+      index: 0
+    description: *o127
+    index: 0
+  - &o133 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: LParen
+      phrase: *o129
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o132
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Expression
+      phrase: *o135
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: RParen
+      phrase: *o137
+      index: 0
+    description: *o139
+    index: 0
+  - &o130 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: LParen
+      phrase: *o129
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Expression
+      phrase: *o135
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: RParen
+      phrase: *o137
+      index: 0
+    description: *o139
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o147 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o141
+  name: RParen
+  trends:
+  - &o142 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o1
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '")"'
+      phrase: *o2
+      index: 0
+    description: *o146
+    index: 0
+  - &o144 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '")"'
+      phrase: *o2
+      index: 0
+    description: *o146
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o155 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o149
+  name: LParen
+  trends:
+  - &o150 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o1
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '")"'
+      phrase: *o2
+      index: 0
+    description: *o154
+    index: 0
+  - &o152 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '")"'
+      phrase: *o2
+      index: 0
+    description: *o154
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o164 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o157
+  name: Integer
+  trends:
+  - &o159 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Integer
+      phrase: *o158
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Digit
+      phrase: *o161
+      index: 0
+    description: *o163
+    index: 0
+  - &o166 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Digit
+      phrase: *o165
+      index: 0
+    description: *o168
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o175 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o170
+  name: Digit
+  trends:
+  - &o172 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"9"'
+      phrase: *o171
+      index: 0
+    description: *o174
+    index: 0
+  - &o177 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"8"'
+      phrase: *o176
+      index: 0
+    description: *o179
+    index: 0
+  - &o181 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"7"'
+      phrase: *o180
+      index: 0
+    description: *o183
+    index: 0
+  - &o185 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"6"'
+      phrase: *o184
+      index: 0
+    description: *o187
+    index: 0
+  - &o189 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"5"'
+      phrase: *o188
+      index: 0
+    description: *o191
+    index: 0
+  - &o193 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"4"'
+      phrase: *o192
+      index: 0
+    description: *o195
+    index: 0
+  - &o197 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"3"'
+      phrase: *o196
+      index: 0
+    description: *o199
+    index: 0
+  - &o201 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"2"'
+      phrase: *o200
+      index: 0
+    description: *o203
+    index: 0
+  - &o205 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"1"'
+      phrase: *o204
+      index: 0
+    description: *o207
+    index: 0
+  - &o209 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: '"0"'
+      phrase: *o208
+      index: 0
+    description: *o211
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o220 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o213
+  name: _
+  trends:
+  - &o215 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: _
+      phrase: *o214
+      index: 0
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Space
+      phrase: *o217
+      index: 0
+    description: *o219
+    index: 0
+  - &o222 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: Space
+      phrase: *o221
+      index: 0
+    description: *o224
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- &o231 !NeuralNetworkProcessor.Core.CommonCluster
+  definition: *o226
+  name: Space
+  trends:
+  - &o228 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: LineTerminator
+      phrase: *o227
+      index: 0
+    description: *o230
+    index: 0
+  - &o233 !NeuralNetworkProcessor.Core.Trend
+    cells:
+    - !NeuralNetworkProcessor.Core.Cell
+      text: WhiteSpace
+      phrase: *o232
+      index: 0
+    description: *o235
+    index: 0
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.RangeCluster
+  filters:
+  - !NeuralNetworkProcessor.Core.CharRangeFilter
+    type: UnicodeChar
+    class: UppercaseLetter
+    startChar: 10
+    endChar: 10
+    including: true
+  - !NeuralNetworkProcessor.Core.CharRangeFilter
+    type: UnicodeChar
+    class: UppercaseLetter
+    startChar: 13
+    endChar: 13
+    including: true
+  - !NeuralNetworkProcessor.Core.CharRangeFilter
+    type: UnicodeChar
+    class: UppercaseLetter
+    startChar: 8232
+    endChar: 8232
+    including: true
+  - !NeuralNetworkProcessor.Core.CharRangeFilter
+    type: UnicodeChar
+    class: UppercaseLetter
+    startChar: 8233
+    endChar: 8233
+    including: true
+  - &o239 !NeuralNetworkProcessor.Core.CharRangeFilter
+    type: UnicodeChar
+    class: UppercaseLetter
+    startChar: 160
+    endChar: 160
+    including: true
+  - !NeuralNetworkProcessor.Core.CharRangeFilter
+    type: UnicodeChar
+    class: UppercaseLetter
+    startChar: 133
+    endChar: 133
+    including: true
+  unicodeClassTemplate: 0
+  unicodeActionTemplate: 0
+  definition: *o237
+  name: LineTerminator
+  trends: []
+  index: 0
+  trendFlowsList: []
+  patterns: []
+- !NeuralNetworkProcessor.Core.RangeCluster
+  filters:
+  - !NeuralNetworkProcessor.Core.CharRangeFilter
+    type: UnicodeChar
+    class: UppercaseLetter
+    startChar: 9
+    endChar: 9
+    including: true
+  - !NeuralNetworkProcessor.Core.CharRangeFilter
+    type: UnicodeChar
+    class: UppercaseLetter
+    startChar: 11
+    endChar: 11
+    including: true
+  - !NeuralNetworkProcessor.Core.CharRangeFilter
+    type: UnicodeChar
+    class: UppercaseLetter
+    startChar: 12
+    endChar: 12
+    including: true
+  - !NeuralNetworkProcessor.Core.CharRangeFilter
+    type: UnicodeChar
+    class: UppercaseLetter
+    startChar: 32
+    endChar: 32
+    including: true
+  - *o239
+  unicodeClassTemplate: 0
+  unicodeActionTemplate: 0
+  definition: *o240
+  name: WhiteSpace
+  trends: []
+  index: 0
+  trendFlowsList: []
+  patterns: []

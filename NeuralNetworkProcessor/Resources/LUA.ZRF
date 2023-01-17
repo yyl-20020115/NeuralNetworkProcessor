@@ -1,0 +1,161 @@
+﻿#Name ::=
+#Numeral ::=
+#LiteralString ::=
+
+chunk :
+	block
+
+block :
+	stats? retstat?
+
+stats:
+	stat
+	stats stat
+
+stat:
+	';'
+	varlist '=' explist
+	functioncall
+	label
+	'break'
+	'goto' Name
+	'do' block 'end'
+	'while' exp 'do' block 'end'
+	'repeat' block 'until' exp
+	'if' exp 'then' block elifs? else? 'end'
+	'for' Name '=' exp ',' exp [',' exp] 'do' block 'end'
+	'for' namelist 'in' explist 'do' block 'end'
+	'function' funcname Name funcbody
+	'local' 'function' Name funcbody
+	'local' namelist eq_explist?
+
+elifs:
+	elif
+	elifs elif
+
+elif:
+	'elseif' exp 'then' block
+
+else:
+	'else' block
+
+eq_explist:	
+	'=' explist
+	
+retstat:
+	'return' explist? ';'?
+
+label:
+	'::' Name '::'
+
+funcname:
+	namelist colon_name?
+
+colon_name:
+	':' Name
+
+varlist:
+	var 
+	varlist ',' var
+
+var:
+	Name
+	prefixexp '[' exp ']'
+	prefixexp '.' Name
+
+namelist:
+	Name 
+	namelist ',' Name
+
+explist:
+	exp
+	explist ',' exp
+
+exp:
+	Numeral
+	LiteralString
+	'nil'
+	'false'
+	'true'
+	'...'
+	functiondef
+	prefixexp
+	tableconstructor
+	exp binop exp
+	unop exp
+
+prefixexp:
+	var
+	functioncall
+	'(' exp ')'
+
+functioncall:
+	prefixexp args
+	prefixexp ':' Name args
+
+args:
+	'(' explist? ')'
+	tableconstructor
+	LiteralString
+
+functiondef:
+	'function' funcbody
+
+funcbody:
+	'(' parlist? ')' block 'end'
+
+parlist:
+	namelist comma_el?
+	'...'
+
+comma_el:
+	',' '...'
+
+tableconstructor:
+	'{' fieldlist? '}'
+
+fieldlist:
+	field
+	fieldlist fieldsep field fieldsep?
+
+fieldseps:
+	field
+	fieldseps field
+
+field:
+	'[' exp ']' '=' exp 
+	Name '=' exp
+	exp
+
+fieldsep:
+	','
+	';'
+
+binop:
+	'+'
+	'-'
+	'*'
+	'/'
+	'//'
+	'^'
+	'%'
+	'&'
+	'~'
+	'|'
+	'>>'
+	'<<'
+	'..'
+	'<'
+	'<='
+	'>'
+	'>='
+	'=='
+	'~='
+	'and'
+	'or'
+	
+unop:
+	'-'
+	'not'
+	'#'
+	'~'

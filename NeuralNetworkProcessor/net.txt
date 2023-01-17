@@ -1,0 +1,92 @@
+
+-_ : [-]
++_ : [+]
+/_ : [/]
+*_ : [*]
+)_ : [)]
+(_ : [(]
+9_ : [9]
+8_ : [8]
+7_ : [7]
+6_ : [6]
+5_ : [5]
+4_ : [4]
+3_ : [3]
+2_ : [2]
+1_ : [1]
+0_ : [0]
+Ranges : [CharRangeType:UnicodeChar,UnicodeClass:UppercaseLetter,StartChar:9,EndChar:9,Including:True],[CharRangeType:UnicodeChar,UnicodeClass:UppercaseLetter,StartChar:11,EndChar:11,Including:True],[CharRangeType:UnicodeChar,UnicodeClass:UppercaseLetter,StartChar:12,EndChar:12,Including:True],[CharRangeType:UnicodeChar,UnicodeClass:UppercaseLetter,StartChar:32,EndChar:32,Including:True],[CharRangeType:UnicodeChar,UnicodeClass:UppercaseLetter,StartChar:160,EndChar:160,Including:True],
+Ranges : [CharRangeType:UnicodeChar,UnicodeClass:UppercaseLetter,StartChar:10,EndChar:10,Including:True],[CharRangeType:UnicodeChar,UnicodeClass:UppercaseLetter,StartChar:13,EndChar:13,Including:True],[CharRangeType:UnicodeChar,UnicodeClass:UppercaseLetter,StartChar:8232,EndChar:8232,Including:True],[CharRangeType:UnicodeChar,UnicodeClass:UppercaseLetter,StartChar:8233,EndChar:8233,Including:True],[CharRangeType:UnicodeChar,UnicodeClass:UppercaseLetter,StartChar:133,EndChar:133,Including:True],
+Space : 
+Space : LineTerminator 
+Space : WhiteSpace 
+
+_ : 
+_ : _ Space 
+_ : Space 
+
+Digit : 
+Digit : "9" 
+Digit : "8" 
+Digit : "7" 
+Digit : "6" 
+Digit : "5" 
+Digit : "4" 
+Digit : "3" 
+Digit : "2" 
+Digit : "1" 
+Digit : "0" 
+
+Integer : 
+Integer : Integer Digit 
+Integer : Digit 
+
+LParen : 
+LParen : _? "(" 
+LParen : "(" 
+
+RParen : 
+RParen : _? ")" 
+RParen : ")" 
+
+Factor : 
+Factor : Integer 
+Factor : LParen _? Expression RParen 
+Factor : LParen Expression RParen 
+
+Mul : 
+Mul : _? "*" 
+Mul : "*" 
+
+Div : 
+Div : _? "/" 
+Div : "/" 
+
+Add : 
+Add : _? "+" 
+Add : "+" 
+
+Sub : 
+Sub : _? "-" 
+Sub : "-" 
+
+Term : 
+Term : Factor 
+Term : Term Div _? Factor 
+Term : Term Div Factor 
+Term : Term Mul _? Factor 
+Term : Term Mul Factor 
+
+Expression : 
+Expression : Term 
+Expression : Expression Sub _? Term 
+Expression : Expression Sub Term 
+Expression : Expression Add _? Term 
+Expression : Expression Add Term 
+
+Top : 
+Top : _? Expression _? 
+Top : Expression _? 
+Top : _? Expression 
+Top : Expression 
+Top : _? 

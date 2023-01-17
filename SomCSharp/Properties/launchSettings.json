@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "SomCSharp": {
+      "commandName": "Project",
+      "commandLineArgs": "-cp core-lib/Smalltalk:core-lib/TestSuite:core-lib/SomSom/src/compiler:core-lib/SomSom/src/vm:core-lib/SomSom/src/vmobjects:core-lib/SomSom/src/interpreter:core-lib/SomSom/src/primitives core-lib/SomSom/tests/SomSomTests.som",
+      "workingDirectory": "C:\\Working\\SomCSharp\\SomCSharp"
+    }
+  }
+}

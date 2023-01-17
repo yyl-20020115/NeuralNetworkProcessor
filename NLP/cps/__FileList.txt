@@ -1,0 +1,3 @@
+﻿cnli_train_1.0.txt
+aishell_transcript_v0.8.txt
+aidatatang_200_zh_transcript.txt

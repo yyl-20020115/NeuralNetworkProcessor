@@ -1,0 +1,389 @@
+﻿#C- Programming Language's BNF/ZRF
+
+WhiteSpace:	
+	"&#x0009;"
+	"&#x000B;"
+	"&#x000C;"
+	"&#x0020;"
+	"&#x00A0;"
+	"&#+Zs;"
+	
+LineTerminator:	
+	"&#x000A;"
+	"&#x000D;"
+	"&#x2028;"
+	"&#x2029;"
+	"&#x0085;" 
+
+Comment:	
+	MultiLineComment
+	SingleLineComment
+
+@:
+	WhiteSpace
+	LineTerminator
+	Comment
+
+MultiLineComment:	
+	"/*" MultiLineCommentChars? "*/"
+
+MultiLineCommentChars:	
+	MultiLineNotAsteriskChar MultiLineCommentChars?
+	"*" PostAsteriskCommentChars?
+
+PostAsteriskCommentChars:	
+	MultiLineNotForwardSlashOrAsteriskChar MultiLineCommentChars?
+	"*" PostAsteriskCommentChars?
+
+MultiLineNotAsteriskChar:	
+		+"&#+Lu;"
+		+"&#+Ll;"
+		+"&#+Lt;"
+		+"&#+Lm;"
+		+"&#+Lo;"
+		+"&#+Mn;"
+		+"&#+Mc;"
+		+"&#+Me;"
+		+"&#+Nd;"
+		+"&#+Nl;"
+		+"&#+No;"
+		+"&#+Zs;"
+		+"&#+Zl;"
+		+"&#+Zp;"
+		+"&#+Cc;"
+		+"&#+Cf;"
+		+"&#+Cs;"
+		+"&#+Co;"
+		+"&#+Pc;"
+		+"&#+Pd;"
+		+"&#+Ps;"
+		+"&#+Pe;"
+		+"&#+Pi;"
+		+"&#+Po;"
+		+"&#+Sm;"
+		+"&#+Pf;"
+		+"&#+Sc;"
+		+"&#+Sk;"
+		+"&#+So;"
+		+"&#+Cn;"
+		-"*"
+
+MultiLineNotForwardSlashOrAsteriskChar:	
+		+"&#+Lu;"
+		+"&#+Ll;"
+		+"&#+Lt;"
+		+"&#+Lm;"
+		+"&#+Lo;"
+		+"&#+Mn;"
+		+"&#+Mc;"
+		+"&#+Me;"
+		+"&#+Nd;"
+		+"&#+Nl;"
+		+"&#+No;"
+		+"&#+Zs;"
+		+"&#+Zl;"
+		+"&#+Zp;"
+		+"&#+Cc;"
+		+"&#+Cf;"
+		+"&#+Cs;"
+		+"&#+Co;"
+		+"&#+Pc;"
+		+"&#+Pd;"
+		+"&#+Ps;"
+		+"&#+Pe;"
+		+"&#+Pi;"
+		+"&#+Po;"
+		+"&#+Sm;"
+		+"&#+Pf;"
+		+"&#+Sc;"
+		+"&#+Sk;"
+		+"&#+So;"
+		+"&#+Cn;"
+		-"/"
+		-"*"
+
+SingleLineComment:	
+	"//" SingleLineCommentChars?
+
+SingleLineCommentChars:	
+	SingleLineCommentChar SingleLineCommentChars?
+
+SingleLineCommentChar:	
+		+"&#+Lu;"
+		+"&#+Ll;"
+		+"&#+Lt;"
+		+"&#+Lm;"
+		+"&#+Lo;"
+		+"&#+Mn;"
+		+"&#+Mc;"
+		+"&#+Me;"
+		+"&#+Nd;"
+		+"&#+Nl;"
+		+"&#+No;"
+		+"&#+Zs;"
+		+"&#+Zl;"
+		+"&#+Zp;"
+		+"&#+Cc;"
+		+"&#+Cf;"
+		+"&#+Cs;"
+		+"&#+Co;"
+		+"&#+Pc;"
+		+"&#+Pd;"
+		+"&#+Ps;"
+		+"&#+Pe;"
+		+"&#+Pi;"
+		+"&#+Po;"
+		+"&#+Sm;"
+		+"&#+Pf;"
+		+"&#+Sc;"
+		+"&#+Sk;"
+		+"&#+So;"
+		+"&#+Cn;"
+		-"&#x000D;"
+		-"&#x000A;"
+		-"&#x0085;"
+		-"&#x2028;"
+
+IdentifierName:	
+	IdentifierStart
+	IdentifierName IdentifierPart
+
+IdentifierStart:	
+	UnicodeLetter
+	"$"
+	"_"
+	UnicodeEscapeSequence
+
+IdentifierPart:	
+	IdentifierStart
+	UnicodeCombiningMark
+	UnicodeDigit
+	UnicodeConnectorPunctuation
+	UnicodeEscapeSequence
+
+UnicodeLetter:	
+		+"&#+Lu;"
+		+"&#+Ll;"
+		+"&#+Lt;"
+		+"&#+Lm;"
+		+"&#+Lo;"
+		+"&#+Nl;"
+
+UnicodeCombiningMark:	
+		+"&#+Mn;"
+		+"&#+Mc;"
+
+UnicodeDigit:	
+		+"&#+Nd;"
+
+UnicodeConnectorPunctuation:	
+		+"&#+Pc;"
+
+UnicodeEscapeSequence:	
+	"\u" HexDigit HexDigit HexDigit HexDigit
+
+HexDigit:
+	"0"
+	"1"
+	"2"
+	"3"
+	"4"
+	"5"
+	"6"
+	"7"
+	"8"
+	"9"
+	"A"
+	"B"
+	"C"
+	"D"
+	"E"
+	"F"
+	"a"
+	"b"
+	"c"
+	"d"
+	"e"
+	"f"
+
+DecimalDigit:
+    "0"
+    "1"
+    "2"
+    "3"
+    "4"
+    "5"
+    "6"
+    "7"
+    "8"
+    "9"
+
+DecimalDigits:	
+	DecimalDigit
+	DecimalDigits DecimalDigit
+
+SignedIntegerNumber:	
+	DecimalDigits
+	"+" DecimalDigits
+	"-" DecimalDigits
+
+HexIntegerNumber:	
+	"0x" HexDigit
+	"0X" HexDigit
+	HexIntegerNumber HexDigit
+
+Number:
+	SignedIntegerNumber
+	HexIntegerNumber
+
+Keyword:
+	"void"
+	"int"
+	"if"
+	"else"
+	"while"
+	"do"
+	"return"
+
+#identifier should not contain Keywords
+Identifier:
+	IdentifierName ~Keyword
+
+TypeSpecifier:
+	"void"
+	"int"
+
+ArrayIdentifier:
+	Identifier @? "[" @? "]"
+
+SimpleVariable:
+	Identifier
+
+IndexExpression:
+	Expression
+
+ArrayVariable:
+	Identifier @? "[" @? IndexExpression @? "]"
+
+Variable:
+	SimpleVariable
+	ArrayVariable
+
+Argument:
+	Expression
+
+Arguments:
+	Argument
+	Arguments @? "," @? Argument
+
+Call:
+	FunctionName @?"(" @? Arguments @? ")"
+
+Factor:
+	"(" @? Expression @? ")"
+	Number
+	Variable
+	Call
+
+Term:
+	Term @? "*" @? Factor
+	Term @? "/" @? Factor
+	Factor
+
+AdditiveExpression:
+	AdditiveExpression @? "+" @? Term
+	AdditiveExpression @? "-" @? Term
+	Term
+
+SimpleExpression:
+	AdditiveExpression @? "<=" @? AdditiveExpression
+	AdditiveExpression @? "<" @? AdditiveExpression
+	AdditiveExpression @? ">=" @? AdditiveExpression
+	AdditiveExpression @? ">" @? AdditiveExpression
+	AdditiveExpression @? "==" @? AdditiveExpression
+	AdditiveExpression @? "!=" @? AdditiveExpression
+	AdditiveExpression
+
+AssignExpression:
+	Variable "=" Expression
+	
+Expression:
+	SimpleExpression
+	AssignExpression
+
+ExpressionStatement:
+	Expression @? ";"
+
+LocalDeclarationStatement:
+	VariableDeclaration ";"
+
+IfStatement:
+	"if" @? "(" @? Expression @? ")" @? Statement
+	"if" @? "(" @? Expression @? ")" @? Statement @? "else" @? Statement
+
+WhileStatement:
+	"while" @? "(" @? Expression @? ")" @? Statement
+
+DoWhileStatement:
+	"do" @? Statement @? "while" @? "(" @? Expression @? ")" @? ";"
+
+ReturnStatement:
+	"return" @? ";"
+
+EmptyStatement:
+	";"
+
+Statement:
+	EmptyStatement
+	ExpressionStatement
+	LocalDeclarationStatement
+	BlockStatement
+	IfStatement
+	WhileStatement
+	DoWhileStatement
+	ReturnStatement
+
+Statements:
+	Statement
+	Statements @? Statement
+
+BlockStatement:
+	"{" @? Statements @? "}"
+
+PlanParameterDeclaration:
+	TypeSpecifier @? Identifier
+
+ArrayParameterDeclaration:
+	TypeSpecifier @? Identifier @? ArrayIdentifier
+
+ParameterDeclaration:
+	PlanParameterDeclaration
+	ArrayParameterDeclaration
+
+ParameterDeclarations:
+	ParameterDeclaration
+	ParameterDeclarations @? "," @? ParameterDeclaration
+
+FunctionDeclaration:
+	TypeSpecifier @? Identifier @? "(" @? ParameterDeclarations? @? ")" @? BlockStatement
+
+PlanVariableDeclaration:
+	TypeSpecifier @? Identifier @? ";"
+
+ArrayVariableDeclaration:
+	TypeSpecifier @? Identifier @? ArrayIdentifier @? ";"
+
+VariableDeclaration:
+	PlanVariableDeclaration
+	ArrayVaraibleDeclaration
+
+Declaration:
+	VariableDeclaration
+	FunctionDeclaration
+
+Declarations:
+	Declarations? @? Declaration
+
+Program:
+	@? Declarations? @? ""
+
