@@ -119,10 +119,12 @@ public class Compiler
                 this.Emit(factor.PatternTuple, g);
                 break;
             case Integer integer:
-                g.Emit(OpCodes.Ldc_R8, 
-                    double.TryParse(integer.ToString(), out var v) 
-                    ? v 
+                g.Emit(OpCodes.Ldc_R8,
+                    double.TryParse(integer.ToString(), out var v)
+                    ? v
                     : 0);
+                break;
+            default:
                 break;
         }
     }
