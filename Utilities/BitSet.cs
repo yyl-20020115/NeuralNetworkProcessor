@@ -56,29 +56,19 @@ namespace Utilities
                     this.BitsBuffer = (long[])s.BitsBuffer.Clone(), s.Count);
             else
                 foreach (var i in e)
-                    if (i >= 0 && i < Count) 
+                    if (i >= 0 && i < Count)
                         this[i] = true;
                     else throw new ArgumentOutOfRangeException(
                         $"elements in e should be within [0..{Count}]");
         }
-        public bool Add(int item)
-        {
-            if (item < 0 || item >= this.Count)
-                throw new ArgumentOutOfRangeException(nameof(item));
-            else if (this[item]) 
-                return false;
-            else 
-                this[item] = true;
-            return false;
-        }
+        public bool Add(int item) => item < 0 || item >= this.Count
+                ? throw new ArgumentOutOfRangeException(nameof(item))
+                : this[item] ? false : (this[item] = true);
         void ICollection<int>.Add(int item) => this.Add(item);
         public bool Remove(int item)
-        {
-            if (item < 0 || item >= this.Count)
-                throw new ArgumentOutOfRangeException(nameof(item));
-            else
-                return !(this[item] = false);
-        }
+            => item < 0 || item >= Count
+            ? throw new ArgumentOutOfRangeException(nameof(item))
+            : !(this[item] = false);
         public void Clear()
             => Array.Clear(this.BitsBuffer, 0, this.BitsBuffer.Length);
         public bool Contains(int item)
@@ -119,7 +109,8 @@ namespace Utilities
         {
             var otherSet = new BitSet(other);
             if (this.Count != otherSet.Count) return false;
-            for (int i = 0; i < this.BitsBuffer.Length; i++) if (this.BitsBuffer[i] != otherSet.BitsBuffer[i]) return false;
+            for (int i = 0; i < this.BitsBuffer.Length; i++)
+                if (this.BitsBuffer[i] != otherSet.BitsBuffer[i]) return false;
             return true;
         }
         public bool Overlaps(IEnumerable<int> other)
