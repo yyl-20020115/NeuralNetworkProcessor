@@ -98,7 +98,8 @@ public class Compiler
         var generator = methodBuilder.GetILGenerator();
         this.Emit(root, generator);
         //NOTICE: this is used for fixing values
-        if (generator.ILOffset == 0) generator.Emit(OpCodes.Ldc_R8, 0.0);
+        if (generator.ILOffset == 0) 
+            generator.Emit(OpCodes.Ldc_R8, 0.0);
         generator.Emit(OpCodes.Ret);
     }
     public virtual void Emit(Node node, ILGenerator g)
@@ -118,10 +119,10 @@ public class Compiler
                 this.Emit(factor.PatternTuple, g);
                 break;
             case Integer integer:
-                if (double.TryParse(integer.ToString(), out var v))
-                    g.Emit(OpCodes.Ldc_R8, v);
-                else
-                    g.Emit(OpCodes.Ldc_R8, 0.0);
+                g.Emit(OpCodes.Ldc_R8, 
+                    double.TryParse(integer.ToString(), out var v) 
+                    ? v 
+                    : 0);
                 break;
         }
     }

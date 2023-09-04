@@ -31,7 +31,7 @@ public partial record class Node : INode<Node, InterpretrContext, double>
 }
 public partial record class Digit : Node
 {
-    public override string ToString() => this._Digit;
+    public override string ToString() => _;
 }
 public partial record class Integer : Node
 {
