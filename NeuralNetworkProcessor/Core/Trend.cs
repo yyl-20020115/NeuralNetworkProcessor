@@ -9,7 +9,7 @@ namespace NeuralNetworkProcessor.Core;
 public sealed record Trend(List<Cell> Cells, Description Description = null) : NeuralEntity
 {
     public static readonly Trend Default = new();
-    public List<Cell> Cells { get; init; } = Cells ?? new();
+    public List<Cell> Cells { get; init; } = Cells ?? [];
     [YamlIgnore]
     public int CellsCount => this.Cells.Count;
     [YamlIsLink]

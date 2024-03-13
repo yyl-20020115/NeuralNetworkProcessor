@@ -29,7 +29,7 @@ public sealed record MatrixLine(
     public bool Init = true;
 
     public MatrixRow ContainerRow = ContainerRow;
-    public List<(MatrixRow, MatrixLine)> Closure { get; } = new();
+    public List<(MatrixRow, MatrixLine)> Closure { get; } = [];
     public bool HasContent 
         => this.SymbolExtractions.Count > 0
         ;

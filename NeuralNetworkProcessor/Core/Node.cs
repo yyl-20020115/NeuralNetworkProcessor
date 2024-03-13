@@ -8,8 +8,8 @@ public sealed class PatternAttribute : Attribute
 {
     public const string OptionalText = "";
     public const string IgnoredText = null;
-    public string[] Texts = Array.Empty<string>();
-    public int[] Optionals = Array.Empty<int>();
+    public string[] Texts = [];
+    public int[] Optionals = [];
     public bool AsPatterns = false;
     public string Alias { get; set; } = "";
     public PatternAttribute() { }

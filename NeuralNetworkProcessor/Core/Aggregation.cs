@@ -9,7 +9,7 @@ public sealed record Aggregation(string Name,List<Cluster> Clusters = null,Knowl
 {
     public string Name { get; set; } = Name ?? string.Empty;
     public Knowledge Knowledge { get; set; } = Knowledge ?? Knowledge.Default;
-    public List<Cluster> Clusters { get; set; } = Clusters ?? new();
+    public List<Cluster> Clusters { get; set; } = Clusters ?? [];
     public Aggregation() : this("", null, null) { }
     public Aggregation BackBind()
     {

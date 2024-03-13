@@ -5,7 +5,7 @@ using Utilities;
 
 namespace NeuralNetworkProcessor.Core;
 
-public class ResultsPrinter
+public class ResultsPrinter(TextWriter writer = null)
 {
     public const string Spaces  = "        ";
     public const string Branch  = "├──  ";
@@ -13,9 +13,7 @@ public class ResultsPrinter
     public const string Tail    = "└──  ";
     public const int CornerLength = 4;
     public int LineCount { get; protected set; } = 0;
-    public TextWriter Writer { get; protected set; }
-    public ResultsPrinter(TextWriter writer = null)
-        => this.Writer = writer ?? new StringWriter();
+    public TextWriter Writer { get; protected set; } = writer ?? new StringWriter();
 
     public ResultsPrinter PrintList(List<Results> resultsList, ListStack<string> pres = null)
     {

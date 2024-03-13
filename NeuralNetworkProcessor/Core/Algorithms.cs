@@ -7,7 +7,7 @@ public static class Algorithms
 {
     public static bool CanReach(this Cell from, Trend to, HashSet<Cell> visited = null)
     {
-        if ((visited ??= new HashSet<Cell>()).Add(from))
+        if ((visited ??= []).Add(from))
         {
             if (from.Sources.Any(s => s.Trends.Contains(to)))
                 return true;
@@ -19,7 +19,7 @@ public static class Algorithms
     }
     public static bool HasAnyTailRecurse(Cell cx, HashSet<Cell> visited = null)
     {
-        if ((visited ??= new()).Add(cx))
+        if ((visited ??= []).Add(cx))
             foreach (var s in cx.Sources)
                 if (s.HasRecurse) return true;
                 //only check the last cell

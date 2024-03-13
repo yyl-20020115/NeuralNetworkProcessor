@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NeuralNetworkProcessorSample": {
+      "commandName": "Project",
+      "workingDirectory": "$(ProjectDir)"
+    }
+  }
+}

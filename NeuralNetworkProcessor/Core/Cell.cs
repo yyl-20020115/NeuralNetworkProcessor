@@ -9,7 +9,7 @@ public sealed record Cell(string Text, Phrase Phrase = null) : NeuralEntity
 {
     public static readonly Cell Default = new("",Phrase.Default);
     public string Text { get; set; } = Text ?? string.Empty;
-    public HashSet<Trend> DeepClosureTrends { get; } = new HashSet<Trend>();
+    public HashSet<Trend> DeepClosureTrends { get; } = [];
     [YamlIsLink]
     public Phrase Phrase { get; set; } = Phrase ?? Phrase.Default;
     [YamlIgnore]

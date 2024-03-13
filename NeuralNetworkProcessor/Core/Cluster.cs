@@ -13,10 +13,10 @@ public abstract record Cluster(string Name, List<Trend> Trends, Definition Defin
     [YamlIsLink]
     public Definition Definition { get; set; } = Definition ?? Definition.Default;
     public string Name { get; set; } = Name ?? string.Empty;
-    public List<Trend> Trends { get; set; } = Trends ?? new();
+    public List<Trend> Trends { get; set; } = Trends ?? [];
     public int Index { get; set; } = -1;
     [YamlIgnore]
-    public HashSet<Cell> Targets { get; set; } = new();
+    public HashSet<Cell> Targets { get; set; } = [];
     [YamlIgnore]
     public bool HasTargets => this.Targets.Count > 0;
     [YamlIgnore]
@@ -55,7 +55,7 @@ public abstract record Cluster(string Name, List<Trend> Trends, Definition Defin
 }
 public record CommonCluster(string Name, List<Trend> Trends, Definition Definition = null) : Cluster(Name, Trends, Definition)
 {
-    public CommonCluster() : this("", new(), Definition.Default) { }
+    public CommonCluster() : this("", [], Definition.Default) { }
     public override string ToString()
         => this.Name + this.Trends.Aggregate(" : ", (a, b) => a + Environment.NewLine + b.ToString()) + Environment.NewLine;
 }
@@ -152,25 +152,25 @@ public struct CharRangeFilter
     public UnicodeClass Class;
     public int StartChar;
     public int EndChar;
-    public override string ToString()
+    public override readonly string ToString()
         => $"{nameof(CharRangeType)}:{Type},{nameof(UnicodeClass)}:{Class},{nameof(StartChar)}:{StartChar},{nameof(EndChar)}:{EndChar}";
-    public bool Hit(int InputChar)
+    public readonly bool Hit(int InputChar)
        => UnicodeClassTools.IsValidUnicode(InputChar)
         && (this.IsCharHit(InputChar)
             || this.IsClassHit(InputChar)
             || this.IsRangeHit(InputChar)
             );
-    private bool IsCharHit(int InputChar)
+    private readonly bool IsCharHit(int InputChar)
         => this.Type == CharRangeType.UnicodeChar
         && InputChar == StartChar
         ;
-    private bool IsClassHit(int InputChar)
+    private readonly bool IsClassHit(int InputChar)
         => (this.Type == CharRangeType.UnicodeClass)
             && ((this.Class == UnicodeClass.Any)
             || (this.Class == (UnicodeClass)Char.GetUnicodeCategory(
                 UnicodeClassTools.ToText(InputChar), 0)))
            ;
-    private bool IsRangeHit(int InputChar)
+    private readonly bool IsRangeHit(int InputChar)
         => this.Type == CharRangeType.UnicodeRange
         && InputChar >= this.StartChar
         && InputChar <= this.EndChar

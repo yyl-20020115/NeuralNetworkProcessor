@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using NeuralNetworkProcessor.ZRF;
+using System.IO;
 
 namespace NeuralNetworkProcessor.Core;
 
@@ -37,7 +38,7 @@ public partial class FastParser
         var results = new List<Results>();
         var inputs_symbols = inputs.Select(n => n.Symbol.Text).ToList();
 
-        if (ProgramEntry.Enabled) ProgramEntry.Debug(
+        if (Debuger.Enabled) Debuger.Debug(
             $"INPUT[{position}]({inputs.Count}): [{init}]{inputs.Aggregate("", (a, b) => a + (!string.IsNullOrEmpty(a) ? ", " : "") + b)}");
         var relations = new ListLookups<(int, MatrixRow), Results>();
         var partitions = new HashLookups<Definition, Pattern>();
@@ -105,7 +106,7 @@ public partial class FastParser
                     removings, 
                     enclosings);
 
-                if (ProgramEntry.Enabled) ProgramEntry.Debug($"PROCESS:   [{state}][IsPrefix={row.IsPrefix}]{row} RESULT: \"{p?.Extract()}\", FROM: {row.ParentRow}");
+                if (Debuger.Enabled) Debuger.Debug($"PROCESS:   [{state}][IsPrefix={row.IsPrefix}]{row} RESULT: \"{p?.Extract()}\", FROM: {row.ParentRow}");
                 if (state >= AcceptState.Accepted && p != null)
                     partitions[row.Definition].Add(p);
             }
@@ -146,8 +147,8 @@ public partial class FastParser
             var rms = removings.SelectMany(r => r.Value).ToHashSet();
             this.Matrix = this.Matrix.Where(m => !rms.Contains(m)).ToList();
         }
-        if (ProgramEntry.Enabled)
-            ProgramEntry.Debug($"====>Matrix:{this.Matrix.Count}");
+        if (Debuger.Enabled)
+            Debuger.Debug($"====>Matrix:{this.Matrix.Count}");
         return results;
     }
     protected bool Emit(bool init,bool final, int position, out int lexical_hits, out int syntax_hits)
@@ -169,4 +170,23 @@ public partial class FastParser
         }
         return this.InputResults.Count > 0;
     }
+}
+
+public class Debuger
+{
+    public static bool Enabled = false;
+    public static int Index = 0;
+    public static void Debug(string text)
+    {
+        if (Enabled)
+        {
+            using var writer = new StringWriter();
+            text ??= string.Empty;
+            writer.Write(string.Format("[{0:X8}]", Index));
+            writer.WriteLine(text);
+            System.Diagnostics.Debug.Write(writer.ToString());
+            Index++;
+        }
+    }
+
 }

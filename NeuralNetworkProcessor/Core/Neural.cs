@@ -1,6 +1,4 @@
-﻿using YamlDotNet.Serialization;
-
-namespace NeuralNetworkProcessor.Core;
+﻿namespace NeuralNetworkProcessor.Core;
 
 public interface Neural 
 {

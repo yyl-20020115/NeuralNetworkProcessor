@@ -14,19 +14,19 @@ public partial class FastParser
     public virtual OnReportErrorFunction OnReportErrorCallBack { get; set; } = null;
     public virtual List<TerminalCluster> InputAccepters { get; protected set; }
     public virtual Aggregation Aggregation { get; protected set; } = null;
-    public virtual HashSet<Cluster> Tops { get; } = new();
-    public virtual HashSet<string> TopNames { get; } = new();
-    public virtual HashSet<Cluster> Atoms { get; } = new();
-    public virtual HashSet<Cluster> AboveAtoms { get; } = new();
-    public virtual HashSet<Trend> AboveAtomTrends { get; protected set; } = new();
-    public virtual HashSet<Cluster> NonAtoms { get; } = new();
-    public virtual HashSet<Trend> NonAtomTrends { get; protected set; } = new();
-    public virtual List<Results> LastResults { get; protected set; } = new();
+    public virtual HashSet<Cluster> Tops { get; } = [];
+    public virtual HashSet<string> TopNames { get; } = [];
+    public virtual HashSet<Cluster> Atoms { get; } = [];
+    public virtual HashSet<Cluster> AboveAtoms { get; } = [];
+    public virtual HashSet<Trend> AboveAtomTrends { get; protected set; } = [];
+    public virtual HashSet<Cluster> NonAtoms { get; } = [];
+    public virtual HashSet<Trend> NonAtomTrends { get; protected set; } = [];
+    public virtual List<Results> LastResults { get; protected set; } = [];
     public virtual IEnumerator<int> Enumerator { get; protected set; } = null;
 
     protected const int SymbolOffset = UnicodeClassTools.UNICODE_PLANE16_END + 1;
-    protected List<Results> InputResults = new();
-    protected readonly DualDictionary<int, string> Symbols = new ();
+    protected List<Results> InputResults = [];
+    protected readonly DualDictionary<int, string> Symbols = [];
     protected List<MatrixRow> Matrix = null;
     protected int GetSymbolValue(string symbol)
     {
@@ -76,7 +76,7 @@ public partial class FastParser
         //this.Aggregation?.Reset();
         this.LastResults.Clear();
         //this.Symbols.Clear();
-        this.Matrix = this.RebuildMatrix(new (), this.NonAtomTrends);
+        this.Matrix = this.RebuildMatrix([], this.NonAtomTrends);
     }
     public virtual int ParseStep(int Position, Input NextInput)
     {
@@ -169,7 +169,7 @@ public partial class FastParser
                 Position, 
                 pattern.Length, 
                 trend.Owner.Definition.IsDynamicBuilt 
-                ? new ("_'"+span.Text+"'", new())
+                ? new ("_'"+span.Text+"'", [])
                 : trend.Owner.Definition);
             this.InputResults.Add(result);
         }

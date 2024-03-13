@@ -200,16 +200,16 @@ public sealed record MatrixRow
                     additions[this.Trend].Add(
                         row = this.PusherDuplicate(position));
 
-                    if (ProgramEntry.Enabled)
-                        ProgramEntry.Debug($"PUSH-DUP:  {row} FROM {this}");
+                    if (Debuger.Enabled)
+                        Debuger.Debug($"PUSH-DUP:  {row} FROM {this}");
                 }
                 if (!this.IsPrefix || (this.IsPrefix && this.IsBeforeNonRecurse))
                 {
                     var sep = this.SeparatorDuplicate(position);
                     additions[this.Trend].Add(sep);
 
-                    if (ProgramEntry.Enabled)
-                        ProgramEntry.Debug($"SEPT-DUP:  {sep} FROM {this}");
+                    if (Debuger.Enabled)
+                        Debuger.Debug($"SEPT-DUP:  {sep} FROM {this}");
 
                     var closure = this.CurrentCell.DeepClosureTrends;
                     if (closure.Count > 0)

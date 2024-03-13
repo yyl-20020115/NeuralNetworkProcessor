@@ -1,15 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <LangVersion>preview</LangVersion>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Samples\LUA\**" />
     <Compile Remove="Utils\**" />
-    <EmbeddedResource Remove="Samples\LUA\**" />
     <EmbeddedResource Remove="Utils\**" />
-    <None Remove="Samples\LUA\**" />
     <None Remove="Utils\**" />
   </ItemGroup>
   <ItemGroup>
