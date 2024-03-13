@@ -15,7 +15,7 @@ public class GExecutor<T>
     public readonly Task[] Tasks;
     public readonly CancellationTokenSource TokenSource;
     public readonly AutoResetEvent ProcessEvent = new(false);
-    public readonly ConcurrentCollection<T> Collection = new();
+    public readonly ConcurrentCollection<T> Collection = [];
     public readonly Action<T> Action;
     public GExecutor(Action<T> action, int count = -1, CancellationTokenSource TokenSource = null)
     {

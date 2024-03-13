@@ -17,7 +17,7 @@ public class ResultsPrinter(TextWriter writer = null)
 
     public ResultsPrinter PrintList(List<Results> resultsList, ListStack<string> pres = null)
     {
-        pres ??= new ListStack<string>();
+        pres ??= [];
         var count = resultsList.Count;
         for (int i = 0; i < count; i++)
         {

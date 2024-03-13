@@ -1,6 +1,6 @@
 ﻿using NeuralNetworkProcessor.Core;
 
-namespace NeuralNetworkProcessorSample.LUA
+namespace NeuralNetworkCodeEdit.LUA
 {
     public partial record Node;
     public partial record WhiteSpace(
@@ -12,7 +12,7 @@ namespace NeuralNetworkProcessorSample.LUA
             "+'&#x00A0;'",
             "+'&#+Zs;'",
             AsPatterns = true)]
-            string _ = default
+            string? _ = default
         ) : Node
         ;
     public partial record LineTerminator(
@@ -24,17 +24,17 @@ namespace NeuralNetworkProcessorSample.LUA
             "+'&#x00A0;'",
             "+'&#x0085;'",
             AsPatterns = true
-            )]string _ = default
+            )]string? _ = default
         ) : Node
         ;
     public partial record Space(
-        [Pattern] WhiteSpace _0 = default,
-        [Pattern] LineTerminator _1 = default
+        [Pattern] WhiteSpace? _0 = default,
+        [Pattern] LineTerminator? _1 = default
         ) : Node
         ;
     public partial record _(
-        [Pattern] Space _0 = default,
-        [Pattern] (_ _, Space Space) _1 = default
+        [Pattern] Space? _0 = default,
+        [Pattern] (_ _, Space Space)? _1 = default
         ) : Node
         ;
     public partial record Digit(
@@ -51,12 +51,12 @@ namespace NeuralNetworkProcessorSample.LUA
             "9",
             AsPatterns = true
         )]
-        string _ = default
+        string ? _ = default
         ) : Node
         ;
     public partial record Integer(
-        [Pattern] Digit _0 = default,
-        [Pattern] (Integer Integer, Digit Digit) _1 = default
+        [Pattern] Digit? _0 = default,
+        [Pattern] (Integer Integer, Digit Digit)? _1 = default
         ) : Node
         ;
     public partial record Double(
@@ -64,8 +64,8 @@ namespace NeuralNetworkProcessorSample.LUA
         ) : Node
         ;
     public partial record Numeral(
-        [Pattern] Integer _0 = default,
-        [Pattern] Double _2 = default
+        [Pattern] Integer? _0 = default,
+        [Pattern] Double? _2 = default
         ) : Node
         ;
     public partial record LiteralString(
@@ -80,7 +80,7 @@ namespace NeuralNetworkProcessorSample.LUA
             "~",
             AsPatterns = true
         )]
-        string _ = default
+        string ? _ = default
         ) : Node
         ;
     public partial record BinaryOperation(
@@ -108,7 +108,7 @@ namespace NeuralNetworkProcessorSample.LUA
             "or",
             AsPatterns = true
         )]
-        string _ = default
+        string ? _ = default
         ) : Node
         ;    
     public abstract record Statement(
@@ -118,26 +118,26 @@ namespace NeuralNetworkProcessorSample.LUA
         ) : Node
         ;
     public partial record Expressions(
-        [Pattern]Expression Expression = default,
-        [Pattern](Expressions Expressions, Expression Expression) __ = default
+        [Pattern]Expression? Expression = default,
+        [Pattern](Expressions Expressions, Expression Expression)? __ = default
         ) : Node
         ;
     public partial record ReturnStatement(
         [Pattern("return","","",";")]
-        (string RETURN,_ Spaces, Expressions Expressions, string SEMICOLON) _ = default
+        (string RETURN, _ Spaces, Expressions Expressions, string SEMICOLON) ? _ = default
         ) : Statement
         ;
     public partial record Statements(
-        [Pattern]Statement Statement = default,
-        [Pattern](Statements Statements, Statement Statement) __ = default
+        [Pattern]Statement? Statement = default,
+        [Pattern](Statements Statements, Statement Statement)? __ = default
         ) : Node
         ;
     public partial record Block(
-        [Pattern(null,null)](Statements Statements, ReturnStatement Return) _ = default
+        [Pattern(null,null)](Statements Statements, ReturnStatement Return)? _ = default
         ) : Node
         ;
     public partial record Chunk(
-        [Pattern(null,null)](Block Block, _ Spaces) _ = default
+        [Pattern(null,null)](Block Block, _ Spaces)? _ = default
         ) : Node
         ;
 }

@@ -37,7 +37,7 @@ public static class ModelExtractor
         var attribute = ExtractAttribute<PatternAttribute>(property);
         var names = new List<(Type Type, string Name)>();
         if (attribute == null)
-            return new ();
+            return [];
         else if (attribute.AsPatterns)
         {
             return attribute.Texts.Select(
@@ -73,10 +73,10 @@ public static class ModelExtractor
                     && Array.IndexOf(attribute.Optionals, 0) >= 0));
 
             var text = attribute?.Texts != null && attribute.Texts.Length > 0 ?$"\"{attribute.Texts[0]}\""  : null;
-            return new()
-            {
-                new(new () { new (text ?? type.Name, opt) })
-            };
+            return
+            [
+                new([new (text ?? type.Name, opt)])
+            ];
         }
     }
     public static bool IsValueTupleType(Type type)

@@ -9,7 +9,7 @@ public class ConcurrentCollection<T> : ConcurrentBag<T>, IRangeCollection<T>
     public bool IsReadOnly => false;
 
     public bool Contains(T item)
-        => Array.IndexOf(this.ToArray(), item) >= 0;
+        => Array.IndexOf([.. this], item) >= 0;
 
     public bool Remove(T item)
     {

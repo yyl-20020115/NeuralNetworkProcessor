@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Utilities;
@@ -7,8 +6,8 @@ using Utilities;
 namespace NeuralNetworkProcessor.Util;
 public record struct CharRange(int First = -1, int Last = -1)
 {
-    public bool InRange(int ch) => ch >= this.First && ch <= this.Last;
-    public override string ToString() => $"({this.First:X8}-{this.Last:X8})";
+    public readonly bool InRange(int ch) => ch >= this.First && ch <= this.Last;
+    public override readonly string ToString() => $"({this.First:X8}-{this.Last:X8})";
 }
 
 public static class UnicodeHelper
@@ -44,7 +43,7 @@ public static class UnicodeHelper
     /// <param name="text"></param>
     /// <param name="range"></param>
     /// <returns></returns>
-    public static bool TryDecloseRange(string text, out CharRange range)
+    public static bool TryDecloseRange(string text, out CharRange? range)
     {
         if (text.Length >= 2 && ((text[0] == '"' && text[^1] == '"')
         || (text[0] == '\'' && text[^1] == '\'')))

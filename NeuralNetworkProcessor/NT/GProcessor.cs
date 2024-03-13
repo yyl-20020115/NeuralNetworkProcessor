@@ -6,7 +6,7 @@ namespace NeuralNetworkProcessor.NT;
 public class GProcessor
 {
     public readonly GNetwork Network;
-    public readonly List<GNode> Terminals = new();
+    public readonly List<GNode> Terminals = [];
     public readonly GExecutor<GPath> Executor;
     public GProcessor(GNetwork newtork)
     {
@@ -62,8 +62,8 @@ public class GProcessor
                     {
                         var split = path with
                         {
-                            Points = path.Points.ToList(),
-                            SubPaths = path.SubPaths.ToList(),
+                            Points = [.. path.Points],
+                            SubPaths = [.. path.SubPaths],
                             LastPosition = position,
                         };
                         locals.Add(split.AddPoints(point));
@@ -74,8 +74,8 @@ public class GProcessor
             {
                 var split = path with
                 {
-                    Points = path.Points.ToList(),
-                    SubPaths = path.SubPaths.ToList(),
+                    Points = [.. path.Points],
+                    SubPaths = [.. path.SubPaths],
                     LastPosition = position,
                 };
                 locals.Add(split.FoldPoints(point));

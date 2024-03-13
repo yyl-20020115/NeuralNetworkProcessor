@@ -1,12 +1,8 @@
 ﻿using NeuralNetworkProcessor.Core;
 using NeuralNetworkProcessorSample.Calculator;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 
-namespace NeuralNetworkProcessorSample;
+namespace NeuralNetworkCodeEdit;
 
 public class ProgramEntry
 {

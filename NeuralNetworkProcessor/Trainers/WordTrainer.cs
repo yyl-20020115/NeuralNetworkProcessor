@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Utilities;
 
@@ -11,7 +10,7 @@ public class WordTrainer
         //"pneumonoultramicroscopicsilicovolcanoconiosis".Length == 45
     public virtual int MaxSequenceLength { get; set; } = DefaultMaxSequenceLength;
 
-    protected virtual ListLookups<long, string> CurrentWords { get; } = new();
+    protected virtual ListLookups<long, string> CurrentWords { get; } = [];
 
     public int CharSweepLimit { get; set; } = 1024 * 1024;
     protected int InputCharsAfterLastSweep = 0;
@@ -24,15 +23,15 @@ public class WordTrainer
     public int TopExtractingSequencesCount { get; set; } = 16;
     public int TopExtractingWordCount { get; set; } = 32;
 
-    protected Dictionary<int, int> CharCounts { get; } = new Dictionary<int, int>();
-    protected Dictionary<string, int> WordCounts { get; } = new ();
-    public HashSet<int> FrequentlySeenChars { get; } = new();
-    public HashSet<string> FrequentlySeenWords { get; } = new();
+    protected Dictionary<int, int> CharCounts { get; } = [];
+    protected Dictionary<string, int> WordCounts { get; } = [];
+    public HashSet<int> FrequentlySeenChars { get; } = [];
+    public HashSet<string> FrequentlySeenWords { get; } = [];
     //This position is used for infinite input
     public virtual long Position { get; set; } = 0L;
     public virtual void Train(Input input)
     {
-        foreach(var (ch,final) in input()) this.Read(ch,this.Position++); 
+        foreach (var (ch, final) in input()) this.Read(ch, this.Position++);
     }
 
     public virtual void Read(int ch, long pos)

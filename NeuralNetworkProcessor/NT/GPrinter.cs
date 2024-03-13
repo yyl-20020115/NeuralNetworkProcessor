@@ -5,7 +5,7 @@ using Utilities;
 
 namespace NeuralNetworkProcessor.NT;
 
-public class GPrinter
+public class GPrinter(TextWriter writer = null)
 {
     public const string SpacesText = "        ";
     public const string BranchText = "├──  ";
@@ -13,9 +13,7 @@ public class GPrinter
     public const string TailText =   "└──  ";
     public const int CornerLength = 4;
     public int LineCount { get; protected set; } = 0;
-    public TextWriter Writer { get; protected set; }
-    public GPrinter(TextWriter writer = null)
-        => this.Writer = writer ?? new StringWriter();
+    public TextWriter Writer { get; protected set; } = writer ?? new StringWriter();
 
     protected ListStack<string> stack = new();
     protected string Indent => this.stack.Aggregate("",(a, b) => a + b);

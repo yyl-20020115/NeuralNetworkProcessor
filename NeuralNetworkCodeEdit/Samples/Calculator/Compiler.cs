@@ -1,10 +1,11 @@
-﻿using IKVM.Reflection;
+﻿using System.IO;
+using IKVM.Reflection;
 using IKVM.Reflection.Emit;
 using NeuralNetworkProcessor.Core;
 using NeuralNetworkProcessor.Reflection;
 using NeuralNetworkProcessor.ZRF;
 
-namespace NeuralNetworkProcessorSample.Calculator;
+namespace NeuralNetworkCodeEdit.Calculator;
 
 public class Compiler
 {

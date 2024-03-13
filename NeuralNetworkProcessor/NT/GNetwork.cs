@@ -8,9 +8,9 @@ public record class GNetwork(string Name = "",GNetwork Parent = null, Group Grou
 {
     public GNode StartJointNode { init; get; }
     public GNode EndJointNode { init; get; }
-    public readonly List<GNode> Nodes = new();
-    public readonly List<GEdge> Edges = new();
-    public readonly List<GNetwork> SubNetworks = new();
+    public readonly List<GNode> Nodes = [];
+    public readonly List<GEdge> Edges = [];
+    public readonly List<GNetwork> SubNetworks = [];
     public GNetwork Init() 
         => this.AddNodes(this.StartJointNode, this.EndJointNode);
     public GNetwork AddNodes(params GNode[] nodes) 

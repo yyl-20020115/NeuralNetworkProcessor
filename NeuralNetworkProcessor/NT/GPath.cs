@@ -17,8 +17,8 @@ public partial record class GPath
 {
     public GLocationReader Reader;
     public readonly GNetwork Network;
-    public List<GPoint> Points = new();
-    public List<GPath> SubPaths = new();
+    public List<GPoint> Points = [];
+    public List<GPath> SubPaths = [];
     public GPoint FlatLastPoint => this.Points.LastOrDefault();
     public int LastPosition = -1;
 
