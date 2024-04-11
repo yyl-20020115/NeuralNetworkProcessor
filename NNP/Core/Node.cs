@@ -47,6 +47,6 @@ public sealed class PatternAttribute : Attribute
 public interface INode { }
 public interface INode<N,C,V> : INode
 {
-    N Compose(C context, string pattern, params (int index, string name, object value)[] parameters);
-    V Process(C context = default, V value = default);
+    N? Compose(C? context, string pattern, params (int index, string name, object value)[] parameters);
+    V? Process(C? context = default, V? value = default);
 }

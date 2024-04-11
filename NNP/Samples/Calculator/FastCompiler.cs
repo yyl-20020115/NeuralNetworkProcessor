@@ -1,7 +1,7 @@
 ﻿using IKVM.Reflection;
 using IKVM.Reflection.Emit;
-using NNP.Core;
 using NNP.Reflection;
+using NNP.Core;
 using NNP.ZRF;
 
 namespace NNP.Calculator;
@@ -12,13 +12,13 @@ public class FastCompiler
         = "C:\\Windows\\Microsoft.net\\Framework\\v4.0.30319\\";
 
     public Universe Universe { get; } = new();
-    public NNP.Core.Parser Parser { get; private set; }
+    public Core.Parser Parser { get; private set; }
     public FastCompiler()
     {
         if (ModelExtractor.Extract(
             typeof(FastCompiler).Assembly,
             typeof(Node),
-            typeof(Node).Namespace,
+            typeof(Node).Namespace??"",
             nameof(Calculator)) is Concept concept)
             this.Parser = new NNP.Core.Parser().Bind(concept);
         this.Universe.AssemblyResolve += Universe_AssemblyResolve;
@@ -27,45 +27,46 @@ public class FastCompiler
     protected virtual Assembly Universe_AssemblyResolve(object sender, IKVM.Reflection.ResolveEventArgs args)
         => this.Universe.LoadFile(
              Path.Combine(DefaultGlobalAssembliesCachePath, $"{args.Name}.dll"));
-    //public virtual List<Results> Parse(string expression)
-    //    => this.Parser.Parse(expression);
-    //public virtual Node Build(List<Results> results)
-    //    => results != null && results.Count > 0
-    //        ? ModelBuilder<Node, InterpretrContext, double>.Build(
-    //            results.First(), typeof(Node), typeof(Node).Assembly) as Node
-    //        : null;
+    public virtual List<Trend> Parse(string expression)
+        => this.Parser.Parse(expression);
+    public virtual Node? Build(List<Trend> results)
+        => results != null && results.Count > 0
+            ? ModelBuilder<Node, InterpretrContext, double>.Build(
+                results.First(), typeof(Node), typeof(Node).Assembly) as Node
+            : null;
 
-    //public virtual AssemblyBuilder Compile(
-    //    string expression,
-    //    string fileName,
-    //    string functionName = "CalcFunction",
-    //    string moduleName = "CalcModule",
-    //    string assemblyName = "Calculator",
-    //    PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
-    //    ImageFileMachine machine = ImageFileMachine.I386)
-    //    => this.Compile(this.Parse(expression), fileName, functionName, moduleName, assemblyName, kind, machine);
-    //public virtual AssemblyBuilder Compile(
-    //    List<Results> results,
-    //    string fileName,
-    //    string functionName = "CalcFunction",
-    //    string moduleName = "CalcModule",
-    //    string assemblyName = "Calculator",
-    //    PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
-    //    ImageFileMachine machine = ImageFileMachine.I386)
-    //{
-    //    var root = ModelBuilder<Node, string, double>.Build(
-    //        results.FirstOrDefault(), typeof(Node),
-    //        typeof(Node).Assembly, typeof(Node).Namespace) as Node;
-    //    var builder = this.Emit(
-    //            root,
-    //            functionName,
-    //            moduleName,
-    //            fileName,
-    //            assemblyName);
-    //    builder.Save(fileName, kind, machine);
-    //    return builder;
-    //}
-    public virtual AssemblyBuilder Emit(Node root,
+    public virtual AssemblyBuilder Compile(
+        string expression,
+        string fileName,
+        string functionName = "CalcFunction",
+        string moduleName = "CalcModule",
+        string assemblyName = "Calculator",
+        PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
+        ImageFileMachine machine = ImageFileMachine.I386)
+        => this.Compile(this.Parse(expression), fileName, functionName, moduleName, assemblyName, kind, machine);
+    public virtual AssemblyBuilder Compile(
+        List<Trend> trends,
+        string fileName,
+        string functionName = "CalcFunction",
+        string moduleName = "CalcModule",
+        string assemblyName = "Calculator",
+        PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
+        ImageFileMachine machine = ImageFileMachine.I386)
+    {
+        var root = ModelBuilder<Node, string, double>.Build(
+            trends.FirstOrDefault(), typeof(Node),
+            typeof(Node).Assembly, typeof(Node).Namespace) as Node;
+        var builder = this.Emit(
+                root,
+                functionName,
+                moduleName,
+                fileName,
+                assemblyName);
+        builder.Save(fileName, kind, machine);
+        return builder;
+    }
+    public virtual AssemblyBuilder Emit(
+        Node? root,
         string functionName,
         string moduleName,
         string fileName,
@@ -79,9 +80,9 @@ public class FastCompiler
         return builder;
     }
 
-    public virtual void Emit(Node root, string functionName, string moduleName, string fileName, AssemblyBuilder asmBuilder)
+    public virtual void Emit(Node? root, string functionName, string moduleName, string fileName, AssemblyBuilder asmBuilder)
         => this.Emit(root, functionName, asmBuilder.DefineDynamicModule(moduleName, fileName));
-    public virtual void Emit(Node root, string functionName, ModuleBuilder moduleBuilder)
+    public virtual void Emit(Node? root, string functionName, ModuleBuilder moduleBuilder)
     {
         var methodBuilder = moduleBuilder.DefineGlobalMethod(
             functionName, MethodAttributes.Public | MethodAttributes.Static, this.Universe.GetBuiltInType("System", "Double"),
@@ -89,7 +90,7 @@ public class FastCompiler
         this.Emit(root, methodBuilder);
         moduleBuilder.CreateGlobalFunctions();
     }
-    public virtual void Emit(Node root, MethodBuilder methodBuilder)
+    public virtual void Emit(Node? root, MethodBuilder methodBuilder)
     {
         var generator = methodBuilder.GetILGenerator();
         this.Emit(root, generator);
@@ -98,7 +99,7 @@ public class FastCompiler
             generator.Emit(OpCodes.Ldc_R8, 0.0);
         generator.Emit(OpCodes.Ret);
     }
-    public virtual void Emit(Node node, ILGenerator g)
+    public virtual void Emit(Node? node, ILGenerator g)
     {
         switch (node)
         {
@@ -124,7 +125,7 @@ public class FastCompiler
                 break;
         }
     }
-    public virtual void Emit(object tuple, ILGenerator generator)
+    public virtual void Emit(object? tuple, ILGenerator generator)
     {
         switch (tuple)
         {

@@ -9,8 +9,8 @@ namespace NNP.Calculator;
 public partial record class Node : INode<Node, InterpretrContext, double>
 {
     //NOTICE: This supports multiple patterns in parallel
-    public virtual string PatternName { get; protected set; } = string.Empty;
-    public virtual object PatternTuple { get; protected set; } = null;
+    public virtual string? PatternName { get; protected set; } = string.Empty;
+    public virtual object? PatternTuple { get; protected set; } = null;
     public virtual object? this[int index]
         => ValueTupleUtils.GetValueTupleElement(this.PatternTuple as ITuple, index);
     public virtual Node Compose(InterpretrContext context, string pattern, params (int index, string name, object value)[] parameters)
@@ -101,40 +101,41 @@ public partial record class Interpreter
         if (ModelExtractor.Extract(
             typeof(FastCompiler).Assembly,
             typeof(Node),
-            typeof(Node).Namespace,
+            typeof(Node).Namespace??"",
             nameof(Calculator)) is Concept concept)
             this.Parser = new Core.Parser().Bind(concept);
     }
 
-    //public virtual List<Results> Parse(string expression)
-    //    => this.Parser.Parse(expression);
-    //public virtual double Run(string expression)
-    //    => this.Run(expression, new() { Interpreter = this });
+    public virtual List<Trend> Parse(string expression)
+        => this.Parser.Parse(expression);
+    public virtual double Run(string expression)
+        => this.Run(expression, new() { Interpreter = this });
 
-    //public virtual double Run(string expression, InterpretrContext context)
-    //{
-    //    var results = this.Parse(expression);
-    //    return results.Count switch
-    //    {
-    //        > 0 => ModelBuilder<Node, InterpretrContext, double>.Execute(
-    //            results.First(), typeof(Node), typeof(Node).Assembly, context: context, value: double.NaN),
-    //        _ => double.NaN
-    //    };
-    //}
-    //public virtual double Run(List<Results> results)
-    //    => this.Run(results, new() { Interpreter = this });
-    //public virtual double Run(List<Results> results, InterpretrContext context)
-    //    => this.BuildFirstResult(results) is Node node
-    //    ? ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN)
-    //    : double.NaN ;
+    public virtual double Run(string expression, InterpretrContext context)
+    {
+        var results = this.Parse(expression);
+        return results.Count switch
+        {
+            > 0 => ModelBuilder<Node, InterpretrContext, double>.Execute(
+                results.First(), typeof(Node), typeof(Node).Assembly, context: context, value: double.NaN),
+            _ => double.NaN
+        };
+    }
+    public virtual double Run(List<Trend> results)
+        => this.Run(results, new() { Interpreter = this });
+    public virtual double Run(List<Trend> results, InterpretrContext context)
+        => this.BuildFirstResult(results) is Node node
+        ? ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN)
+        : double.NaN;
 
-    //public virtual double Run(Node node)
-    //    => this.Run(node, new() { Interpreter = this });
-    //public virtual double Run(Node node, InterpretrContext context)
-    //    => ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN);
-    //public virtual Node? BuildFirstResult(List<Results> results)
-    //    => results != null && results.Count > 0
-    //        ? ModelBuilder<Node, string, double>.Build(
-    //            results.First(), typeof(Node), typeof(Node).Assembly) as Node
-    //        : null;
+    public virtual double Run(Node? node)
+        => this.Run(node, new() { Interpreter = this });
+    public virtual double Run(Node? node, InterpretrContext context)
+        => ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN);
+    public virtual Node? BuildFirstResult(List<Trend> results)
+        => results != null && results.Count > 0
+            ? ModelBuilder<Node, string, double>.Build(
+                results.First(), typeof(Node), typeof(Node).Assembly) as Node
+            : null
+        ;
 }

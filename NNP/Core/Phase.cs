@@ -1,4 +1,5 @@
-﻿using Utilities;
+﻿using System.Text;
+using Utilities;
 
 namespace NNP.Core;
 
@@ -20,6 +21,21 @@ public record class Phase(string Name, Trend Parent, int Index = -1, HashSet<Tre
     public int Index = Index;
     public virtual bool Accept(string Text) => Text == this.Name;
     public override string ToString() => this.Name;
+
+    public StringBuilder Flattern(StringBuilder builder)
+    {
+        if (Sources.Count == 0)
+        {
+            builder.Append(this.Name);
+        }
+        else
+        {
+            foreach (var source in this.Sources)
+                source.Flattern(builder);
+        }
+        return builder;
+    }
+    public string Flattern() => this.Flattern(new ()).ToString();
 }
 
 public abstract record TerminalPhase(string Name, Trend Parent, int Index = -1) : Phase(Name, Parent, Index)

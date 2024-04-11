@@ -1,4 +1,6 @@
 ﻿using NNP.Calculator;
+using NNP.Core;
+using System.Reflection;
 
 namespace NNP;
 
@@ -36,36 +38,37 @@ public static class ProgramEntry
             var path = root + i + ".dll";
             var compiler = new FastCompiler();
             var interpreter = new Interpreter();
-            //var tree = compiler.Parse(l);
-            //var node = compiler.Build(tree);
-            //var result = interpreter.Run(node);
-            //var dump = tree.Count > 0 ? tree[0].Extract() : string.Empty;
-            //var printer = new ResultsPrinter();
-            //printer.PrintList(tree);
+            var tree = compiler.Parse(l);
+            var node = compiler.Build(tree);
+            var result = interpreter.Run(node);
+            var printer = new TrendPrinter();
+            printer.PrintList(tree);
 
-            //writer.WriteLine($"Input({i}):\"{l}\"");
-            //writer.WriteLine($"Result: {dump} = {result}");
-            //writer.WriteLine($"PASSED: {(dump == l ? "YES" : "NO")}");
-            //writer.WriteLine($"Tree:");
-            //writer.Write(printer);
-            //writer.WriteLine(separator);
+            var dump = tree.Count > 0 ? tree[0].Flattern() : string.Empty;
 
-            //if (compile)
-            //{
-            //    compiler.Compile(
-            //        tree,
-            //        path,
-            //        "CalcFunction" + i,
-            //        "CalcModule" + i,
-            //        "Calculator" + i
-            //        );
-            //    var assembly = Assembly.LoadFrom(path);
+            writer.WriteLine($"Input({i}):\"{l}\"");
+            writer.WriteLine($"Result: {dump} = {result}");
+            writer.WriteLine($"PASSED: {(dump == l ? "YES" : "NO")}");
+            writer.WriteLine($"Tree:");
+            writer.Write(printer);
+            writer.WriteLine(separator);
 
-            //    var module = assembly?.GetModules()?.FirstOrDefault();
-            //    var method = module?.GetMethods(BindingFlags.Public | BindingFlags.Static)?.FirstOrDefault();
-            //    var @object = method?.Invoke(null, null);
-            //    writer.WriteLine($"{l} = {dump} = {@object}");
-            //}
+            if (compile)
+            {
+                compiler.Compile(
+                    tree,
+                    path,
+                    "CalcFunction" + i,
+                    "CalcModule" + i,
+                    "Calculator" + i
+                    );
+                var assembly = Assembly.LoadFrom(path);
+
+                var module = assembly?.GetModules()?.FirstOrDefault();
+                var method = module?.GetMethods(BindingFlags.Public | BindingFlags.Static)?.FirstOrDefault();
+                var @object = method?.Invoke(null, null);
+                writer.WriteLine($"{l} = {dump} = {@object}");
+            }
         });
     }
 

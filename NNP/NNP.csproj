@@ -10,15 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Reflection\ModelBuilder.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="input.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ikvm\reflect\IKVM.Reflection.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
     <ProjectReference Include="..\YamlDotNet\YamlDotNet.csproj" />
   </ItemGroup>
 
