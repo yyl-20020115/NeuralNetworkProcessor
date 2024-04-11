@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
 using GraphSharp.Controls;
-using NeuralNetworkProcessor.Core;
-using NeuralNetworkProcessor.Reflection;
-using NeuralNetworkProcessor.Samples.Calculator;
+using NNP.Core;
+using NNP.Reflection;
+using NNP.Samples.Calculator;
 using Utilities;
 using System.Windows.Input;
 

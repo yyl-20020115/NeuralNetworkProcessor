@@ -1,4 +1,4 @@
-﻿using NeuralNetworkProcessor.Core;
+﻿using NNP.Core;
 
 namespace NeuralNetworkCodeEdit.LUA
 {

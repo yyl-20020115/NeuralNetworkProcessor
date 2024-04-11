@@ -20,9 +20,9 @@ public sealed record Trend(List<Cell> Cells, Description Description = null) : N
     [YamlIgnore]
     public Cell FinsherCell => this.Cells.Count > 0 ? this.Cells[^1] : null;
     [YamlIgnore]
-    public bool IsLeftRecurse => this.Owner != null && this.Cells.Count >= 2 && this.StarterCell.Text == this.Owner.Name;
+    public bool IsLeftRecurse => this.OwnerCluster != null && this.Cells.Count >= 2 && this.StarterCell.Text == this.OwnerCluster.Name;
     [YamlIgnore]
-    public bool IsRightRecurse => this.Owner != null && this.Cells.Count >= 2 && this.FinsherCell.Text == this.Owner.Name;
+    public bool IsRightRecurse => this.OwnerCluster != null && this.Cells.Count >= 2 && this.FinsherCell.Text == this.OwnerCluster.Name;
     [YamlIgnore]
     public bool IsDeepRecurse { get; set; }
     [YamlIgnore]
@@ -30,10 +30,10 @@ public sealed record Trend(List<Cell> Cells, Description Description = null) : N
     [YamlIgnore]
     public bool IsSimpleRightRecurse => this.IsRightRecurse && this.CellsCount == 2;
     [YamlIgnore]
-    public bool IsTopTrend => this.Owner != null && this.Owner.IsTop;
+    public bool IsTopTrend => this.OwnerCluster != null && this.OwnerCluster.IsTop;
     public int Index { get; set; }
     [YamlIsLink]
-    public Cluster Owner { get; set; }
+    public Cluster OwnerCluster { get; set; }
     public bool IsFinal(int index, bool strict = false)
         => !strict ? (index >= this.CellsCount - 1)
         : ((index >= this.CellsCount - 1) && this.CellsCount > 1);
@@ -45,7 +45,7 @@ public sealed record Trend(List<Cell> Cells, Description Description = null) : N
         => this.GetIndex(c) is int i && i > 0 && i < this.Cells.Count - 1;
     public Trend Bind(Cluster Owner)
     {
-        this.Owner = Owner;
+        this.OwnerCluster = Owner;
         return this.BackBind();
     }
     public Trend BackBind()
@@ -71,5 +71,5 @@ public sealed record Trend(List<Cell> Cells, Description Description = null) : N
         return builder.ToString();
     }
     public override string ToString()
-        => ((this.Owner?.Name ?? string.Empty) + " : ") + this.Cells.Aggregate("", (a, b) => a + b.ToString() + " ");
+        => ((this.OwnerCluster?.Name ?? string.Empty) + " : ") + this.Cells.Aggregate("", (a, b) => a + b.ToString() + " ");
 }

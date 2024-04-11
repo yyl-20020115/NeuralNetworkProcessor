@@ -43,9 +43,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpAssembler.Formats.Elf3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpAssembler.Languages.Nasm", "CSharpAssembler\SharpAssembler.Languages.Nasm\Source\SharpAssembler.Languages.Nasm.csproj", "{E483CE75-A8FB-43DE-BEEC-512F958D76A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetworkProcessorSample", "NeuralNetworkProcessorSample\NeuralNetworkProcessorSample.csproj", "{8D845933-5560-4960-BCC2-8CAC95A89188}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetworkProcessorSample", "NeuralNetworkProcessorSample\NeuralNetworkProcessorSample.csproj", "{8D845933-5560-4960-BCC2-8CAC95A89188}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetworkCodeEdit", "NeuralNetworkCodeEdit\NeuralNetworkCodeEdit.csproj", "{0DC93781-D13B-4222-82D6-07CF0B372C42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeuralNetworkCodeEdit", "NeuralNetworkCodeEdit\NeuralNetworkCodeEdit.csproj", "{0DC93781-D13B-4222-82D6-07CF0B372C42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NNP", "NNP\NNP.csproj", "{12D44E39-8435-4CDD-B690-8E1B96AE23CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -321,6 +323,18 @@ Global
 		{0DC93781-D13B-4222-82D6-07CF0B372C42}.Release|x64.Build.0 = Release|Any CPU
 		{0DC93781-D13B-4222-82D6-07CF0B372C42}.Release|x86.ActiveCfg = Release|Any CPU
 		{0DC93781-D13B-4222-82D6-07CF0B372C42}.Release|x86.Build.0 = Release|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Debug|x64.Build.0 = Debug|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Debug|x86.Build.0 = Debug|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Release|x64.ActiveCfg = Release|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Release|x64.Build.0 = Release|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Release|x86.ActiveCfg = Release|Any CPU
+		{12D44E39-8435-4CDD-B690-8E1B96AE23CA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

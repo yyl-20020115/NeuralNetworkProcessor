@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NNP": {
+      "commandName": "Project",
+      "workingDirectory": "$(ProjectDir)"
+    }
+  }
+}

@@ -4,7 +4,7 @@ using NNP.Core;
 using NNP.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace NeuralNetworkProcessorSample.Calculator;
+namespace NNP.Calculator;
 
 public partial record class Node : INode<Node, InterpretrContext, double>
 {
@@ -94,7 +94,7 @@ public partial record class Top : Node
 
 public partial record class Interpreter
 {
-    public readonly FastParser Parser;
+    public readonly Core.Parser Parser;
 
     public Interpreter()
     {
@@ -102,39 +102,39 @@ public partial record class Interpreter
             typeof(FastCompiler).Assembly,
             typeof(Node),
             typeof(Node).Namespace,
-            nameof(Calculator)) is Knowledge knowledge)
-            this.Parser = new FastParser().Bind(Builder.Rebuild(knowledge));
+            nameof(Calculator)) is Concept concept)
+            this.Parser = new Core.Parser().Bind(concept);
     }
 
-    public virtual List<Results> Parse(string expression)
-        => this.Parser.Parse(expression);
-    public virtual double Run(string expression)
-        => this.Run(expression, new() { Interpreter = this });
+    //public virtual List<Results> Parse(string expression)
+    //    => this.Parser.Parse(expression);
+    //public virtual double Run(string expression)
+    //    => this.Run(expression, new() { Interpreter = this });
 
-    public virtual double Run(string expression, InterpretrContext context)
-    {
-        var results = this.Parse(expression);
-        return results.Count switch
-        {
-            > 0 => ModelBuilder<Node, InterpretrContext, double>.Execute(
-                results.First(), typeof(Node), typeof(Node).Assembly, context: context, value: double.NaN),
-            _ => double.NaN
-        };
-    }
-    public virtual double Run(List<Results> results)
-        => this.Run(results, new() { Interpreter = this });
-    public virtual double Run(List<Results> results, InterpretrContext context)
-        => this.BuildFirstResult(results) is Node node
-        ? ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN)
-        : double.NaN ;
+    //public virtual double Run(string expression, InterpretrContext context)
+    //{
+    //    var results = this.Parse(expression);
+    //    return results.Count switch
+    //    {
+    //        > 0 => ModelBuilder<Node, InterpretrContext, double>.Execute(
+    //            results.First(), typeof(Node), typeof(Node).Assembly, context: context, value: double.NaN),
+    //        _ => double.NaN
+    //    };
+    //}
+    //public virtual double Run(List<Results> results)
+    //    => this.Run(results, new() { Interpreter = this });
+    //public virtual double Run(List<Results> results, InterpretrContext context)
+    //    => this.BuildFirstResult(results) is Node node
+    //    ? ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN)
+    //    : double.NaN ;
 
-    public virtual double Run(Node node)
-        => this.Run(node, new() { Interpreter = this });
-    public virtual double Run(Node node, InterpretrContext context)
-        => ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN);
-    public virtual Node? BuildFirstResult(List<Results> results)
-        => results != null && results.Count > 0
-            ? ModelBuilder<Node, string, double>.Build(
-                results.First(), typeof(Node), typeof(Node).Assembly) as Node
-            : null;
+    //public virtual double Run(Node node)
+    //    => this.Run(node, new() { Interpreter = this });
+    //public virtual double Run(Node node, InterpretrContext context)
+    //    => ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN);
+    //public virtual Node? BuildFirstResult(List<Results> results)
+    //    => results != null && results.Count > 0
+    //        ? ModelBuilder<Node, string, double>.Build(
+    //            results.First(), typeof(Node), typeof(Node).Assembly) as Node
+    //        : null;
 }

@@ -1,6 +1,6 @@
 ﻿using NNP.Core;
 
-namespace NeuralNetworkCodeEdit.Calculator;
+namespace NNP.Calculator;
 
 public partial record WhiteSpace(
     [Pattern(

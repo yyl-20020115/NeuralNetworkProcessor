@@ -1,5 +1,5 @@
 ﻿using NeuralNetworkCodeEdit.Calculator;
-using NeuralNetworkProcessor.Core;
+using NNP.Core;
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -27,7 +27,7 @@ public partial class NCEdit : UserControl
     {
         var input = "2+((3+4))";
         var block = new TextBlock() {  };
-        var trees = new Compiler().Parse(input);
+        var trees = new FastCompiler().Parse(input);
 
         //var ret = new ResultsPrinter().PrintList(trees).ToString();
 

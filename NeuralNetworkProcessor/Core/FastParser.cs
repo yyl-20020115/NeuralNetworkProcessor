@@ -151,7 +151,7 @@ public partial class FastParser
             Position, Length, UTF32: UTF32);
         var trends = this.InputAccepters
             .Where(i => i.Accept(UTF32)).SelectMany(c => c.Targets)
-            .Where(s => s.Owner != null).Select(s => s.Owner).Distinct().ToList();
+            .Where(s => s.OwnerTrend != null).Select(s => s.OwnerTrend).Distinct().ToList();
         foreach (var trend in trends)
         {
             var pattern = new Pattern(
@@ -162,15 +162,15 @@ public partial class FastParser
                 span.Length,
                 trend.Description,
                 trend) 
-            { Definition = trend.Owner.Definition };
+            { Definition = trend.OwnerCluster.Definition };
             var result = new Results(
                 new[] { pattern }
                 .ToImmutableArray(),
                 Position, 
                 pattern.Length, 
-                trend.Owner.Definition.IsDynamicBuilt 
+                trend.OwnerCluster.Definition.IsDynamicBuilt 
                 ? new ("_'"+span.Text+"'", [])
-                : trend.Owner.Definition);
+                : trend.OwnerCluster.Definition);
             this.InputResults.Add(result);
         }
         return trends.Count;

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using GraphSharp.Controls;
-using NeuralNetworkProcessor.Core;
+using NNP.Core;
 using QuickGraph;
 
 namespace NNPlatform
@@ -25,8 +25,8 @@ namespace NNPlatform
         public long SerialNumber => this.Entity != null ? this.Entity.SerialNumber : 0;
         public long ContainerSerialNumber => this.Entity switch
         {
-            Cell c=>c.Owner.SerialNumber,
-            Trend t=>t.Owner.SerialNumber,
+            Cell c=>c.OwnerTrend.SerialNumber,
+            Trend t=>t.OwnerCluster.SerialNumber,
             Cluster c=>c.Owner.SerialNumber,
             _=>0
         };

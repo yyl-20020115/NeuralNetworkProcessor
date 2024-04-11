@@ -70,11 +70,11 @@ public partial class FastParser
                             (rowsList[p] ??= new(inputs_vectors.Count)).Add(i);
                             if (p < this.Matrix.Count)
                             {
-                                if (this.AboveAtoms.Contains(this.Matrix[p].Trend.Owner))
+                                if (this.AboveAtoms.Contains(this.Matrix[p].Trend.OwnerCluster))
                                 {
                                     lexical_hits++;
                                 }
-                                else if (this.NonAtoms.Contains(this.Matrix[p].Trend.Owner))
+                                else if (this.NonAtoms.Contains(this.Matrix[p].Trend.OwnerCluster))
                                 {
                                     syntax_hits++;
                                 }

@@ -5,8 +5,11 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="MT\**" />
     <Compile Remove="Utils\**" />
+    <EmbeddedResource Remove="MT\**" />
     <EmbeddedResource Remove="Utils\**" />
+    <None Remove="MT\**" />
     <None Remove="Utils\**" />
   </ItemGroup>
   <ItemGroup>

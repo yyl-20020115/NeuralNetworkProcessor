@@ -176,7 +176,7 @@ public static class Builder
                 foreach(var s in c.Sources)
                 {
                     s.BindTarget(c);
-                    s.Targets.RemoveWhere(t => t.Owner == null);
+                    s.Targets.RemoveWhere(t => t.OwnerTrend == null);
                 }
         }
         return Trends;

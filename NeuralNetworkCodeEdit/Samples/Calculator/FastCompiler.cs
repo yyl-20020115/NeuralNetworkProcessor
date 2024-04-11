@@ -1,23 +1,23 @@
 ﻿using System.IO;
 using IKVM.Reflection;
 using IKVM.Reflection.Emit;
-using NeuralNetworkProcessor.Core;
-using NeuralNetworkProcessor.Reflection;
-using NeuralNetworkProcessor.ZRF;
+using NNP.Core;
+using NNP.Reflection;
+using NNP.ZRF;
 
 namespace NeuralNetworkCodeEdit.Calculator;
 
-public class Compiler
+public class FastCompiler
 {
     public string DefaultGlobalAssembliesCachePath { get; set; }
         = "C:\\Windows\\Microsoft.net\\Framework\\v4.0.30319\\";
 
     public Universe Universe { get; } = new();
     public FastParser Parser { get; private set; }
-    public Compiler()
+    public FastCompiler()
     {
         if (ModelExtractor.Extract(
-            typeof(Compiler).Assembly,
+            typeof(FastCompiler).Assembly,
             typeof(Node),
             typeof(Node).Namespace,
             nameof(Calculator)) is Knowledge knowledge)

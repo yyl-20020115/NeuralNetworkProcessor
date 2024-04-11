@@ -17,7 +17,7 @@ public sealed record Cell(string Text, Phrase Phrase = null) : NeuralEntity
     public int Index { get; set; } = -1;
     //public int SourceIndex { get; set; } = -1;
     [YamlIsLink]
-    public Trend Owner { get; set; } = null;
+    public Trend OwnerTrend { get; set; } = null;
     public bool HasAnyDeepSource => this.Sources.Any(s => s.HasDeepRecurse);
     public bool HasLowerRecurse { get; set; }
     [YamlHasLinks]
@@ -25,11 +25,11 @@ public sealed record Cell(string Text, Phrase Phrase = null) : NeuralEntity
     public Cell() : this("",Phrase.Default) { }
     public Cell Bind(Trend Owner)
     {
-        this.Owner = Owner;
+        this.OwnerTrend = Owner;
         return this;
     }
     [YamlIgnore]
-    public Cluster SuperOwner => this.Owner.Owner;
+    public Cluster SuperOwner => this.OwnerTrend.OwnerCluster;
     public Cell Bind(IEnumerable<Cluster> Sources)
     {
         this.Sources.UnionWith(Sources);

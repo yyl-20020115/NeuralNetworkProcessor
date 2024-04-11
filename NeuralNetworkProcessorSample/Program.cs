@@ -27,7 +27,7 @@ public class ProgramEntry
             lines.Add((text, i++));
         }
         
-        lines.AsParallel().ForAll(line => 
+        lines./*AsParallel().ForAll*/ForEach(line => 
         {
             var (l, i) = line;
             var output_file = Path.Combine(
@@ -36,7 +36,7 @@ public class ProgramEntry
 
             using var writer = new StreamWriter(output_file);
             var path = root + i + ".dll";
-            var compiler = new Compiler();
+            var compiler = new MultiCompiler();
             var interpreter = new Interpreter();
             var tree = compiler.Parse(l);
             var node = compiler.Build(tree);

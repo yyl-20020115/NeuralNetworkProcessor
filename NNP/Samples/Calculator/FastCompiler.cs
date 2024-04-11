@@ -1,70 +1,70 @@
 ﻿using IKVM.Reflection;
 using IKVM.Reflection.Emit;
-using NeuralNetworkProcessor.Core;
-using NeuralNetworkProcessor.Reflection;
-using NeuralNetworkProcessor.ZRF;
+using NNP.Core;
+using NNP.Reflection;
+using NNP.ZRF;
 
-namespace NeuralNetworkProcessorSample.Calculator;
+namespace NNP.Calculator;
 
-public class Compiler
+public class FastCompiler
 {
     public string DefaultGlobalAssembliesCachePath { get; set; }
         = "C:\\Windows\\Microsoft.net\\Framework\\v4.0.30319\\";
 
     public Universe Universe { get; } = new();
-    public FastParser Parser { get; private set; }
-    public Compiler()
+    public NNP.Core.Parser Parser { get; private set; }
+    public FastCompiler()
     {
         if (ModelExtractor.Extract(
-            typeof(Compiler).Assembly,
+            typeof(FastCompiler).Assembly,
             typeof(Node),
             typeof(Node).Namespace,
-            nameof(Calculator)) is Knowledge knowledge)
-            this.Parser = new FastParser().Bind(Builder.Rebuild(knowledge));
+            nameof(Calculator)) is Concept concept)
+            this.Parser = new NNP.Core.Parser().Bind(concept);
         this.Universe.AssemblyResolve += Universe_AssemblyResolve;
     }
 
     protected virtual Assembly Universe_AssemblyResolve(object sender, IKVM.Reflection.ResolveEventArgs args)
         => this.Universe.LoadFile(
              Path.Combine(DefaultGlobalAssembliesCachePath, $"{args.Name}.dll"));
-    public virtual List<Results> Parse(string expression)
-        => this.Parser.Parse(expression);
-    public virtual Node Build(List<Results> results)
-        => results != null && results.Count > 0
-            ? ModelBuilder<Node, InterpretrContext, double>.Build(
-                results.First(), typeof(Node), typeof(Node).Assembly) as Node
-            : null;
+    //public virtual List<Results> Parse(string expression)
+    //    => this.Parser.Parse(expression);
+    //public virtual Node Build(List<Results> results)
+    //    => results != null && results.Count > 0
+    //        ? ModelBuilder<Node, InterpretrContext, double>.Build(
+    //            results.First(), typeof(Node), typeof(Node).Assembly) as Node
+    //        : null;
 
-    public virtual AssemblyBuilder Compile(
-        string expression,
-        string fileName,
-        string functionName = "CalcFunction",
-        string moduleName = "CalcModule",
-        string assemblyName = "Calculator",
-        PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
-        ImageFileMachine machine = ImageFileMachine.I386)
-        => this.Compile(this.Parse(expression), fileName, functionName, moduleName, assemblyName, kind, machine);
-    public virtual AssemblyBuilder Compile(
-        List<Results> results,
-        string fileName,
-        string functionName = "CalcFunction",
-        string moduleName = "CalcModule",
-        string assemblyName = "Calculator",
-        PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
-        ImageFileMachine machine = ImageFileMachine.I386)
-    {
-        var root = ModelBuilder<Node, string, double>.Build(
-            results.FirstOrDefault(), typeof(Node),
-            typeof(Node).Assembly, typeof(Node).Namespace) as Node;
-        var builder = this.Emit(
-                root,
-                functionName,
-                moduleName,
-                fileName,
-                assemblyName);
-        builder.Save(fileName, kind, machine);
-        return builder;
-    }
+    //public virtual AssemblyBuilder Compile(
+    //    string expression,
+    //    string fileName,
+    //    string functionName = "CalcFunction",
+    //    string moduleName = "CalcModule",
+    //    string assemblyName = "Calculator",
+    //    PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
+    //    ImageFileMachine machine = ImageFileMachine.I386)
+    //    => this.Compile(this.Parse(expression), fileName, functionName, moduleName, assemblyName, kind, machine);
+    //public virtual AssemblyBuilder Compile(
+    //    List<Results> results,
+    //    string fileName,
+    //    string functionName = "CalcFunction",
+    //    string moduleName = "CalcModule",
+    //    string assemblyName = "Calculator",
+    //    PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
+    //    ImageFileMachine machine = ImageFileMachine.I386)
+    //{
+    //    var root = ModelBuilder<Node, string, double>.Build(
+    //        results.FirstOrDefault(), typeof(Node),
+    //        typeof(Node).Assembly, typeof(Node).Namespace) as Node;
+    //    var builder = this.Emit(
+    //            root,
+    //            functionName,
+    //            moduleName,
+    //            fileName,
+    //            assemblyName);
+    //    builder.Save(fileName, kind, machine);
+    //    return builder;
+    //}
     public virtual AssemblyBuilder Emit(Node root,
         string functionName,
         string moduleName,

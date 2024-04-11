@@ -1,7 +1,7 @@
 ﻿using Utilities;
-using NeuralNetworkProcessor.ZRF;
-using NeuralNetworkProcessor.Core;
-using NeuralNetworkProcessor.Reflection;
+using NNP.ZRF;
+using NNP.Core;
+using NNP.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace NeuralNetworkCodeEdit.Calculator;
@@ -99,7 +99,7 @@ public partial record class Interpreter
     public Interpreter()
     {
         if (ModelExtractor.Extract(
-            typeof(Compiler).Assembly,
+            typeof(FastCompiler).Assembly,
             typeof(Node),
             typeof(Node).Namespace,
             nameof(Calculator)) is Knowledge knowledge)

@@ -31,8 +31,8 @@ public static class Algorithms
     }
     public static void MarkDeepRecurseClosure(Cell cx, HashSet<Trend> candidates, HashSet<Trend> selected, int mindepth = 3 )
     {
-        var current = new HashSet<Trend> { cx.Owner };
-        var visited = new HashSet<Trend> { cx.Owner };
+        var current = new HashSet<Trend> { cx.OwnerTrend };
+        var visited = new HashSet<Trend> { cx.OwnerTrend };
         var depth = 0;
         bool anynew;
         do
@@ -51,10 +51,10 @@ public static class Algorithms
                     comming.Add(c);
                 }
             }
-            if (comming.Contains(cx.Owner) && depth >= mindepth) break;
+            if (comming.Contains(cx.OwnerTrend) && depth >= mindepth) break;
             current = comming;
         } while (anynew);
-        selected.Add(cx.Owner);
+        selected.Add(cx.OwnerTrend);
     }
 
     public static bool DetectDeepRecurse(Trend t,int mindepth = 3)
