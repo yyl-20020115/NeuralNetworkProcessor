@@ -28,7 +28,7 @@ public static class Builder
         var descriptions = new List<Description>();
         //Expand all optionals
         foreach (var description in concept.Definitions.SelectMany(d => d.Descriptions))
-        {            
+        {
             if (description.Phrases.Any(p => p.Optional))
             {
                 var count = description.Phrases.Count;
@@ -43,18 +43,20 @@ public static class Builder
                     hit |= current;
                 }
                 var hits = new HashSet<BigInteger>();
-                for(var t = zero; t <= max; t++)
+                for (var t = zero; t <= max; t++)
                 {
                     var s = t | hit;
                     if (hits.Add(s))
                     {
                         var phrases = new List<Phrase>();
-                        for(var i = 0; i < count; i++)
+                        for (var i = 0; i < count; i++)
                             if ((s & (one << i)) != zero) //disable optionals 
                                 phrases.Add(description.Phrases[i] with { Optional = false });
                         if (phrases.Count > 0)
-                            descriptions.Add(new (phrases) {
-                                Definition = description.Definition });
+                            descriptions.Add(new(phrases)
+                            {
+                                Definition = description.Definition
+                            });
                     }
                 }
             }
@@ -77,47 +79,42 @@ public static class Builder
                 if (declosed != text && declosed.Length > 0)
                 {
                     var char_index = 0;
-                    var char_trend = new Trend();
+                    var chars_trend = new Trend(text);
                     foreach (var (unicode_class, c, len) in UnicodeHelper.NextPoint(declosed))
                     {
-                        char_trend.Line.Add(
+                        chars_trend.Line.Add(
                             _phase = (unicode_class == UnicodeClass.Unknown
-                            ? new CharacterPhase($"\'{char.ConvertFromUtf32(c)}\'", char_trend, char_index++, UTF32: c)
-                            : new CharrangePhase($"[{unicode_class}]", char_trend, char_index++)
+                            ? new CharacterPhase($"\'{char.ConvertFromUtf32(c)}\'", chars_trend, char_index++, UTF32: c)
+                            : new CharrangePhase($"[{unicode_class}]", chars_trend, char_index++)
                              .TryBindFilter(new()
                              {
                                  Type = CharRangeType.UnicodeClass,
                                  Class = unicode_class,
                              })));
-                        _phase.Sources.Add(char_trend);
                         phases.Add(_phase);
                     }
 
-                    trend.Line.Add(_phase = new(phrase.Text, phrase_trend, current_index++, [char_trend]));
-                    char_trend.Targets.Add(_phase);
+                    trend.Line.Add(_phase = new(text, phrase_trend, current_index++, [chars_trend]));
                 }
                 else
                 {
-                    trend.Line.Add(_phase = new(phrase.Text, phrase_trend, current_index++));
+                    trend.Line.Add(_phase = new(text, phrase_trend, current_index++));
                 }
                 phases.Add(_phase);
             }
             trends.Add(trend);
         }
 
-        foreach(var trend in trends)
+        foreach (var trend in trends)
         {
-            foreach(var phase in trend.Line)
+            foreach (var phase in trend.Line)
             {
                 var founds = trends.Where(t => t.Name == phase.Name).ToArray();
                 phase.Sources.UnionWith(founds);
-                foreach(var found in founds)
-                {
-                    found.Targets.Add(phase);
-                }
+                foreach (var found in founds) found.Targets.Add(phase);
             }
         }
 
-        return (trends,phases);
+        return (trends, phases);
     }
 }

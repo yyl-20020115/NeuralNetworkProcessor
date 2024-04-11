@@ -1,4 +1,4 @@
-﻿using NNP.Core;
+﻿using NeuralNetworkProcessor.Core;
 
 namespace NeuralNetworkCodeEdit.Calculator;
 

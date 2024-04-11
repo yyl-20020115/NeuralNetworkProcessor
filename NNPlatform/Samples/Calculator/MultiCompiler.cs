@@ -3,17 +3,21 @@ using IKVM.Reflection.Emit;
 using NeuralNetworkProcessor.Core;
 using NeuralNetworkProcessor.Reflection;
 using NeuralNetworkProcessor.ZRF;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace NeuralNetworkProcessorSample.Calculator;
 
-public class FastCompiler
+public class MultiCompiler
 {
     public string DefaultGlobalAssembliesCachePath { get; set; }
         = "C:\\Windows\\Microsoft.net\\Framework\\v4.0.30319\\";
 
     public Universe Universe { get; } = new();
     public FastParser Parser { get; private set; }
-    public FastCompiler()
+    public MultiCompiler()
     {
         if (ModelExtractor.Extract(
             typeof(FastCompiler).Assembly,
@@ -29,7 +33,7 @@ public class FastCompiler
              Path.Combine(DefaultGlobalAssembliesCachePath, $"{args.Name}.dll"));
     public virtual List<Results> Parse(string expression)
         => this.Parser.Parse(expression);
-    public virtual Node Build(List<Results> results)
+    public virtual Node? Build(List<Results> results)
         => results != null && results.Count > 0
             ? ModelBuilder<Node, InterpretrContext, double>.Build(
                 results.First(), typeof(Node), typeof(Node).Assembly) as Node

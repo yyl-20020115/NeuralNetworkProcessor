@@ -1,9 +1,8 @@
 ﻿using IKVM.Reflection;
 using IKVM.Reflection.Emit;
-using NNP.Core;
-using NNP.MT;
-using NNP.Reflection;
-using NNP.ZRF;
+using NeuralNetworkProcessor.Core;
+using NeuralNetworkProcessor.Reflection;
+using NeuralNetworkProcessor.ZRF;
 
 namespace NeuralNetworkProcessorSample.Calculator;
 
@@ -13,7 +12,7 @@ public class MultiCompiler
         = "C:\\Windows\\Microsoft.net\\Framework\\v4.0.30319\\";
 
     public Universe Universe { get; } = new();
-    public MultiParser Parser { get; private set; }
+    public FastParser Parser { get; private set; }
     public MultiCompiler()
     {
         if (ModelExtractor.Extract(
@@ -21,7 +20,7 @@ public class MultiCompiler
             typeof(Node),
             typeof(Node).Namespace,
             nameof(Calculator)) is Knowledge knowledge)
-            this.Parser = new MultiParser().Bind(Builder.Rebuild(knowledge));
+            this.Parser = new FastParser().Bind(Builder.Rebuild(knowledge));
         this.Universe.AssemblyResolve += Universe_AssemblyResolve;
     }
 

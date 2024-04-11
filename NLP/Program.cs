@@ -1,4 +1,4 @@
-﻿using NNP.Trainers;
+﻿using NeuralNetworkProcessor.Trainers;
 using System;
 using System.IO;
 using System.Linq;

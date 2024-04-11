@@ -1,5 +1,5 @@
 ﻿using NeuralNetworkCodeEdit.Calculator;
-using NNP.Core;
+using NeuralNetworkProcessor.Core;
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Documents;

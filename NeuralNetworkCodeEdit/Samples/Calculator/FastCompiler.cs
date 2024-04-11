@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using IKVM.Reflection;
 using IKVM.Reflection.Emit;
-using NNP.Core;
-using NNP.Reflection;
-using NNP.ZRF;
+using NeuralNetworkProcessor.Core;
+using NeuralNetworkProcessor.Reflection;
+using NeuralNetworkProcessor.ZRF;
 
 namespace NeuralNetworkCodeEdit.Calculator;
 

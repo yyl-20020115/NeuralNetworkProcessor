@@ -1,5 +1,5 @@
-﻿using NNP.Core;
-using NNP.ZRF;
+﻿using NeuralNetworkProcessor.Core;
+using NeuralNetworkProcessor.ZRF;
 using System;
 using System.Collections.Generic;
 using System.Linq;

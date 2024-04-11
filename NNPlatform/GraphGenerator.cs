@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using GraphSharp.Controls;
-using NNP.Core;
+using NeuralNetworkProcessor.Core;
 using QuickGraph;
 
 namespace NNPlatform

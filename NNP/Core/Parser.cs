@@ -32,9 +32,11 @@ public class Parser
             var length = text.Length;
 
             var init_trends = this.Terminals
-                .Where(t => t.Accept(utf32))
-                .Select(t=>t.Parent)
+                .Where(terminal => terminal.Accept(utf32))
+                .Select(terminal=>terminal.Parent)
                 .Distinct()
+                .SelectMany(trend=>trend.Targets)
+                .Select(phase=>phase.Parent)
                 .ToList();
 
                     

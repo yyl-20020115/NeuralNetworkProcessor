@@ -1,7 +1,7 @@
 ﻿using Utilities;
-using NNP.ZRF;
-using NNP.Core;
-using NNP.Reflection;
+using NeuralNetworkProcessor.ZRF;
+using NeuralNetworkProcessor.Core;
+using NeuralNetworkProcessor.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace NeuralNetworkCodeEdit.Calculator;

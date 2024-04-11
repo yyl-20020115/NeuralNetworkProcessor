@@ -4,11 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
 using GraphSharp.Controls;
-using NNP.Core;
-using NNP.Reflection;
-using NNP.Samples.Calculator;
+using NeuralNetworkProcessor.Core;
+using NeuralNetworkProcessor.Reflection;
 using Utilities;
-using System.Windows.Input;
+using NeuralNetworkProcessorSample.Calculator;
 
 namespace NNPlatform
 {
@@ -34,7 +33,7 @@ namespace NNPlatform
     {
         protected int position = 0;
         protected Input input = null;
-        protected Compiler WorkingCompiler = new();
+        protected FastCompiler WorkingCompiler = new();
         protected List<Results> WorkingResults = null;
         public MainWindow()
         {
