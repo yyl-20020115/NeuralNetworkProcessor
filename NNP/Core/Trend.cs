@@ -21,6 +21,7 @@ public record class Trend(string Name = "", Description? Description = null, boo
     public int Progress = 0;
     public bool IsComplete => this.Progress == this.Line.Count;
     public bool IsTop => this.Targets.Count == 0;
+    public bool IsLeftRecursive =>this.Line.Count>0 && this.Line[0].Name==this.Name;
     public bool IsInitiator(Phase phase) => this.Line.Count > 0 && this.Line[0].Name == phase.Name;
     public bool IsAnyInitiator(HashSet<Phase> phases) => phases.Any(phase => this.IsInitiator(phase));
 

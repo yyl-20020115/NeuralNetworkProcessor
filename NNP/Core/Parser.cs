@@ -21,10 +21,11 @@ public class Parser
     public virtual List<Trend> Parse(TextReader Reader)
         => this.Parse(InputProvider.CreateInput(Reader));
 
+    public static int Step = 0;
     public static void DebugPrint<T>(string title, params T[] objects)
     {
         using var log = File.AppendText("log.txt");
-        log.WriteLine($"{title}:");
+        log.WriteLine($"{Step++} {title}:");
         if (objects.Length > 0)
         {
             log.WriteLine("\t" + string.Join(Environment.NewLine + "\t", objects));
@@ -38,7 +39,7 @@ public class Parser
         foreach (var (utf32, last) in input())
         {
             var text = char.ConvertFromUtf32(utf32);
-            DebugPrint("input", "char:"+text , "pos:"+position);
+
             //terminal and other target phases as bullets
             var bullets = this.Terminals
                 .Where(terminal => terminal.Accept(utf32))
@@ -47,36 +48,26 @@ public class Parser
                 .Cast<Phase>()
                 .ToHashSet(PhaseComparer.Default);
             
-            DebugPrint(nameof(bullets), bullets.ToArray());
-
             //all hits here are lexes
             var hits = bullets
                 .Where(bullet => bullet.Parent.IsInitiator(bullet))
                 .SelectMany(bullet => bullet.Parents).ToHashSet(TrendComparer.Default);
 
-            DebugPrint(nameof(hits), hits.ToArray());
-
             var previous = new HashSet<Trend>(TrendComparer.Default);
             while (true)
             {
                 this.Pool.UnionWith(hits);
-                DebugPrint(nameof(Pool), this.Pool.ToArray());
 
                 var dones = this.Pool.Where(hit => hit.Advance(bullets, position)).ToHashSet(TrendComparer.Default);
-
-                DebugPrint(nameof(dones), dones.ToArray());
 
                 if (dones.Count == 0 || dones.SetEquals(previous)) break;
 
                 var targets = dones
                     .SelectMany(done => done.Targets).ToHashSet(PhaseComparer.Default);
 
-                DebugPrint(nameof(targets), targets.ToArray());
-
                 //initiator only
                 hits = targets.SelectMany(target => target.Parents)
                     .Where(hit => hit.IsAnyInitiator(targets)).ToHashSet(TrendComparer.Default);
-
 
                 //copy hits
                 hits = hits.Select(hit => hit with
@@ -85,8 +76,6 @@ public class Parser
                     StartPosition = position,
                     EndPosition = position
                 }).ToHashSet(TrendComparer.Default);
-
-                DebugPrint(nameof(hits), hits.ToArray());
 
                 var hash = bullets.SelectMany(bullet => bullet.Parents).ToHashSet(TrendComparer.Default);
                 foreach (var hit in hits)

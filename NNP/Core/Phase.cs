@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using Utilities;
 
 namespace NNP.Core;
@@ -27,7 +28,6 @@ public record class Phase(string Name, Trend Parent, TrendHashSet? Sources = def
     public long Position = -1;
     public virtual bool Accept(string Text) => Text == this.Name;
     public override string ToString() => this.Name;
-
     public StringBuilder Flattern(StringBuilder builder, HashSet<object>? visited = null)
     {
         if ((visited ??= []).Add(this))

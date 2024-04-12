@@ -1,408 +1,252 @@
-input:
+0 input:
 	char:3
 	pos:0
 ================================
-bullets:
+1 bullets:
 	3
 ================================
-hits:
+2 hits:
 	"3" : 3
 ================================
-Pool:
+3 Pool:
 	"3" : 3
 ================================
-dones:
+4 dones:
 	"3" : 3
 ================================
-targets:
+5 targets:
 	"3"
 ================================
-hits:
+6 hits:
 	Digit : "3"
 ================================
-Pool:
+7 Pool:
 	Digit : "3"
 ================================
-dones:
+8 dones:
 	Digit : "3"
 ================================
-targets:
-	Digit
-	Digit
+0 input:
+	char:3
+	pos:0
 ================================
-hits:
-	Integer : Digit
+1 bullets:
+	3
 ================================
-Pool:
-	Integer : Digit
+2 hits:
+	"3" : 3
 ================================
-dones:
-	Integer : Digit
+3 Pool:
+	"3" : 3
 ================================
-targets:
-	Integer
-	Integer
+4 dones:
+	"3" : 3
 ================================
-hits:
-	Integer : Integer, Digit
-	Factor : Integer
+0 input:
+	char:3
+	pos:0
 ================================
-Pool:
-	Integer : Integer, Digit
-	Factor : Integer
+1 bullets:
+	3
 ================================
-dones:
-	Factor : Integer
+2 hits:
+	"3" : 3
 ================================
-targets:
-	Factor
-	Factor
-	Factor
-	Factor
-	Factor
+3 Pool:
+	"3" : 3
 ================================
-hits:
-	Term : Factor
+4 dones:
+	"3" : 3
 ================================
-Pool:
-	Integer : Integer, Digit
-	Term : Factor
+0 input:
+	char:3
+	pos:0
 ================================
-dones:
-	Term : Factor
+1 bullets:
+	3
 ================================
-targets:
-	Term
-	Term
-	Term
-	Term
-	Term
-	Term
-	Term
-	Term
-	Term
+2 hits:
+	"3" : 3
 ================================
-hits:
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Term
+3 Pool:
+	"3" : 3
 ================================
-Pool:
-	Integer : Integer, Digit
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Term
+4 dones:
+	"3" : 3
 ================================
-dones:
-	Expression : Term
+0 input:
+	char:3
+	pos:0
 ================================
-targets:
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
+1 bullets:
+	3
 ================================
-hits:
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
+2 hits:
+	"3" : 3
 ================================
-Pool:
-	Integer : Integer, Digit
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
+3 Pool:
+	"3" : 3
 ================================
-dones:
-	Top : Expression
+4 dones:
+	"3" : 3
 ================================
-targets:
+0 input:
+	char:3
+	pos:0
 ================================
-hits:
+1 bullets:
+	3
 ================================
-Pool:
-	Integer : Integer, Digit
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
+2 hits:
+	"3" : 3
 ================================
-dones:
-	Top : Expression
+3 Pool:
+	"3" : 3
 ================================
-input:
-	char:2
-	pos:1
+4 dones:
+	"3" : 3
 ================================
-bullets:
-	2
+0 input:
+	char:3
+	pos:0
 ================================
-hits:
-	"2" : 2
+1 bullets:
+	3
 ================================
-Pool:
-	Integer : Integer, Digit
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
-	"2" : 2
+2 hits:
+	"3" : 3
 ================================
-dones:
-	Top : Expression
-	"2" : 2
+3 Pool:
+	"3" : 3
 ================================
-targets:
-	"2"
+4 dones:
+	"3" : 3
 ================================
-hits:
-	Digit : "2"
+0 input:
+	char:3
+	pos:0
 ================================
-Pool:
-	Integer : Integer, Digit
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
-	Digit : "2"
+1 bullets:
+	3
 ================================
-dones:
-	Top : Expression
-	Digit : "2"
+2 hits:
+	"3" : 3
 ================================
-targets:
-	Digit
-	Digit
+3 Pool:
+	"3" : 3
 ================================
-hits:
-	Integer : Digit
+4 dones:
+	"3" : 3
 ================================
-Pool:
-	Integer : Integer, Digit
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
-	Integer : Digit
+0 input:
+	char:3
+	pos:0
 ================================
-dones:
-	Integer : Integer, Digit
-	Top : Expression
-	Integer : Digit
+1 bullets:
+	3
 ================================
-targets:
-	Integer
-	Integer
+2 hits:
+	"3" : 3
 ================================
-hits:
-	Integer : Integer, Digit
-	Factor : Integer
+3 Pool:
+	"3" : 3
 ================================
-Pool:
-	Factor : Integer
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
-	Integer : Integer, Digit
+4 dones:
+	"3" : 3
 ================================
-dones:
-	Factor : Integer
-	Top : Expression
+0 input:
+	char:3
+	pos:0
 ================================
-targets:
-	Factor
-	Factor
-	Factor
-	Factor
-	Factor
+1 bullets:
+	3
 ================================
-hits:
-	Term : Factor
+2 hits:
+	"3" : 3
 ================================
-Pool:
-	Term : Factor
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
-	Integer : Integer, Digit
+3 Pool:
+	"3" : 3
 ================================
-dones:
-	Term : Factor
-	Top : Expression
+4 dones:
+	"3" : 3
 ================================
-targets:
-	Term
-	Term
-	Term
-	Term
-	Term
-	Term
-	Term
-	Term
-	Term
+0 input:
+	char:3
+	pos:0
 ================================
-hits:
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Term
+1 bullets:
+	3
 ================================
-Pool:
-	Term : Term, Mul, Factor
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
-	Integer : Integer, Digit
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Term
+2 hits:
+	"3" : 3
 ================================
-dones:
-	Top : Expression
-	Expression : Term
+3 Pool:
+	"3" : 3
 ================================
-targets:
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
-	Expression
+4 dones:
+	"3" : 3
 ================================
-hits:
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
+0 input:
+	char:3
+	pos:0
 ================================
-Pool:
-	Term : Term, Mul, Factor
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
-	Integer : Integer, Digit
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
+1 bullets:
+	3
 ================================
-dones:
-	Top : Expression
-	Top : Expression
+2 hits:
+	"3" : 3
 ================================
-targets:
+3 Pool:
+	"3" : 3
 ================================
-hits:
+4 dones:
+	"3" : 3
 ================================
-Pool:
-	Term : Term, Mul, Factor
-	Term : Term, Mul, Factor
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
-	Integer : Integer, Digit
-	Term : Term, Mul, _, Factor
-	Term : Term, Div, Factor
-	Term : Term, Div, _, Factor
-	Expression : Expression, Add, Term
-	Expression : Expression, Add, _, Term
-	Expression : Expression, Sub, Term
-	Expression : Expression, Sub, _, Term
-	Top : Expression
-	Top : Expression, _
+0 input:
+	char:3
+	pos:0
 ================================
-dones:
-	Top : Expression
-	Top : Expression
+1 bullets:
+	3
+================================
+2 hits:
+	"3" : 3
+================================
+3 Pool:
+	"3" : 3
+================================
+4 dones:
+	"3" : 3
+================================
+0 input:
+	char:3
+	pos:0
+================================
+1 bullets:
+	3
+================================
+2 hits:
+	"3" : 3
+================================
+3 Pool:
+	"3" : 3
+================================
+4 dones:
+	"3" : 3
+================================
+0 input:
+	char:3
+	pos:0
+================================
+1 bullets:
+	3
+================================
+2 hits:
+	"3" : 3
+================================
+3 Pool:
+	"3" : 3
+================================
+4 dones:
+	"3" : 3
 ================================
