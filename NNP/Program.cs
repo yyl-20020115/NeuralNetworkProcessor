@@ -38,16 +38,17 @@ public static class ProgramEntry
             var path = root + i + ".dll";
             var compiler = new FastCompiler();
             var interpreter = new Interpreter();
-            var tree = compiler.Parse(l);
-            var node = compiler.Build(tree);
-            var result = interpreter.Run(node);
+            var branches = compiler.Parse(l);
             var printer = new TrendPrinter();
-            printer.PrintList(tree);
+            printer.PrintList(branches);
 
-            var dump = tree.Count > 0 ? tree[0].Flattern() : string.Empty;
+            //var node = compiler.Build(branches);
+            //var result = interpreter.Run(node);
+
+            var dump = branches.Count > 0 ? branches[0].Flattern() : string.Empty;
 
             writer.WriteLine($"Input({i}):\"{l}\"");
-            writer.WriteLine($"Result: {dump} = {result}");
+//            writer.WriteLine($"Result: {dump} = {result}");
             writer.WriteLine($"PASSED: {(dump == l ? "YES" : "NO")}");
             writer.WriteLine($"Tree:");
             writer.Write(printer);
@@ -56,7 +57,7 @@ public static class ProgramEntry
             if (compile)
             {
                 compiler.Compile(
-                    tree,
+                    branches,
                     path,
                     "CalcFunction" + i,
                     "CalcModule" + i,

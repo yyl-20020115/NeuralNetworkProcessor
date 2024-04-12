@@ -27,7 +27,7 @@ public class TrendPrinter(TextWriter? writer = null)
                 indents.Push(count <= 1 ? Spaces : Vert);
                 {
                     this.PrintLine(
-                        $"{trend.Description}({0},{0})=\"{trend}\"");
+                        $"{trend.Description}({trend.StartPosition})=\"{trend}\"");
                     this.Print(trend, indents);
                 }
                 indents.Pop();
@@ -38,7 +38,7 @@ public class TrendPrinter(TextWriter? writer = null)
                 indents.Push(Spaces);
                 {
                     this.PrintLine(
-                        $"{trend.Description}({0},{0})=\"{trend}\"");
+                        $"{trend.Description}({trend.StartPosition},{trend.EndPosition})=\"{trend}\"");
                     this.Print(trend, indents);
                 }
                 indents.Pop();
@@ -46,30 +46,34 @@ public class TrendPrinter(TextWriter? writer = null)
         }
         return this;
     }
-    public TrendPrinter Print(Trend trend, ListStack<string>? indents = null, bool many =false, bool tail=false)
+    public TrendPrinter Print(Trend trend, ListStack<string>? indents = null, bool many =false, bool tail=false ,HashSet<Trend>? visited = null)
     {
-        if (trend != null)
+        visited ??= [];
+        if (trend != null && visited.Add(trend))
         {
             indents ??= [];
             var condition = many && !tail;
-            this.Print(string.Join(string.Empty,indents) + (condition ? Branch : Tail));
-            this.PrintLine($"{trend.Description}:({0},{0})");
-            indents.Push(condition ? Vert : Spaces);
+            this.Print(string.Join("",indents) + (condition ? Branch : Tail));
+            if (trend.Description != Description.Default)
             {
-                this.Print(trend, indents);
+                this.PrintLine($"{trend.Description}:({trend.StartPosition},{trend.EndPosition})");
+                indents.Push(condition ? Vert : Spaces);
+                {
+                    foreach (var sub_trend in trend.Line.SelectMany(line => line.Sources))
+                    {
+                        this.Print(sub_trend, indents, visited: visited);
+                    }
+                }
+                indents.Pop();
             }
-            indents.Pop();
-        }
-        return this;
-    }
-    public TrendPrinter Print(Description description, ListStack<string>? indents = null)
-    {
-        indents ??= [];
-        var length = description.Phrases.Count;
-        var many = length > 1;
-        for (int i = 0; i < length; i++)
-        {
-            var phrase = description.Phrases[i];
+            else
+            {
+                foreach(var phase in trend.Line)
+                {
+                    this.Print(phase.ToString());
+                }
+                this.PrintLine();
+            }
         }
         return this;
     }

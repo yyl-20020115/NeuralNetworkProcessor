@@ -20,7 +20,7 @@ public class FastCompiler
             typeof(Node),
             typeof(Node).Namespace??"",
             nameof(Calculator)) is Concept concept)
-            this.Parser = new NNP.Core.Parser().Bind(concept);
+            this.Parser = new Core.Parser(concept);
         this.Universe.AssemblyResolve += Universe_AssemblyResolve;
     }
 

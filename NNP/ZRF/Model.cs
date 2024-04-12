@@ -1,4 +1,5 @@
 ﻿using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace NNP.ZRF;
 
@@ -57,6 +58,29 @@ public sealed record Description(List<Phrase> Phrases) : IZRFElement
     //public override int GetHashCode() => base.GetHashCode();
     public override string ToString()
          => this.Phrases.Aggregate("", (a, b) => a + (string.IsNullOrEmpty(a) ? "":" ") + b.ToString());
+
+    public HashSet<string> GetBranches(Concept concept, HashSet<string>? names = null, HashSet<Description>? visited = null)
+    {
+        names ??= [];
+        visited ??= [];
+        if (visited.Add(this))
+        {
+            names.Add(this.Text);
+            var descriptions = new List<Description>();
+            foreach(var phrase in this.Phrases)
+            {
+                descriptions.AddRange(
+                    concept.Definitions.Where(
+                        d => d.Text == phrase.Text).SelectMany(d => d.Descriptions)
+                );
+            }
+            foreach(var description in descriptions)
+            {
+                description.GetBranches(concept, names, visited);
+            }
+        }
+        return names;
+    }
 }
 public sealed record Definition(string Text, List<Description> Descriptions,bool IsDynamicBuilt = false) : IZRFSymbol, IZRFElement
 {
@@ -89,7 +113,15 @@ public sealed record Definition(string Text, List<Description> Descriptions,bool
 }
 public sealed record Concept(string Topic, List<Definition> Definitions) :IZRFElement
 {
-    public const int DefaultMaxOptionals = 6;
+    public static string Serialize(Concept concept)
+    => new SerializerBuilder(concept.GetType().Namespace ?? string.Empty)
+        .WithNamingConvention(CamelCaseNamingConvention.Instance)
+        .Build().Serialize(concept);
+    public static Concept Deserialize(string text)
+        => new DeserializerBuilder(typeof(Concept).Namespace ?? string.Empty, typeof(Concept).Assembly)
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build().Deserialize<Concept>(text);
+
     public static readonly Concept Default = new("", []);
     public string Text =>nameof(Concept);
 
@@ -100,10 +132,6 @@ public sealed record Concept(string Topic, List<Definition> Definitions) :IZRFEl
         foreach (var d in this.Definitions) { d.Bind(this); d.Index = i++; }
         return this;
     }
-    public IList<Description> GetDescriptionsWithMoreOptionalsThan(int MaxOptionals = DefaultMaxOptionals) 
-        => this.Definitions.SelectMany(d => d.Descriptions).Where(d => d.Phrases.Count(c => c.Optional) > MaxOptionals).ToArray();
-    public bool AnyDescriptionsWithMoreOptionalsThan(int MaxOptionals = DefaultMaxOptionals)
-        => this.Definitions.SelectMany(d => d.Descriptions).Any(d => d.Phrases.Count(c => c.Optional) > MaxOptionals);
     public Concept() : this("", []) { }
     //public override int GetHashCode() => base.GetHashCode();
     public override string ToString()

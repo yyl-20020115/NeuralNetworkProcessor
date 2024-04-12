@@ -4,7 +4,8 @@ using Utilities;
 namespace NNP.Core;
 
 /// <summary>
-/// Trend0 Line = Phase0 Phase1 Phase2 ...
+/// Trend0 Line = [Phase0 Phase1 Phase2 ...]
+///         Targets = {PhaseA,PhaseB,PhaseC}
 /// Phase0 Sources= {
 ///   Trend0;
 ///   Trend1;
@@ -15,27 +16,33 @@ namespace NNP.Core;
 /// <param name="Parent"></param>
 public record class Phase(string Name, Trend Parent, int Index = -1, HashSet<Trend>? Sources = default)
 {
+    public static int IndexBase { get; protected set; } = 0;
+    public readonly int Index = Index>=0?Index:IndexBase++;
     public readonly string Name = Name;
-    public readonly Trend Parent = Parent;
+    public readonly HashSet<Trend> Parents = [Parent];
     public readonly HashSet<Trend> Sources = Sources ?? [];
-    public int Index = Index;
     public virtual bool Accept(string Text) => Text == this.Name;
     public override string ToString() => this.Name;
 
-    public StringBuilder Flattern(StringBuilder builder)
+    public StringBuilder Flattern(StringBuilder builder, HashSet<object>? visited = null)
     {
-        if (Sources.Count == 0)
+        if ((visited ??= []).Add(this))
         {
-            builder.Append(this.Name);
-        }
-        else
-        {
-            foreach (var source in this.Sources)
-                source.Flattern(builder);
+            if (Sources.Count == 0)
+            {
+                builder.Append(this.ToString());
+            }
+            else
+            {
+                foreach (var source in this.Sources)
+                    source.Flattern(builder, visited);
+            }
         }
         return builder;
     }
     public string Flattern() => this.Flattern(new ()).ToString();
+
+    public string Describe() => $"{this.Name} => Sources:{string.Join(",",this.Sources)};Parents:{string.Join(",",this.Parents)}";
 }
 
 public abstract record TerminalPhase(string Name, Trend Parent, int Index = -1) : Phase(Name, Parent, Index)
@@ -51,7 +58,7 @@ public record CharacterPhase(string Name, Trend Parent, int Index = -1, int UTF3
     public readonly int TargetChar = UTF32;
     public override bool Accept(int UTF32) => UTF32 == this.TargetChar;
     public override string ToString()
-        => $"['{UnicodeClassTools.ToText(this.TargetChar)}']";
+        => $"{UnicodeClassTools.ToText(this.TargetChar)}";
 }
 public record CharrangePhase(string Name, Trend Parent, int Index = -1) : TerminalPhase(Name, Parent, Index)
 {

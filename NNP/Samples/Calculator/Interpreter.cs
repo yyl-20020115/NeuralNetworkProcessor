@@ -13,7 +13,7 @@ public partial record class Node : INode<Node, InterpretrContext, double>
     public virtual object? PatternTuple { get; protected set; } = null;
     public virtual object? this[int index]
         => ValueTupleUtils.GetValueTupleElement(this.PatternTuple as ITuple, index);
-    public virtual Node Compose(InterpretrContext context, string pattern, params (int index, string name, object value)[] parameters)
+    public virtual Node? Compose(InterpretrContext? context, string pattern, params (int index, string name, object value)[] parameters)
     {
         this.PatternName = pattern;
         if (parameters.Length > 0)
@@ -21,9 +21,9 @@ public partial record class Node : INode<Node, InterpretrContext, double>
                     parameters.Select(parameter => parameter.value).ToArray());
         return this;
     }
-    public virtual double Process(InterpretrContext context, double value)
+    public virtual double Process(InterpretrContext? context, double value)
         => this[0] is Node node ? node.Process(context, value) : value;
-    public virtual double AsResult(InterpretrContext context, bool logic)
+    public virtual double AsResult(InterpretrContext? context, bool logic)
         => logic ? 1.0 : 0.0;
 }
 public partial record class Digit : Node
@@ -43,7 +43,7 @@ public partial record class Integer : Node
         _ => value.ToString(),
     };
 
-    public override double Process(InterpretrContext context, double value)
+    public override double Process(InterpretrContext? context, double value)
        => double.TryParse(this.ToString(value), out var result)
         ? result
         : value
@@ -51,7 +51,7 @@ public partial record class Integer : Node
 }
 public partial record class Term : Node
 {
-    public override double Process(InterpretrContext context, double value)
+    public override double Process(InterpretrContext? context, double value)
         => this.PatternTuple switch
         {
             (Term m, Mul, _, Factor p) => m.Process(context, value) * p.Process(context, value),
@@ -62,7 +62,7 @@ public partial record class Term : Node
 }
 public partial record class Expression : Node
 {
-    public override double Process(InterpretrContext context, double value)
+    public override double Process(InterpretrContext? context, double value)
         => this.PatternTuple switch
         {
             (Expression a, Add, _, Term m) => a.Process(context, value) + m.Process(context, value),
@@ -74,7 +74,7 @@ public partial record class Expression : Node
 
 public partial record class Factor : Node
 {
-    public override double Process(InterpretrContext context, double value)
+    public override double Process(InterpretrContext? context, double value)
         => this.PatternTuple switch
         {
             ValueTuple<Integer>(var i) => i.Process(context, value),
@@ -84,7 +84,7 @@ public partial record class Factor : Node
 }
 public partial record class Top : Node
 {
-    public override double Process(InterpretrContext context, double value)
+    public override double Process(InterpretrContext? context, double value)
         => this.PatternTuple switch
         {
             (_, Expression e, _) => e.Process(context, value),
@@ -103,7 +103,7 @@ public partial record class Interpreter
             typeof(Node),
             typeof(Node).Namespace??"",
             nameof(Calculator)) is Concept concept)
-            this.Parser = new Core.Parser().Bind(concept);
+            this.Parser = new Core.Parser(concept);
     }
 
     public virtual List<Trend> Parse(string expression)

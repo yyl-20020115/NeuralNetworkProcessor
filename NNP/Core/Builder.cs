@@ -2,27 +2,17 @@
 using NNP.ZRF;
 using Utilities;
 using System.Numerics;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace NNP.Core;
 
 public static class Builder
 {
-    public static string Serialize(Concept concept)
-        => new SerializerBuilder(concept.GetType().Namespace ?? string.Empty)
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build().Serialize(concept);
-    public static Concept Deserialize(string text)
-        => new DeserializerBuilder(typeof(Concept).Namespace ?? string.Empty, typeof(Concept).Assembly)
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build().Deserialize<Concept>(text);
-    public static readonly BigInteger one = BigInteger.One;
-    public static readonly BigInteger zero = BigInteger.Zero;
-
-    public static (List<Trend> trends, List<Phase> phases) Build(Concept concept)
+    public static readonly BigInteger _1_ = BigInteger.One;
+    public static readonly BigInteger _0_ = BigInteger.Zero;
+    public static (List<Trend> trends, List<Phase> phases,List<TerminalPhase> terminals) Build(Concept concept)
     {
         var global_index = 0;
+        var terminals = new List<TerminalPhase>();
         var phases = new List<Phase>();
         var trends = new List<Trend>();
         var descriptions = new List<Description>();
@@ -36,21 +26,21 @@ public static class Builder
                 var hit = BigInteger.Zero;
                 for (var i = 0; i < count; i++)
                 {
-                    var current = one << i;
+                    var current = _1_ << i;
                     max |= current;
                     if (description.Phrases[i].Optional)
                         continue;
                     hit |= current;
                 }
                 var hits = new HashSet<BigInteger>();
-                for (var t = zero; t <= max; t++)
+                for (var t = _0_; t <= max; t++)
                 {
                     var s = t | hit;
                     if (hits.Add(s))
                     {
                         var phrases = new List<Phrase>();
                         for (var i = 0; i < count; i++)
-                            if ((s & (one << i)) != zero) //disable optionals 
+                            if ((s & (_1_ << i)) != _0_) //disable optionals 
                                 phrases.Add(description.Phrases[i] with { Optional = false });
                         if (phrases.Count > 0)
                             descriptions.Add(new(phrases)
@@ -71,36 +61,31 @@ public static class Builder
             var trend = new Trend(description.Definition.Text, global_index++, description);
             foreach (var phrase in description.Phrases)
             {
-                var phrase_trend = new Trend();
                 var text = phrase.Text;
                 var declosed = UnicodeHelper.TryDeclose(text);
-
-                Phase _phase;
+                Phase trend_phase ;
+                trend.Line.Add(trend_phase = new Phase(text, trend, current_index++));
+                phases.Add(trend_phase);
                 if (declosed != text && declosed.Length > 0)
                 {
+                    var phrase_trend = new Trend(text, IsLex: true, Target: trend_phase);
                     var char_index = 0;
-                    var chars_trend = new Trend(text);
                     foreach (var (unicode_class, c, len) in UnicodeHelper.NextPoint(declosed))
                     {
-                        chars_trend.Line.Add(
-                            _phase = (unicode_class == UnicodeClass.Unknown
-                            ? new CharacterPhase($"\'{char.ConvertFromUtf32(c)}\'", chars_trend, char_index++, UTF32: c)
-                            : new CharrangePhase($"[{unicode_class}]", chars_trend, char_index++)
+                        TerminalPhase terminal_phase;
+                        phrase_trend.Line.Add(
+                            terminal_phase = (unicode_class == UnicodeClass.Unknown
+                            ? new CharacterPhase($"\'{char.ConvertFromUtf32(c)}\'", phrase_trend, char_index++, UTF32: c)
+                            : new CharrangePhase($"[{unicode_class}]", phrase_trend, char_index++)
                              .TryBindFilter(new()
                              {
                                  Type = CharRangeType.UnicodeClass,
                                  Class = unicode_class,
                              })));
-                        phases.Add(_phase);
+                        terminals.Add(terminal_phase);
                     }
+                }
 
-                    trend.Line.Add(_phase = new(text, phrase_trend, current_index++, [chars_trend]));
-                }
-                else
-                {
-                    trend.Line.Add(_phase = new(text, phrase_trend, current_index++));
-                }
-                phases.Add(_phase);
             }
             trends.Add(trend);
         }
@@ -110,11 +95,15 @@ public static class Builder
             foreach (var phase in trend.Line)
             {
                 var founds = trends.Where(t => t.Name == phase.Name).ToArray();
-                phase.Sources.UnionWith(founds);
-                foreach (var found in founds) found.Targets.Add(phase);
+                if (founds.Length > 0)
+                {
+                    phase.Sources.UnionWith(founds);
+                    foreach (var found in founds) found.Targets.Add(phase);
+                }
             }
+            trend.BranchNames.UnionWith(trend.Description.GetBranches(concept));
         }
-
-        return (trends, phases);
+        
+        return (trends, phases, terminals);
     }
 }

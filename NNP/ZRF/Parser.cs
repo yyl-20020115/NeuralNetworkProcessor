@@ -62,7 +62,7 @@ public static class Parser
         }
         if ((text = builder.ToString().Trim()).Length > 0) yield return text;
     }
-    public static ParseResult Parse(TextReader reader, string language = "", int MaxOptionals = Concept.DefaultMaxOptionals)
+    public static ParseResult Parse(TextReader reader, string language = "")
     {
         if (reader == null) return new ParseResult(ParseStatus.InvalidReader);
         var name = "";
@@ -97,14 +97,12 @@ public static class Parser
                         : new(s, false) { Index = k++ });
 
                 var oc = fs.Count(s => s.Optional);
-                if (oc > MaxOptionals)
-                    return new(ParseStatus.TooManyOptionals, null, oc, n);
                 if (fs.Count > 0) pb.Add(new(fs) { Index = j });
             }
         }
         return new(ParseStatus.OK, new Concept(language, db).Compact().BackBind());
     }
-    public static ParseResult Parse(YamlStream stream, string language = "", int MaxOptionals = Concept.DefaultMaxOptionals)
+    public static ParseResult Parse(YamlStream stream, string language = "")
     {
         if (stream == null) return new ParseResult(ParseStatus.InvalidReader);
         var defs = new List<Definition>();
