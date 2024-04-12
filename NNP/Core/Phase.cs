@@ -16,13 +16,13 @@ namespace NNP.Core;
 /// <param name="Parent"></param>
 public record class Phase(string Name, Trend Parent, TrendHashSet? Sources = default)
 {
-    public static int IndexBase { get; protected set; } = 0;
-    public readonly int Index = IndexBase++;
+    public static long IdentityBase = 0;
+    public readonly long Identity = IdentityBase++;
     public readonly string Name = Name;
     public readonly TrendHashSet Parents = Parent != null
         ? [Parent]
         : [];
-    public readonly TrendHashSet Sources 
+    public TrendHashSet Sources 
         = Sources ?? [];
     public virtual bool Accept(string Text) => Text == this.Name;
     public override string ToString() => this.Name;
@@ -47,7 +47,7 @@ public record class Phase(string Name, Trend Parent, TrendHashSet? Sources = def
 
     public string Describe() => $"{this.Name} => Sources:{string.Join(",",this.Sources)};Parents:{string.Join(",",this.Parents)}";
 
-    public override int GetHashCode() => this.Name.GetHashCode() ^ this.Index;
+    public override int GetHashCode() => this.Name.GetHashCode() ^ (int)this.Identity;
 }
 
 public abstract record TerminalPhase(string Name, Trend Parent) : Phase(Name, Parent)

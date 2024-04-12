@@ -5,8 +5,8 @@ namespace NNP.Core;
 
 public record class Trend(string Name = "", Description? Description = null, bool IsLex = false, Phase? Target = null)
 {
-    public static int IndexBase { get; protected set; } = 0;
-    public readonly int Index = IndexBase++;
+    public static long IdentityBase = 0;
+    public long Identity = IdentityBase++;
     public readonly string Name = Name;
     public readonly List<Phase> Line = [];
     public readonly PhaseHashSet Targets = Target != null
@@ -40,9 +40,9 @@ public record class Trend(string Name = "", Description? Description = null, boo
         {
             var p = Line[i];
             progress++;
-            if (!p.Parents.Select(p => p.Index).Contains(this.Index)) continue;
+            if (!p.Parents.Select(p => p.Identity).Contains(this.Identity)) continue;
 
-            if (bullets.Select(b => b.Index).Contains(p.Index))
+            if (bullets.Select(b => b.Identity).Contains(p.Identity))
             {
                 this.Progress = progress;
                 p.Parents.Remove(this);
@@ -74,5 +74,5 @@ public record class Trend(string Name = "", Description? Description = null, boo
 
     public string Describe() => $"{this.Name} => Line:{string.Join(",", this.Line)};Targets:{string.Join(",", this.Targets)}";
 
-    public override int GetHashCode() => this.Name.GetHashCode() ^ this.Index;
+    public override int GetHashCode() => this.Name.GetHashCode() ^ (int)this.Identity;
 }

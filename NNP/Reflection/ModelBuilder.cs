@@ -34,7 +34,7 @@ public static class ModelBuilder<N, C, V> where N : class
                 && type != null && CreateObject(type) is N n)
             {
                 var names = new List<(Type Type, string Name)>();
-                var pi = GetPatternPropertyInfoAt(type, trend.Index);
+                var pi = GetPatternPropertyInfoAt(type, /*trend.Identity*/0);
                 //should not happen
                 if (pi == null) 
                     return null;

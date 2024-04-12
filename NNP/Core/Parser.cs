@@ -1,4 +1,5 @@
 ﻿using NNP.ZRF;
+using System.Security.Principal;
 using Utilities;
 
 namespace NNP.Core;
@@ -44,22 +45,20 @@ public class Parser
                 //copy hits
                 hits = hits.Select(hit => hit with
                 {
+                    Identity = Trend.IdentityBase++,
                     StartPosition = position,
                     EndPosition = position + text.Length
                 }) ;
-                //foreach(var hit in hits)
-                //{
-                //    System.Diagnostics.Debug.WriteLine(hit);
-                //}
+
                 
                 foreach(var hit in hits.Where(h=>!h.IsLex))
                 {
                     //reconnect the source
                     foreach(var bit in hit.Line)
                     {
-                        bit.Sources.Clear();
-                        bit.Sources.UnionWith(this.Pool.Where(
-                            trend => /*trend.StartPosition>=position &&*/ trend.Name == bit.Name));
+                        //use new source collection
+                        bit.Sources = [.. this.Pool.Where(
+                            trend => trend.Name == bit.Name)];
                         //reconnect to the copy
                         foreach(var source in bit.Sources)
                         {
@@ -89,24 +88,24 @@ public class Parser
             if (last)
             {
                 previous = Compact(Trim(previous));
-                return [.. previous.OrderByDescending(p => p.Index)];
+                return [.. previous.OrderByDescending(p => p.Identity)];
             }
         }
 
-        return [.. this.Pool.OrderByDescending(p => p.Index)];
+        return [.. this.Pool.OrderByDescending(p => p.Identity)];
     }
 
     public static HashSet<Trend> Compact(HashSet<Trend> trends)
     {
         var results = new HashSet<Trend>(trends);
-        var enumerator = trends.OrderByDescending(t => t.Index).GetEnumerator();
+        var enumerator = trends.OrderByDescending(t => t.Identity).GetEnumerator();
         var last = 0;
         while(enumerator.MoveNext())
         {
             results.ExceptWith(enumerator.Current.GetBranches(results));
             if (results.Count <= 1 || results.Count==last) break;
             last = results.Count;
-            enumerator = trends.OrderByDescending(t => t.Index).GetEnumerator();
+            enumerator = trends.OrderByDescending(t => t.Identity).GetEnumerator();
         }
         return results;
     }

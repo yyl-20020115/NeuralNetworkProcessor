@@ -9,7 +9,7 @@ public class PhaseComparer : IEqualityComparer<Phase>
     {
         if (x is null && y is null) return true;
         if (x is null && y is not null || y is not null && x is null) return false;
-        return x is not null && y is not null && x.Index == y.Index && x.Name == y.Name;
+        return x is not null && y is not null && x.Identity == y.Identity && x.Name == y.Name;
     }
     public int GetHashCode([DisallowNull] Phase phase) => phase.GetHashCode();
 }
