@@ -1,5 +1,4 @@
-﻿using NNP.Util;
-using NNP.ZRF;
+﻿using NNP.ZRF;
 using Utilities;
 
 namespace NNP.Core;
@@ -9,7 +8,8 @@ public class Parser
     public readonly List<Trend> Trends;
     public readonly List<Phase> Phases;
     public readonly List<TerminalPhase> Terminals;
-    protected readonly HashSet<Trend> Pool = [];
+
+    protected readonly TrendHashSet Pool = [];
     public Parser(Concept concept)
     {
         (this.Trends, this.Phases, this.Terminals) = Builder.Build(concept);
@@ -23,7 +23,6 @@ public class Parser
     public List<Trend> Parse(Input input)
     {
         var position = 0;
-        var previous = new HashSet<Trend>();
 
         foreach (var (utf32, last) in input())
         {
@@ -31,27 +30,36 @@ public class Parser
             //terminal and other target phases as bullets
             var bullets = this.Terminals
                 .Where(terminal => terminal.Accept(utf32))
-                .Distinct().Cast<Phase>().ToHashSet();
+                .Distinct().Cast<Phase>().ToHashSet(PhaseComparer.Default);
             //all hits here are lexes
             var hits = bullets
                 .Where(bullet => bullet.Parent.IsInitiator(bullet))
                 .SelectMany(bullet => bullet.Parents);
-            previous.Clear();
+            
+            //this.Pool.RemoveWhere(p => p.IsComplete);
+
+            var previous = new HashSet<Trend>(TrendComparer.Default);
             while (true)
             {
                 //copy hits
-                hits = hits.Select(t => t with
+                hits = hits.Select(hit => hit with
                 {
                     StartPosition = position,
-                    EndPosition = position + t.Flattern().Length
-                });
-                foreach(var hit in hits.ToArray())
+                    EndPosition = position + text.Length
+                }) ;
+                //foreach(var hit in hits)
+                //{
+                //    System.Diagnostics.Debug.WriteLine(hit);
+                //}
+                
+                foreach(var hit in hits.Where(h=>!h.IsLex))
                 {
                     //reconnect the source
                     foreach(var bit in hit.Line)
                     {
                         bit.Sources.Clear();
-                        bit.Sources.UnionWith(this.Pool.Where(trend => trend.Name == bit.Name));
+                        bit.Sources.UnionWith(this.Pool.Where(
+                            trend => /*trend.StartPosition>=position &&*/ trend.Name == bit.Name));
                         //reconnect to the copy
                         foreach(var source in bit.Sources)
                         {
@@ -62,13 +70,15 @@ public class Parser
 
                 this.Pool.UnionWith(hits);
 
-                var dones = this.Pool.Where(hit => hit.Advance(bullets, position)).ToHashSet();
+                var dones = this.Pool.Where(hit => hit.Advance(bullets, position)).ToHashSet(TrendComparer.Default);
 
-                if (dones.Count == 0) break;
-                if (dones.SetEquals(previous)) break;
-                this.Pool.ExceptWith(dones);
+                if (dones.Count == 0 || dones.SetEquals(previous)) break;
+                //this.Pool.ExceptWith(dones);
+                //var dup = new HashSet<Trend>(this.Pool.ToArray().Where(p => !p.IsComplete));
+                //this.Pool.Clear();
+                //this.Pool.UnionWith(dup);
                 var targets = dones
-                    .SelectMany(done => done.Targets).ToHashSet();
+                    .SelectMany(done => done.Targets).ToHashSet(PhaseComparer.Default);
                 //initiator only
                 hits = targets.SelectMany(target => target.Parents)
                     .Where(hit => hit.IsAnyInitiator(targets));
@@ -79,10 +89,11 @@ public class Parser
             if (last)
             {
                 previous = Compact(Trim(previous));
+                return [.. previous.OrderByDescending(p => p.Index)];
             }
         }
 
-        return [.. previous.OrderByDescending(p => p.Index)];
+        return [.. this.Pool.OrderByDescending(p => p.Index)];
     }
 
     public static HashSet<Trend> Compact(HashSet<Trend> trends)
@@ -116,5 +127,4 @@ public class Parser
         }
         return trend;
     }
-
 }

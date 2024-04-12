@@ -14,13 +14,16 @@ namespace NNP.Core;
 /// </summary>
 /// <param name="Name"></param>
 /// <param name="Parent"></param>
-public record class Phase(string Name, Trend Parent, int Index = -1, HashSet<Trend>? Sources = default)
+public record class Phase(string Name, Trend Parent, TrendHashSet? Sources = default)
 {
     public static int IndexBase { get; protected set; } = 0;
-    public readonly int Index = Index>=0?Index:IndexBase++;
+    public readonly int Index = IndexBase++;
     public readonly string Name = Name;
-    public readonly HashSet<Trend> Parents = [Parent];
-    public readonly HashSet<Trend> Sources = Sources ?? [];
+    public readonly TrendHashSet Parents = Parent != null
+        ? [Parent]
+        : [];
+    public readonly TrendHashSet Sources 
+        = Sources ?? [];
     public virtual bool Accept(string Text) => Text == this.Name;
     public override string ToString() => this.Name;
 
@@ -43,15 +46,17 @@ public record class Phase(string Name, Trend Parent, int Index = -1, HashSet<Tre
     public string Flattern() => this.Flattern(new ()).ToString();
 
     public string Describe() => $"{this.Name} => Sources:{string.Join(",",this.Sources)};Parents:{string.Join(",",this.Parents)}";
+
+    public override int GetHashCode() => this.Name.GetHashCode() ^ this.Index;
 }
 
-public abstract record TerminalPhase(string Name, Trend Parent, int Index = -1) : Phase(Name, Parent, Index)
+public abstract record TerminalPhase(string Name, Trend Parent) : Phase(Name, Parent)
 {
     public abstract bool Accept(int UTF32);
     public override string ToString()
         => $"{nameof(this.Name)}:{this.Name}";
 }
-public record CharacterPhase(string Name, Trend Parent, int Index = -1, int UTF32 = -1) : TerminalPhase(Name, Parent, Index)
+public record CharacterPhase(string Name, Trend Parent, int UTF32 = -1) : TerminalPhase(Name, Parent)
 {
     public const int NULLChar = 0;
     public const int EOFChar = -1;
@@ -60,7 +65,7 @@ public record CharacterPhase(string Name, Trend Parent, int Index = -1, int UTF3
     public override string ToString()
         => $"{UnicodeClassTools.ToText(this.TargetChar)}";
 }
-public record CharrangePhase(string Name, Trend Parent, int Index = -1) : TerminalPhase(Name, Parent, Index)
+public record CharrangePhase(string Name, Trend Parent) : TerminalPhase(Name, Parent)
 {
     public CharRangeFilter Filter { get; protected set; }
     public int UnicodeClassTemplate { get; set; } = 0;

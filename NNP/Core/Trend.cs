@@ -3,13 +3,16 @@ using System.Text;
 
 namespace NNP.Core;
 
-public record class Trend(string Name = "", int Index = -1, Description? Description = null, bool IsLex = false, Phase? Target = null)
+public record class Trend(string Name = "", Description? Description = null, bool IsLex = false, Phase? Target = null)
 {
     public static int IndexBase { get; protected set; } = 0;
-    public readonly int Index = Index >= 0 ? Index : IndexBase++;
+    public readonly int Index = IndexBase++;
     public readonly string Name = Name;
     public readonly List<Phase> Line = [];
-    public readonly HashSet<Phase> Targets = Target != null ? [Target] : [];
+    public readonly PhaseHashSet Targets = Target != null
+        ? [Target] 
+        : [];
+
     public readonly Description Description = Description ?? Description.Default;
     public readonly bool IsLex = IsLex;
     public readonly HashSet<string> BranchNames = [];
@@ -18,28 +21,28 @@ public record class Trend(string Name = "", int Index = -1, Description? Descrip
     public int Progress = 0;
     public bool IsComplete => this.Progress == this.Line.Count;
     public bool IsInitiator(Phase phase) => this.Line.Count > 0 && this.Line[0] == phase;
-    public bool IsAnyInitiator(HashSet<Phase> phases)=>phases.Any(phase=>this.IsInitiator(phase));
+    public bool IsAnyInitiator(HashSet<Phase> phases) => phases.Any(phase => this.IsInitiator(phase));
 
-    public bool IsBranch(Trend trend) => trend.Name!=this.Name && this.BranchNames.Contains(trend.Name);
+    public bool IsBranch(Trend trend) => trend.Name != this.Name && this.BranchNames.Contains(trend.Name);
 
-    public HashSet<Trend> GetBranches(HashSet<Trend> trends) 
+    public HashSet<Trend> GetBranches(HashSet<Trend> trends)
         => trends.Where(this.IsBranch).ToHashSet();
 
     public Trend UpdatePosition()
     {
-        
+
         return this;
     }
-    public bool Advance(HashSet<Phase> bullets,int position)
+    public bool Advance(HashSet<Phase> bullets, int position)
     {
         var progress = 0;
-        for(int i = 0;i< Line.Count; i++)
+        for (int i = 0; i < Line.Count; i++)
         {
             var p = Line[i];
             progress++;
-            if (!p.Parents.Select(p=>p.Index).Contains(this.Index)) continue;
+            if (!p.Parents.Select(p => p.Index).Contains(this.Index)) continue;
 
-            if (bullets.Select(b=>b.Index).Contains(p.Index))
+            if (bullets.Select(b => b.Index).Contains(p.Index))
             {
                 this.Progress = progress;
                 p.Parents.Remove(this);
@@ -50,7 +53,7 @@ public record class Trend(string Name = "", int Index = -1, Description? Descrip
     }
     public StringBuilder Flattern(StringBuilder builder, HashSet<object>? visited = null)
     {
-        if((visited ??= []).Add(this))
+        if ((visited ??= []).Add(this))
         {
             if (this.IsLex)
             {
@@ -67,8 +70,9 @@ public record class Trend(string Name = "", int Index = -1, Description? Descrip
         => this.Flattern(new()).ToString();
 
     public override string ToString()
-        => $"{this.Name} : {string.Join(", ",this.Line)}";
+        => $"{this.Name} : {string.Join(", ", this.Line)}";
 
     public string Describe() => $"{this.Name} => Line:{string.Join(",", this.Line)};Targets:{string.Join(",", this.Targets)}";
 
+    public override int GetHashCode() => this.Name.GetHashCode() ^ this.Index;
 }

@@ -11,7 +11,6 @@ public static class Builder
     public static readonly BigInteger _0_ = BigInteger.Zero;
     public static (List<Trend> trends, List<Phase> phases,List<TerminalPhase> terminals) Build(Concept concept)
     {
-        var global_index = 0;
         var terminals = new List<TerminalPhase>();
         var phases = new List<Phase>();
         var trends = new List<Trend>();
@@ -57,26 +56,24 @@ public static class Builder
         }
         foreach (var description in descriptions)
         {
-            var current_index = 0;
-            var trend = new Trend(description.Definition.Text, global_index++, description);
+            var trend = new Trend(description.Definition.Text, description);
             foreach (var phrase in description.Phrases)
             {
                 var text = phrase.Text;
                 var declosed = UnicodeHelper.TryDeclose(text);
                 Phase trend_phase ;
-                trend.Line.Add(trend_phase = new Phase(text, trend, current_index++));
+                trend.Line.Add(trend_phase = new Phase(text, trend));
                 phases.Add(trend_phase);
                 if (declosed != text && declosed.Length > 0)
                 {
                     var phrase_trend = new Trend(text, IsLex: true, Target: trend_phase);
-                    var char_index = 0;
                     foreach (var (unicode_class, c, len) in UnicodeHelper.NextPoint(declosed))
                     {
                         TerminalPhase terminal_phase;
                         phrase_trend.Line.Add(
                             terminal_phase = (unicode_class == UnicodeClass.Unknown
-                            ? new CharacterPhase($"\'{char.ConvertFromUtf32(c)}\'", phrase_trend, char_index++, UTF32: c)
-                            : new CharrangePhase($"[{unicode_class}]", phrase_trend, char_index++)
+                            ? new CharacterPhase($"\'{char.ConvertFromUtf32(c)}\'", phrase_trend, UTF32: c)
+                            : new CharrangePhase($"[{unicode_class}]", phrase_trend)
                              .TryBindFilter(new()
                              {
                                  Type = CharRangeType.UnicodeClass,
