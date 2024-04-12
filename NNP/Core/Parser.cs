@@ -1,5 +1,4 @@
 ﻿using NNP.ZRF;
-using System.Security.Principal;
 using Utilities;
 
 namespace NNP.Core;
@@ -35,64 +34,68 @@ public class Parser
             //all hits here are lexes
             var hits = bullets
                 .Where(bullet => bullet.Parent.IsInitiator(bullet))
-                .SelectMany(bullet => bullet.Parents);
-            
+                .SelectMany(bullet => bullet.Parents).ToHashSet(TrendComparer.Default);
             //this.Pool.RemoveWhere(p => p.IsComplete);
 
             var previous = new HashSet<Trend>(TrendComparer.Default);
             while (true)
             {
+                this.Pool.UnionWith(hits);
+
+                var dones = this.Pool.Where(hit => hit.Advance(bullets, position)).ToHashSet(TrendComparer.Default);
+
+                if (dones.Count == 0 || dones.SetEquals(previous)) break;
+
+                var targets = dones
+                    .SelectMany(done => done.Targets).ToHashSet(PhaseComparer.Default);
+                //initiator only
+                hits = targets.SelectMany(target => target.Parents)
+                    .Where(hit => hit.IsAnyInitiator(targets)).ToHashSet(TrendComparer.Default);
+
                 //copy hits
                 hits = hits.Select(hit => hit with
                 {
                     Identity = Trend.IdentityBase++,
                     StartPosition = position,
                     EndPosition = position + text.Length
-                }) ;
+                }).ToHashSet(TrendComparer.Default);
 
-                
-                foreach(var hit in hits.Where(h=>!h.IsLex))
+                var hash = bullets.SelectMany(bullet => bullet.Parents).ToHashSet(TrendComparer.Default);
+                foreach (var hit in hits)
                 {
                     //reconnect the source
-                    foreach(var bit in hit.Line)
+                    foreach (var bit in hit.Line)
                     {
-                        //use new source collection
-                        bit.Sources = [.. this.Pool.Where(
-                            trend => trend.Name == bit.Name)];
-                        //reconnect to the copy
+                        var bitset = new TrendHashSet();
                         foreach(var source in bit.Sources)
                         {
-                            source.Targets.Add(bit);
+                            if (hash.Contains(source))
+                                bitset.UnionWith(this.Pool.Where(
+                                    trend => trend.Name == source.Name));
+                        }
+                        if (bitset.Count > 0)
+                        {
+                            bit.Sources = bitset;
+                            foreach (var source in bitset)
+                            {
+                                source.Targets.Add(bit);
+                            }
                         }
                     }
                 }
-
-                this.Pool.UnionWith(hits);
-
-                var dones = this.Pool.Where(hit => hit.Advance(bullets, position)).ToHashSet(TrendComparer.Default);
-
-                if (dones.Count == 0 || dones.SetEquals(previous)) break;
-                //this.Pool.ExceptWith(dones);
-                //var dup = new HashSet<Trend>(this.Pool.ToArray().Where(p => !p.IsComplete));
-                //this.Pool.Clear();
-                //this.Pool.UnionWith(dup);
-                var targets = dones
-                    .SelectMany(done => done.Targets).ToHashSet(PhaseComparer.Default);
-                //initiator only
-                hits = targets.SelectMany(target => target.Parents)
-                    .Where(hit => hit.IsAnyInitiator(targets));
-
+                this.Pool.ExceptWith(dones.Where(done=>!done.IsTop));
                 previous = dones;
+                bullets = dones.SelectMany(done=>done.Targets).ToHashSet(PhaseComparer.Default);
             }
             position += text.Length;
             if (last)
             {
                 previous = Compact(Trim(previous));
-                return [.. previous.OrderByDescending(p => p.Identity)];
+                return [.. previous.OrderBy(p => p.Identity)];
             }
         }
 
-        return [.. this.Pool.OrderByDescending(p => p.Identity)];
+        return [.. this.Pool.OrderBy(p => p.Identity)];
     }
 
     public static HashSet<Trend> Compact(HashSet<Trend> trends)

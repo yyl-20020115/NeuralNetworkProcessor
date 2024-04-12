@@ -27,7 +27,7 @@ public class TrendPrinter(TextWriter? writer = null)
                 indents.Push(count <= 1 ? Spaces : Vert);
                 {
                     this.PrintLine(
-                        $"{trend.Description}({trend.StartPosition})=\"{trend}\"");
+                        $"{trend} ({trend.Identity})({trend.StartPosition},{trend.EndPosition})");
                     this.Print(trend, indents);
                 }
                 indents.Pop();
@@ -38,7 +38,7 @@ public class TrendPrinter(TextWriter? writer = null)
                 indents.Push(Spaces);
                 {
                     this.PrintLine(
-                        $"{trend.Description}({trend.StartPosition},{trend.EndPosition})=\"{trend}\"");
+                        $"{trend} ({trend.Identity})({trend.StartPosition},{trend.EndPosition})");
                     this.Print(trend, indents);
                 }
                 indents.Pop();
@@ -54,9 +54,9 @@ public class TrendPrinter(TextWriter? writer = null)
             indents ??= [];
             var condition = many && !tail;
             this.Print(string.Join("",indents) + (condition ? Branch : Tail));
-            if (trend.Description != Description.Default)
+            this.PrintLine($"{trend} ({trend.Identity})({trend.StartPosition},{trend.EndPosition})");
+            if (!trend.IsLex)
             {
-                this.PrintLine($"{trend.Description}:({trend.StartPosition},{trend.EndPosition})");
                 indents.Push(condition ? Vert : Spaces);
                 {
                     foreach (var sub_trend in trend.Line.SelectMany(line => line.Sources))
@@ -68,7 +68,7 @@ public class TrendPrinter(TextWriter? writer = null)
             }
             else
             {
-                foreach(var phase in trend.Line)
+                foreach (var phase in trend.Line)
                 {
                     this.Print(phase.ToString());
                 }

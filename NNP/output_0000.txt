@@ -1,8 +1,18 @@
 Input(0):"32"
 PASSED: NO
 Tree:
-├──  (0)=""3" : 3"
-│      └──  3
-└──  (1,2)=""2" : 2"
-        └──  2
+├──  Top : Expression (204)(0,1)
+│      └──  Top : Expression (204)(0,1)
+│              └──  Expression : Term (199)(0,1)
+│                      └──  Term : Factor (194)(0,1)
+│                              └──  Factor : Integer (193)(0,1)
+│                                      └──  Integer : Digit (191)(0,1)
+│                                              └──  Digit : "3" (190)(0,1)
+└──  Top : Expression (220)(1,2)
+        └──  Top : Expression (220)(1,2)
+                └──  Expression : Term (199)(0,1)
+                        └──  Term : Factor (194)(0,1)
+                                └──  Factor : Integer (193)(0,1)
+                                        └──  Integer : Digit (191)(0,1)
+                                                └──  Digit : "3" (190)(0,1)
 ================================================================

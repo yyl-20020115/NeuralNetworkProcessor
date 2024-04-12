@@ -20,7 +20,8 @@ public record class Trend(string Name = "", Description? Description = null, boo
     public int EndPosition = 0;
     public int Progress = 0;
     public bool IsComplete => this.Progress == this.Line.Count;
-    public bool IsInitiator(Phase phase) => this.Line.Count > 0 && this.Line[0] == phase;
+    public bool IsTop => this.Targets.Count == 0;
+    public bool IsInitiator(Phase phase) => this.Line.Count > 0 && this.Line[0].Name == phase.Name;
     public bool IsAnyInitiator(HashSet<Phase> phases) => phases.Any(phase => this.IsInitiator(phase));
 
     public bool IsBranch(Trend trend) => trend.Name != this.Name && this.BranchNames.Contains(trend.Name);
@@ -40,7 +41,7 @@ public record class Trend(string Name = "", Description? Description = null, boo
         {
             var p = Line[i];
             progress++;
-            if (!p.Parents.Select(p => p.Identity).Contains(this.Identity)) continue;
+            if (!p.Parents.Select(p => p.Name).Contains(this.Name)) continue;
 
             if (bullets.Select(b => b.Identity).Contains(p.Identity))
             {
