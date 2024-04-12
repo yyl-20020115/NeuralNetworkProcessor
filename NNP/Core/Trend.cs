@@ -36,21 +36,23 @@ public record class Trend(string Name = "", Description? Description = null, boo
     }
     public bool Advance(HashSet<Phase> bullets, int position)
     {
-        var progress = 0;
-        for (int i = 0; i < Line.Count; i++)
+        for (int i = this.Progress; i < Line.Count; i++)
         {
-            var p = Line[i];
-            progress++;
-            if (!p.Parents.Select(p => p.Name).Contains(this.Name)) continue;
-
-            if (bullets.Select(b => b.Identity).Contains(p.Identity))
+            var phase = Line[i];
+            if (!phase.Parents.Any(p => p.Name == this.Name)) 
+                continue;
+            else if (bullets.Any(b => b.Name == phase.Name))
             {
-                this.Progress = progress;
-                p.Parents.Remove(this);
+                this.Progress = i + 1;
+                phase.Parents.Remove(this);
+                break;
+            }
+            else
+            {   //always break since no need to continue
                 break;
             }
         }
-        return this.Progress == this.Line.Count;
+        return this.IsComplete;
     }
     public StringBuilder Flattern(StringBuilder builder, HashSet<object>? visited = null)
     {

@@ -1,0 +1,408 @@
+input:
+	char:3
+	pos:0
+================================
+bullets:
+	3
+================================
+hits:
+	"3" : 3
+================================
+Pool:
+	"3" : 3
+================================
+dones:
+	"3" : 3
+================================
+targets:
+	"3"
+================================
+hits:
+	Digit : "3"
+================================
+Pool:
+	Digit : "3"
+================================
+dones:
+	Digit : "3"
+================================
+targets:
+	Digit
+	Digit
+================================
+hits:
+	Integer : Digit
+================================
+Pool:
+	Integer : Digit
+================================
+dones:
+	Integer : Digit
+================================
+targets:
+	Integer
+	Integer
+================================
+hits:
+	Integer : Integer, Digit
+	Factor : Integer
+================================
+Pool:
+	Integer : Integer, Digit
+	Factor : Integer
+================================
+dones:
+	Factor : Integer
+================================
+targets:
+	Factor
+	Factor
+	Factor
+	Factor
+	Factor
+================================
+hits:
+	Term : Factor
+================================
+Pool:
+	Integer : Integer, Digit
+	Term : Factor
+================================
+dones:
+	Term : Factor
+================================
+targets:
+	Term
+	Term
+	Term
+	Term
+	Term
+	Term
+	Term
+	Term
+	Term
+================================
+hits:
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Term
+================================
+Pool:
+	Integer : Integer, Digit
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Term
+================================
+dones:
+	Expression : Term
+================================
+targets:
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+================================
+hits:
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+================================
+Pool:
+	Integer : Integer, Digit
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+================================
+dones:
+	Top : Expression
+================================
+targets:
+================================
+hits:
+================================
+Pool:
+	Integer : Integer, Digit
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+================================
+dones:
+	Top : Expression
+================================
+input:
+	char:2
+	pos:1
+================================
+bullets:
+	2
+================================
+hits:
+	"2" : 2
+================================
+Pool:
+	Integer : Integer, Digit
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+	"2" : 2
+================================
+dones:
+	Top : Expression
+	"2" : 2
+================================
+targets:
+	"2"
+================================
+hits:
+	Digit : "2"
+================================
+Pool:
+	Integer : Integer, Digit
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+	Digit : "2"
+================================
+dones:
+	Top : Expression
+	Digit : "2"
+================================
+targets:
+	Digit
+	Digit
+================================
+hits:
+	Integer : Digit
+================================
+Pool:
+	Integer : Integer, Digit
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+	Integer : Digit
+================================
+dones:
+	Integer : Integer, Digit
+	Top : Expression
+	Integer : Digit
+================================
+targets:
+	Integer
+	Integer
+================================
+hits:
+	Integer : Integer, Digit
+	Factor : Integer
+================================
+Pool:
+	Factor : Integer
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+	Integer : Integer, Digit
+================================
+dones:
+	Factor : Integer
+	Top : Expression
+================================
+targets:
+	Factor
+	Factor
+	Factor
+	Factor
+	Factor
+================================
+hits:
+	Term : Factor
+================================
+Pool:
+	Term : Factor
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+	Integer : Integer, Digit
+================================
+dones:
+	Term : Factor
+	Top : Expression
+================================
+targets:
+	Term
+	Term
+	Term
+	Term
+	Term
+	Term
+	Term
+	Term
+	Term
+================================
+hits:
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Term
+================================
+Pool:
+	Term : Term, Mul, Factor
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+	Integer : Integer, Digit
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Term
+================================
+dones:
+	Top : Expression
+	Expression : Term
+================================
+targets:
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+	Expression
+================================
+hits:
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+================================
+Pool:
+	Term : Term, Mul, Factor
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+	Integer : Integer, Digit
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+================================
+dones:
+	Top : Expression
+	Top : Expression
+================================
+targets:
+================================
+hits:
+================================
+Pool:
+	Term : Term, Mul, Factor
+	Term : Term, Mul, Factor
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+	Integer : Integer, Digit
+	Term : Term, Mul, _, Factor
+	Term : Term, Div, Factor
+	Term : Term, Div, _, Factor
+	Expression : Expression, Add, Term
+	Expression : Expression, Add, _, Term
+	Expression : Expression, Sub, Term
+	Expression : Expression, Sub, _, Term
+	Top : Expression
+	Top : Expression, _
+================================
+dones:
+	Top : Expression
+	Top : Expression
+================================
