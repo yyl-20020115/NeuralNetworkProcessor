@@ -1,0 +1,1125 @@
+%{
+using System.Text;
+using System.IO;
+using System;
+using System.Collections.Generic;
+using CLanguage.Syntax;
+using CLanguage.Types;
+
+#pragma warning disable 162
+#nullable disable
+
+namespace CLanguage.Parser
+{
+	/// <summary>
+	///    The C Parser
+	///    http://www.quut.com/c/ANSI-C-grammar-y.html
+	/// </summary>
+	public partial class CParser
+	{
+
+		
+%}
+
+%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
+%token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP COLONCOLON
+%token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
+%token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN 
+%token BINARY_AND_ASSIGN BINARY_XOR_ASSIGN BINARY_OR_ASSIGN
+%token AND_ASSIGN OR_ASSIGN
+%token TYPE_NAME
+%token PUBLIC PRIVATE PROTECTED
+
+%token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT
+%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
+%token BOOL COMPLEX IMAGINARY TRUE FALSE
+%token STRUCT CLASS UNION ENUM ELLIPSIS
+
+%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+
+%token EOL
+
+%start translation_unit
+%%
+
+primary_expression
+	: IDENTIFIER			{ var t = lexer.CurrentToken; $$ = new VariableExpression(($1).ToString(), t.Location, t.EndLocation); }
+	| CONSTANT				{ $$ = new ConstantExpression($1); }
+	| STRING_LITERAL		{ $$ = new ConstantExpression($1); }
+    | TRUE                  { $$ = ConstantExpression.True; }
+    | FALSE                 { $$ = ConstantExpression.False; }
+	| '(' expression ')'	{ $$ = $2; }
+	;
+
+postfix_expression
+	: primary_expression
+	{
+		$$ = $1;
+	}
+	| postfix_expression '[' expression ']'
+	{
+		$$ = new ArrayElementExpression((Expression)$1, (Expression)$3);
+	}
+	| postfix_expression '(' ')'
+	{
+		$$ = new FuncallExpression((Expression)$1);
+	}
+	| postfix_expression '(' argument_expression_list ')'
+	{
+		$$ = new FuncallExpression((Expression)$1, (List<Expression>)$3);
+	}
+	| postfix_expression '.' IDENTIFIER
+	{
+		$$ = new MemberFromReferenceExpression((Expression)$1, ($3).ToString());
+	}
+	| postfix_expression PTR_OP IDENTIFIER
+	{
+		$$ = new MemberFromPointerExpression((Expression)$1, ($3).ToString());
+	}
+	| postfix_expression INC_OP
+	{
+		$$ = new UnaryExpression(Unop.PostIncrement, (Expression)$1);
+	}
+	| postfix_expression DEC_OP
+	{
+		$$ = new UnaryExpression(Unop.PostDecrement, (Expression)$1);
+	}
+	| '(' type_name ')' '{' initializer_list '}'
+	{
+		throw new NotSupportedException ("Syntax: '(' type_name ')' '{' initializer_list '}'");
+	}
+	| '(' type_name ')' '{' initializer_list ',' '}'
+	{
+		throw new NotSupportedException ("Syntax: '(' type_name ')' '{' initializer_list ',' '}'");
+	}
+	;
+
+argument_expression_list
+	: assignment_expression
+	{
+		var l = new List<Expression>();
+		l.Add((Expression)$1);
+		$$ = l;
+	}
+	| argument_expression_list ',' assignment_expression
+	{
+		var l = (List<Expression>)$1;
+		l.Add((Expression)$3);
+		$$ = l;
+	}
+	;
+
+unary_expression
+	: postfix_expression
+	{
+		$$ = $1;
+	}
+	| INC_OP unary_expression
+	{
+		$$ = new UnaryExpression(Unop.PreIncrement, (Expression)$2);
+	}
+	| DEC_OP unary_expression
+	{
+		$$ = new UnaryExpression(Unop.PreDecrement, (Expression)$2);
+	}
+	| '&' cast_expression
+	{
+		$$ = new AddressOfExpression((Expression)$2);
+	}
+	| '*' cast_expression
+	{
+        $$ = new DereferenceExpression((Expression)$2);
+	}
+	| unary_operator cast_expression
+	{
+		$$ = new UnaryExpression((Unop)$1, (Expression)$2);
+	}
+	| SIZEOF unary_expression
+	{
+		$$ = new SizeOfExpression((Expression)$2);
+	}
+	| SIZEOF '(' type_name ')'
+	{
+		$$ = new SizeOfTypeExpression((TypeName)$3);
+	}
+	;
+
+unary_operator
+	: '+'		{ $$ = Unop.None; }
+	| '-'		{ $$ = Unop.Negate; }
+	| '~'		{ $$ = Unop.BinaryComplement; }
+	| '!'		{ $$ = Unop.Not; }
+	;
+
+cast_expression
+	: unary_expression
+	{
+		$$ = $1;
+	}
+	| '(' type_name ')' cast_expression
+	{
+		$$ = new CastExpression ((TypeName)$2, (Expression)$4);
+	}
+	;
+
+multiplicative_expression
+	: cast_expression
+	{
+		$$ = $1;
+	}
+	| multiplicative_expression '*' cast_expression
+	{
+		$$ = new BinaryExpression((Expression)$1, Binop.Multiply, (Expression)$3);
+	}
+	| multiplicative_expression '/' cast_expression
+	{
+		$$ = new BinaryExpression((Expression)$1, Binop.Divide, (Expression)$3);
+	}
+	| multiplicative_expression '%' cast_expression
+	{
+		$$ = new BinaryExpression((Expression)$1, Binop.Mod, (Expression)$3);
+	}
+	;
+
+additive_expression
+	: multiplicative_expression
+	| additive_expression '+' multiplicative_expression
+	{
+		$$ = new BinaryExpression((Expression)$1, Binop.Add, (Expression)$3);
+	}
+	| additive_expression '-' multiplicative_expression
+	{
+		$$ = new BinaryExpression((Expression)$1, Binop.Subtract, (Expression)$3);
+	}
+	;
+
+shift_expression
+	: additive_expression
+	| shift_expression LEFT_OP additive_expression
+	{
+		$$ = new BinaryExpression((Expression)$1, Binop.ShiftLeft, (Expression)$3);
+	}
+	| shift_expression RIGHT_OP additive_expression
+	{
+		$$ = new BinaryExpression((Expression)$1, Binop.ShiftRight, (Expression)$3);
+	}
+	;
+
+relational_expression
+	: shift_expression
+	| relational_expression '<' shift_expression
+	{
+		$$ = new RelationalExpression((Expression)$1, RelationalOp.LessThan, (Expression)$3);
+	}
+	| relational_expression '>' shift_expression
+	{
+		$$ = new RelationalExpression((Expression)$1, RelationalOp.GreaterThan, (Expression)$3);
+	}
+	| relational_expression LE_OP shift_expression
+	{
+		$$ = new RelationalExpression((Expression)$1, RelationalOp.LessThanOrEqual, (Expression)$3);
+	}
+	| relational_expression GE_OP shift_expression
+	{
+		$$ = new RelationalExpression((Expression)$1, RelationalOp.GreaterThanOrEqual, (Expression)$3);
+	}
+	;
+
+equality_expression
+	: relational_expression
+	| equality_expression EQ_OP relational_expression
+	{
+		$$ = new RelationalExpression((Expression)$1, RelationalOp.Equals, (Expression)$3);
+	}
+	| equality_expression NE_OP relational_expression
+	{
+		$$ = new RelationalExpression((Expression)$1, RelationalOp.NotEquals, (Expression)$3);
+	}
+	;
+
+and_expression
+	: equality_expression
+	| and_expression '&' equality_expression
+	{
+		$$ = new BinaryExpression((Expression)$1, Binop.BinaryAnd, (Expression)$3);
+	}
+	;
+
+exclusive_or_expression
+	: and_expression
+	| exclusive_or_expression '^' and_expression
+	{
+		$$ = new BinaryExpression((Expression)$1, Binop.BinaryXor, (Expression)$3);
+	}
+	;
+
+inclusive_or_expression
+	: exclusive_or_expression
+	| inclusive_or_expression '|' exclusive_or_expression
+	{
+		$$ = new BinaryExpression((Expression)$1, Binop.BinaryOr, (Expression)$3);
+	}
+	;
+
+logical_and_expression
+	: inclusive_or_expression
+	| logical_and_expression AND_OP inclusive_or_expression
+	{
+		$$ = new LogicExpression((Expression)$1, LogicOp.And, (Expression)$3);
+	}
+	;
+
+logical_or_expression
+	: logical_and_expression
+	| logical_or_expression OR_OP logical_and_expression
+	{
+		$$ = new LogicExpression((Expression)$1, LogicOp.Or, (Expression)$3);
+	}
+	;
+
+conditional_expression
+	: logical_or_expression
+	{
+		$$ = $1;
+	}
+	| logical_or_expression '?' expression ':' conditional_expression
+	{
+		$$ = new ConditionalExpression ((Expression)$1, (Expression)$3, (Expression)$5);
+	}
+	;
+
+assignment_expression
+	: conditional_expression
+	| unary_expression assignment_operator assignment_expression
+	{
+		if ($2 is RelationalOp r && r == RelationalOp.Equals) {
+			$$ = new AssignExpression((Expression)$1, (Expression)$3);
+		}
+		else if ($2 is Binop b) {
+			var left = (Expression)$1;
+			$$ = new AssignExpression(left, new BinaryExpression (left, b, (Expression)$3));
+		}
+        else if ($2 is LogicOp l) {
+            var left = (Expression)$1;
+            $$ = new AssignExpression(left, new LogicExpression (left, l, (Expression)$3));
+        }
+        else {
+            throw new NotSupportedException (String.Format ("'{0}' not supported", $2));
+        }
+	}
+	;
+
+assignment_operator
+	: '='				{ $$ = RelationalOp.Equals; }
+	| MUL_ASSIGN		{ $$ = Binop.Multiply; }
+	| DIV_ASSIGN		{ $$ = Binop.Divide; }
+	| MOD_ASSIGN		{ $$ = Binop.Mod; }
+	| ADD_ASSIGN		{ $$ = Binop.Add; }
+	| SUB_ASSIGN		{ $$ = Binop.Subtract; }
+	| LEFT_ASSIGN		{ $$ = Binop.ShiftLeft; }
+	| RIGHT_ASSIGN		{ $$ = Binop.ShiftRight; }
+	| BINARY_AND_ASSIGN	{ $$ = Binop.BinaryAnd; }
+	| BINARY_XOR_ASSIGN	{ $$ = Binop.BinaryXor; }
+	| BINARY_OR_ASSIGN	{ $$ = Binop.BinaryOr; }
+    | AND_ASSIGN        { $$ = LogicOp.And; }
+    | OR_ASSIGN         { $$ = LogicOp.Or; }
+	;
+
+expression
+	: assignment_expression
+	{
+		$$ = $1;
+	}
+	| expression ',' assignment_expression
+	{
+		$$ = new SequenceExpression ((Expression)$1, (Expression)$3);
+	}
+	;
+
+constant_expression
+	: conditional_expression
+	;
+
+declaration
+	: declaration_specifiers ';'
+	{
+		$$ = new MultiDeclaratorStatement ((DeclarationSpecifiers)$1, null);
+	}
+	| declaration_specifiers init_declarator_list ';'
+	{
+		DeclarationSpecifiers ds = (DeclarationSpecifiers)$1;
+		List<InitDeclarator> decls = (List<InitDeclarator>)$2;
+		$$ = new MultiDeclaratorStatement (ds, decls);
+	}
+	;
+
+declaration_specifiers
+	: storage_class_specifier
+	{
+		var ds = new DeclarationSpecifiers();
+		ds.StorageClassSpecifier = (StorageClassSpecifier)$1;
+		$$ = ds;
+	}
+	| storage_class_specifier declaration_specifiers
+	{
+		var ds = (DeclarationSpecifiers)$2;
+		ds.StorageClassSpecifier = ds.StorageClassSpecifier | (StorageClassSpecifier)$1;		
+		$$ = ds;
+	}
+	| type_specifier
+	{
+		var ds = new DeclarationSpecifiers();
+		ds.TypeSpecifiers.Add((TypeSpecifier)$1);
+		$$ = ds;
+	}
+	| type_specifier declaration_specifiers
+	{
+		var ds = (DeclarationSpecifiers)$2;
+		ds.TypeSpecifiers.Add((TypeSpecifier)$1);
+		$$ = ds;
+	}
+	| type_qualifier
+	{
+		var ds = new DeclarationSpecifiers();
+		ds.TypeQualifiers = (TypeQualifiers)$1;
+		$$ = ds;
+	}
+	| type_qualifier declaration_specifiers
+	{
+		var ds = (DeclarationSpecifiers)$2;
+		ds.TypeQualifiers = (TypeQualifiers)$1;
+		$$ = ds;
+	}
+	| function_specifier
+	{
+		var ds = new DeclarationSpecifiers();
+		ds.FunctionSpecifier = (FunctionSpecifier)$1;
+		$$ = ds;
+	}
+	| function_specifier declaration_specifiers
+	{
+		var ds = (DeclarationSpecifiers)$2;
+		ds.FunctionSpecifier = (FunctionSpecifier)$1;
+		$$ = ds;
+	}
+	;
+
+init_declarator_list
+	: init_declarator
+	{
+		var idl = new List<InitDeclarator>();
+		idl.Add((InitDeclarator)$1);
+		$$ = idl;
+	}
+	| init_declarator_list ',' init_declarator
+	{
+		var idl = (List<InitDeclarator>)$1;
+		idl.Add((InitDeclarator)$3);
+		$$ = idl;
+	}
+	;
+
+init_declarator
+	: declarator
+	{
+		$$ = new InitDeclarator((Declarator)$1, null);
+	}
+	| declarator '=' initializer
+	{
+		$$ = new InitDeclarator((Declarator)$1, (Initializer)$3);
+	}
+	;
+
+storage_class_specifier
+	: TYPEDEF				{ $$ = StorageClassSpecifier.Typedef; }
+	| EXTERN				{ $$ = StorageClassSpecifier.Extern; }
+	| STATIC				{ $$ = StorageClassSpecifier.Static; }
+	| AUTO					{ $$ = StorageClassSpecifier.Auto; }
+	| REGISTER				{ $$ = StorageClassSpecifier.Register; }
+	;
+
+type_specifier
+	: VOID					{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "void"); }
+	| CHAR					{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "char"); }
+	| SHORT					{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "short"); }
+	| INT					{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "int"); }
+	| LONG					{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "long"); }
+	| FLOAT					{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "float"); }
+	| DOUBLE				{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "double"); }
+	| SIGNED				{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "signed"); }
+	| UNSIGNED				{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "unsigned"); }
+	| BOOL					{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "bool"); }
+	| COMPLEX				{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "complex"); }
+	| IMAGINARY				{ $$ = new TypeSpecifier(TypeSpecifierKind.Builtin, "imaginary"); }
+	| struct_or_union_or_class_specifier
+	| enum_specifier
+	| TYPE_NAME				{ $$ = new TypeSpecifier(TypeSpecifierKind.Typename, ($1).ToString()); }
+	;
+
+identifier_or_typename
+	: IDENTIFIER
+	| TYPE_NAME
+	;
+
+struct_or_union_or_class_specifier
+	: struct_or_union_or_class identifier_or_typename class_body { $$ = new TypeSpecifier((TypeSpecifierKind)$1, ($2).ToString(), (Block)$3); }
+	| struct_or_union_or_class class_body            { $$ = new TypeSpecifier((TypeSpecifierKind)$1, "", (Block)$2); }
+	| struct_or_union_or_class identifier_or_typename                    { $$ = new TypeSpecifier((TypeSpecifierKind)$1, ($2).ToString()); }
+	;
+
+struct_or_union_or_class
+	: STRUCT { $$ = TypeSpecifierKind.Struct; }
+    | CLASS  { $$ = TypeSpecifierKind.Class; }
+	| UNION  { $$ = TypeSpecifierKind.Union; }
+	;
+
+specifier_qualifier_list
+	: type_specifier specifier_qualifier_list
+    {
+        ((DeclarationSpecifiers)$2).TypeSpecifiers.Add ((TypeSpecifier)$1);
+        $$ = $2;
+    }
+	| type_specifier
+    {
+        var list = new DeclarationSpecifiers ();
+        list.TypeSpecifiers.Add ((TypeSpecifier)$1);
+        $$ = list;
+    }
+	| type_qualifier specifier_qualifier_list
+    {
+        ((DeclarationSpecifiers)$2).TypeQualifiers = ((DeclarationSpecifiers)$2).TypeQualifiers | ((TypeQualifiers)$1);
+        $$ = $2;
+    }
+	| type_qualifier
+    {
+        var list = new DeclarationSpecifiers ();
+        list.TypeQualifiers = (TypeQualifiers)$1;
+        $$ = list;
+    }
+	;
+
+enum_specifier
+	: ENUM '{' enumerator_list '}'                 { $$ = new TypeSpecifier(TypeSpecifierKind.Enum, "", (Block)$3); }
+	| ENUM identifier_or_typename '{' enumerator_list '}'      { $$ = new TypeSpecifier(TypeSpecifierKind.Enum, ($2).ToString(), (Block)$4); }
+	| ENUM '{' enumerator_list ',' '}'             { $$ = new TypeSpecifier(TypeSpecifierKind.Enum, "", (Block)$3); }
+	| ENUM identifier_or_typename '{' enumerator_list ',' '}'  { $$ = new TypeSpecifier(TypeSpecifierKind.Enum, ($2).ToString(), (Block)$4); }
+	| ENUM identifier_or_typename                              { $$ = new TypeSpecifier(TypeSpecifierKind.Enum, ($2).ToString()); }
+	;
+
+enumerator_list
+	: enumerator
+    {
+        var l = new Block (Compiler.VariableScope.Global);
+        l.AddStatement((Statement)$1);
+        $$ = l;
+    }
+	| enumerator_list ',' enumerator
+    {
+        var l = (Block)$1;
+        l.AddStatement((Statement)$3);
+        $$ = l;
+    }
+	;
+
+enumerator
+	: IDENTIFIER
+    {
+        $$ = new EnumeratorStatement ((string)$1);
+    }
+	| IDENTIFIER '=' constant_expression
+    {
+        $$ = new EnumeratorStatement ((string)$1, (Expression)$3);
+    }
+	;
+
+function_specifier
+	: INLINE		{ $$ = FunctionSpecifier.Inline; }
+	;
+
+declarator
+	: pointer direct_declarator
+	{
+		$$ = new PointerDeclarator((Pointer)$1, (Declarator)$2);
+	}
+	| direct_declarator		{ $$ = $1; }
+	;
+
+
+direct_declarator_identifier_list
+    : IDENTIFIER
+	{
+		$$ = new IdentifierDeclarator(($1).ToString());
+	}
+    | '~' IDENTIFIER
+	{
+		$$ = new IdentifierDeclarator("~" + ($1).ToString());
+	}
+    | direct_declarator_identifier_list COLONCOLON IDENTIFIER
+	{ $$ = ((IdentifierDeclarator)($1)).Push (($3).ToString()); }
+    | direct_declarator_identifier_list COLONCOLON '~' IDENTIFIER
+	{ $$ = ((IdentifierDeclarator)($1)).Push ("~" + ($3).ToString()); }
+	;
+
+direct_declarator
+	: direct_declarator_identifier_list
+	| '(' declarator ')'	
+	{
+		var d = (Declarator)$2;
+		var f = FixPointerAndArrayPrecedence(d);
+		if (f != null) {
+			$$ = f;
+		}
+		else {
+			d.StrongBinding = true;
+			$$ = d;
+		}		
+	}
+	| direct_declarator '[' type_qualifier_list assignment_expression ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, (TypeQualifiers)$3, (Expression)$4, false);
+	}
+	| direct_declarator '[' type_qualifier_list ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, TypeQualifiers.None, null, false);
+	}
+	| direct_declarator '[' assignment_expression ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, TypeQualifiers.None, (Expression)$3, false);
+	}
+	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, (TypeQualifiers)$4, (Expression)$5, true);
+	}
+	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, (TypeQualifiers)$3, (Expression)$5, true);
+	}
+	| direct_declarator '[' type_qualifier_list '*'   ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, (TypeQualifiers)$3, null, false);
+	}
+	| direct_declarator '[' '*' ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, TypeQualifiers.None, null, false);
+	}
+	| direct_declarator '[' ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, TypeQualifiers.None, null, false);
+	}
+	| direct_declarator '(' parameter_type_list ')'
+	{
+		$$ = new FunctionDeclarator(innerDeclarator: (Declarator)$1, parameters: (List<ParameterDeclaration>)$3);
+	}
+	| direct_declarator '(' argument_expression_list ')'
+	{
+		var d = new FunctionDeclarator(innerDeclarator: (Declarator)$1, parameters: new List<ParameterDeclaration>());
+		foreach (var n in (List<Expression>)$3) {
+			d.Parameters.Add(new ParameterDeclaration(ctorArgumentValue: n));
+		}
+		$$ = d;
+	}
+	| direct_declarator '(' ')'
+	{
+		$$ = new FunctionDeclarator(innerDeclarator: (Declarator)$1, parameters: new List<ParameterDeclaration>());
+	}
+	;
+
+pointer
+	: '*'								{ $$ = new Pointer(TypeQualifiers.None); }
+	| '*' type_qualifier_list			{ $$ = new Pointer((TypeQualifiers)$2); }
+	| '*' pointer						{ $$ = new Pointer(TypeQualifiers.None, (Pointer)$2); }
+	| '*' type_qualifier_list pointer	{ $$ = new Pointer((TypeQualifiers)$2, (Pointer)$3); }
+	;
+
+type_qualifier_list
+	: type_qualifier	{ $$ = $1; }
+	| type_qualifier_list type_qualifier
+	{
+		$$ = (TypeQualifiers)($1) | (TypeQualifiers)($2);
+	}
+	;
+
+type_qualifier
+	: CONST			{ $$ = TypeQualifiers.Const; }
+	| RESTRICT		{ $$ = TypeQualifiers.Restrict; }
+	| VOLATILE		{ $$ = TypeQualifiers.Volatile; }
+	;
+
+parameter_type_list
+	: parameter_list
+	{
+		$$ = $1;
+	}
+	| parameter_list ',' ELLIPSIS
+	{
+		var l = (List<ParameterDeclaration>)$1;
+		l.Add(new VarParameter());
+		$$ = l;
+	}
+	;
+
+parameter_list
+	: parameter_declaration
+	{
+		var l = new List<ParameterDeclaration>();
+		l.Add((ParameterDeclaration)$1);
+		$$ = l;
+	}
+	| parameter_list ',' parameter_declaration
+	{
+		var l = (List<ParameterDeclaration>)$1;
+		l.Add((ParameterDeclaration)$3);
+		$$ = l;
+	}
+	;
+
+parameter_declaration
+	: declaration_specifiers declarator
+	{
+		$$ = new ParameterDeclaration((DeclarationSpecifiers)$1, (Declarator)$2);
+	}
+	| declaration_specifiers declarator '=' assignment_expression
+	{
+		$$ = new ParameterDeclaration((DeclarationSpecifiers)$1, (Declarator)$2, (Expression)$4);
+	}
+    | declaration_specifiers abstract_declarator
+    {
+        $$ = new ParameterDeclaration((DeclarationSpecifiers)$1, (Declarator)$2);
+    }
+    | declaration_specifiers
+	{
+		$$ = new ParameterDeclaration((DeclarationSpecifiers)$1);
+	}
+	;
+
+type_name
+	: specifier_qualifier_list
+    {
+        $$ = new TypeName ((DeclarationSpecifiers)$1, null);
+    }
+	| specifier_qualifier_list abstract_declarator
+    {
+        $$ = new TypeName ((DeclarationSpecifiers)$1, (Declarator)$2);
+    }
+	;
+
+abstract_declarator
+	: pointer
+	{
+		$$ = new PointerDeclarator((Pointer)$1, null);
+	}
+	| direct_abstract_declarator
+	| pointer direct_abstract_declarator
+	{
+		$$ = new PointerDeclarator((Pointer)$1, (Declarator)$2);
+	}
+	;
+
+direct_abstract_declarator
+	: '(' abstract_declarator ')'
+	{
+		var d = (Declarator)$2;
+		var f = FixPointerAndArrayPrecedence(d);
+		if (f != null) {
+			$$ = f;
+		}
+		else {
+			d.StrongBinding = true;
+			$$ = d;
+		}		
+	}
+	| '[' ']'
+	{
+		$$ = MakeArrayDeclarator(null, TypeQualifiers.None, null, false);
+	}
+	| '[' assignment_expression ']'
+	{
+		$$ = MakeArrayDeclarator(null, TypeQualifiers.None, (Expression)$2, false);
+	}
+	| direct_abstract_declarator '[' ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, TypeQualifiers.None, null, false);
+	}
+	| direct_abstract_declarator '[' assignment_expression ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, TypeQualifiers.None, (Expression)$3, false);
+	}
+	| '[' '*' ']'
+	{
+		$$ = MakeArrayDeclarator(null, TypeQualifiers.None, null, false);
+	}
+	| direct_abstract_declarator '[' '*' ']'
+	{
+		$$ = MakeArrayDeclarator((Declarator)$1, TypeQualifiers.None, null, false);
+	}
+	| '(' ')'
+	{
+		$$ = new FunctionDeclarator(parameters: new List<ParameterDeclaration>());
+	}
+	| '(' parameter_type_list ')'
+	{
+		$$ = new FunctionDeclarator(parameters: (List<ParameterDeclaration>)$2);
+	}
+	| direct_abstract_declarator '(' ')'
+	{
+		$$ = new FunctionDeclarator(innerDeclarator: (Declarator)$1, parameters: new List<ParameterDeclaration>());
+	}
+	| direct_abstract_declarator '(' parameter_type_list ')'
+	{
+		$$ = new FunctionDeclarator(innerDeclarator: (Declarator)$1, parameters: (List<ParameterDeclaration>)$3);
+	}
+	;
+	
+initializer
+	: assignment_expression
+	{
+		$$ = new ExpressionInitializer((Expression)$1);
+	}
+	| '{' initializer_list '}'
+	{
+		$$ = $2;
+	}
+	| '{' initializer_list ',' '}'
+	{
+		$$ = $2;
+	}
+	;
+
+initializer_list
+	: initializer
+	{
+		var l = new StructuredInitializer();
+		var i = (Initializer)$1;
+		l.Add(i);
+		$$ = l;
+	}
+	| designation initializer
+	{
+		var l = new StructuredInitializer();
+		var i = (Initializer)$2;
+		i.Designation = (InitializerDesignation)$1;
+		l.Add(i);
+		$$ = l;
+	}
+	| initializer_list ',' initializer
+	{
+		var l = (StructuredInitializer)$1;
+		var i = (Initializer)$3;
+		l.Add(i);
+		$$ = l;
+	}
+	| initializer_list ',' designation initializer
+	{
+		var l = (StructuredInitializer)$1;
+		var i = (Initializer)$4;
+		i.Designation = (InitializerDesignation)$3;
+		l.Add(i);
+		$$ = l;
+	}
+	;
+
+designation
+	: designator_list '='
+	{
+		$$ = new InitializerDesignation((List<InitializerDesignator>)$1);
+	}
+	;
+
+designator_list
+	: designator
+	| designator_list designator
+	;
+
+designator
+	: '[' constant_expression ']'
+	| '.' IDENTIFIER
+	;
+
+statement
+	: labeled_statement
+	| compound_statement
+	| expression_statement
+	| selection_statement
+	| iteration_statement
+	| jump_statement
+	;
+    
+labeled_statement
+	: IDENTIFIER ':' statement
+	;
+
+compound_statement
+	: '{' '}'
+	{
+		$$ = new Block (Compiler.VariableScope.Local);
+	}
+	| '{' block_item_list '}'
+	{
+        $$ = new Block (Compiler.VariableScope.Local, (List<Statement>)$2);
+	}
+	;
+
+block_item_list
+	: block_item                 { $$ = new List<Statement> (1) { (Statement)$1 }; }
+	| block_item_list block_item { ((List<Statement>)$1).Add ((Statement)$2); $$ = $1; }
+	;
+
+block_item
+	: declaration
+	| statement
+	;
+
+class_body
+	: '{' '}'
+	{
+		$$ = new Block (Compiler.VariableScope.Local);
+	}
+	| '{' class_block_item_list '}'
+	{
+        $$ = new Block (Compiler.VariableScope.Local, (List<Statement>)$2);
+	}
+	;
+
+class_block_item_list
+	: class_block_item                 { $$ = new List<Statement> (1) { (Statement)$1 }; }
+	| class_block_item_list class_block_item { ((List<Statement>)$1).Add ((Statement)$2); $$ = $1; }
+	;
+
+class_block_item
+	: declaration
+	| visibility
+	| ctor_declaration
+	;
+
+visibility
+	: PUBLIC ':'		{ $$ = new VisibilityStatement(DeclarationsVisibility.Public); }
+	| PRIVATE ':'		{ $$ = new VisibilityStatement(DeclarationsVisibility.Private); }
+	| PROTECTED ':'		{ $$ = new VisibilityStatement(DeclarationsVisibility.Protected); }
+	;
+
+ctor_declarator
+	: direct_declarator_identifier_list '(' parameter_type_list ')'
+	{
+		$$ = new FunctionDeclarator(innerDeclarator: (Declarator)$1, parameters: (List<ParameterDeclaration>)$3);
+	}
+	| direct_declarator_identifier_list '(' ')'
+	{
+		$$ = new FunctionDeclarator(innerDeclarator: (Declarator)$1, parameters: new List<ParameterDeclaration>());
+	}
+	;
+
+ctor_declaration
+	: ctor_declarator ';'
+	{
+		var fdecl = (FunctionDeclarator)$1;
+		DeclarationSpecifiers ds = new DeclarationSpecifiers();
+		List<InitDeclarator> decls = new List<InitDeclarator> {
+			new InitDeclarator(fdecl, null) };
+		$$ = new MultiDeclaratorStatement (ds, decls);
+	}
+	;
+
+expression_statement
+	: ';'
+	{
+		$$ = null;
+	}
+	| expression ';'
+	{
+		$$ = new ExpressionStatement((Expression)$1);
+	}
+	;
+
+selection_statement
+	: IF '(' expression ')' statement
+	{
+		$$ = new IfStatement((Expression)$3, (Statement)$5, GetLocation($1));
+	}
+	| IF '(' expression ')' statement ELSE statement
+	{
+		$$ = new IfStatement((Expression)$3, (Statement)$5, (Statement)$7, GetLocation($1));
+	}
+	| SWITCH '(' expression ')' '{' switch_cases '}'
+	{
+		$$ = new SwitchStatement((Expression)$3, (List<SwitchCase>)$6, GetLocation($1));
+	}
+	| SWITCH '(' expression ')' '{' '}'
+	{
+		$$ = new SwitchStatement((Expression)$3, new List<SwitchCase>(), GetLocation($1));
+	}
+	;
+
+switch_cases
+	: switch_case
+	{
+		$$ = new List<SwitchCase> { (SwitchCase)$1 };
+	}
+	| switch_cases switch_case
+	{
+		((List<SwitchCase>)$1).Add((SwitchCase)$2);
+		$$ = $1;
+	}
+	;
+
+switch_case
+	: CASE constant_expression ':' block_item_list
+	{
+		$$ = new SwitchCase((Expression)$2, (List<Statement>)$4);
+	}
+	| DEFAULT ':' block_item_list
+	{
+		$$ = new SwitchCase(null, (List<Statement>)$3);
+	}
+	;
+
+iteration_statement
+	: WHILE '(' expression ')' statement
+	{
+		$$ = new WhileStatement(false, (Expression)$3, ((Statement)$5).ToBlock ());
+	}
+	| DO statement WHILE '(' expression ')' ';'
+	{
+		$$ = new WhileStatement(true, (Expression)$5, ((Statement)$2).ToBlock ());
+	}
+	| FOR '(' expression_statement expression_statement ')' statement
+	{
+		$$ = new ForStatement((Statement)$3, ((ExpressionStatement)$4).Expression, ((Statement)$6).ToBlock ());
+	}
+	| FOR '(' expression_statement expression_statement expression ')' statement
+	{
+		$$ = new ForStatement((Statement)$3, ((ExpressionStatement)$4).Expression, (Expression)$5, ((Statement)$7).ToBlock ());
+	}
+	| FOR '(' declaration expression_statement ')' statement
+	{
+		$$ = new ForStatement((Statement)$3, ((ExpressionStatement)$4).Expression, ((Statement)$6).ToBlock ());
+	}
+	| FOR '(' declaration expression_statement expression ')' statement
+	{
+        $$ = new ForStatement((Statement)$3, ((ExpressionStatement)$4).Expression, (Expression)$5, ((Statement)$7).ToBlock ());
+	}
+	;
+
+jump_statement
+	: GOTO IDENTIFIER ';'
+	| CONTINUE ';'
+    {
+        $$ = new ContinueStatement ();
+    }
+	| BREAK ';'
+    {
+        $$ = new BreakStatement ();
+    }
+	| RETURN ';'
+	{
+		$$ = new ReturnStatement ();
+	}
+	| RETURN expression ';'
+	{
+		$$ = new ReturnStatement ((Expression)$2);
+	}
+	;
+
+translation_unit
+	: external_declaration
+	{
+		AddDeclaration($1);
+		$$ = _tu;
+	}
+	| translation_unit external_declaration
+	{
+		AddDeclaration($2);
+		$$ = _tu;
+	}
+	;
+
+external_declaration
+	: function_definition
+	| declaration
+    | ';'
+	| ctor_definition
+    ;
+
+function_definition
+	: declaration_specifiers declarator declaration_list compound_statement
+	{
+		var f = new FunctionDefinition(
+			(DeclarationSpecifiers)$1,
+			(Declarator)$2,
+			(List<Declaration>)$3,
+			(Block)$4);
+		$$ = f;
+	}
+	| declaration_specifiers declarator compound_statement
+	{
+		var f = new FunctionDefinition(
+			(DeclarationSpecifiers)$1,
+			(Declarator)$2,
+			null,
+			(Block)$3);
+		$$ = f;
+	}
+	;
+
+ctor_identifier_list
+    : TYPE_NAME
+	{
+		$$ = new IdentifierDeclarator(($1).ToString());
+	}
+    | ctor_identifier_list COLONCOLON TYPE_NAME { $$ = ((IdentifierDeclarator)($1)).Push (($3).ToString()); }
+    | ctor_identifier_list COLONCOLON '~' TYPE_NAME { $$ = ((IdentifierDeclarator)($1)).Push ("~" + ($4).ToString()); }
+	;
+
+ctor_definition
+	: ctor_identifier_list '(' ')' compound_statement
+	{
+		var d = new FunctionDeclarator(innerDeclarator: (Declarator)$1, parameters: new List<ParameterDeclaration> ());
+		$$ = new FunctionDefinition(
+			new DeclarationSpecifiers(),
+			d,
+			null,
+			(Block)$4);
+	}
+	| ctor_identifier_list '(' parameter_type_list ')' compound_statement
+	{
+		var d = new FunctionDeclarator(innerDeclarator: (Declarator)$1, parameters: (List<ParameterDeclaration>)$3);
+		$$ = new FunctionDefinition(
+			new DeclarationSpecifiers(),
+			d,
+			null,
+			(Block)$5);
+	}
+	;
+
+declaration_list
+	: declaration
+	{
+		var l = new List<Declaration>();
+		l.Add((Declaration)$1);
+		$$ = l;
+	}
+    | preproc declaration
+    {
+        var l = new List<Declaration>();
+        l.Add((Declaration)$2);
+        $$ = l;
+    }
+	| declaration_list declaration
+	{
+		var l = (List<Declaration>)$1;
+		l.Add((Declaration)$2);
+		$$ = l;
+	}
+	;
+    
+preproc
+    : EOL
+    | '#'
+    | '\\'
+    ;
+
+
+
+%%
+
+}
+

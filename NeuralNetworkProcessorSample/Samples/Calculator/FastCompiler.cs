@@ -29,7 +29,7 @@ public class FastCompiler
              Path.Combine(DefaultGlobalAssembliesCachePath, $"{args.Name}.dll"));
     public virtual List<Results> Parse(string expression)
         => this.Parser.Parse(expression);
-    public virtual Node Build(List<Results> results)
+    public virtual Node? Build(List<Results> results)
         => results != null && results.Count > 0
             ? ModelBuilder<Node, InterpretrContext, double>.Build(
                 results.First(), typeof(Node), typeof(Node).Assembly) as Node

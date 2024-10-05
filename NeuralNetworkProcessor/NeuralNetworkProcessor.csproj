@@ -2,7 +2,7 @@
   <PropertyGroup>
     <LangVersion>preview</LangVersion>
     <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="MT\**" />

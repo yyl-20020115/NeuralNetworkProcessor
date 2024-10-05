@@ -1,5 +1,4 @@
 ﻿using NNP.ZRF;
-using System.Reflection.Metadata.Ecma335;
 using Utilities;
 
 namespace NNP.Core;
@@ -11,13 +10,13 @@ public class Parser
     public readonly List<TerminalPhase> Terminals;
 
     protected readonly TrendHashSet Pool = [];
-    public Parser(Concept concept)
-    {
-        (this.Trends, this.Phases, this.Terminals) = Builder.Build(concept);
-    }
+    public Parser(Concept concept) 
+        => (this.Trends,
+            this.Phases, 
+            this.Terminals) = Builder.Build(concept);
 
     public virtual List<Trend> Parse(string Text)
-    => this.Parse(InputProvider.CreateInput(Text));
+        => this.Parse(InputProvider.CreateInput(Text));
     public virtual List<Trend> Parse(TextReader Reader)
         => this.Parse(InputProvider.CreateInput(Reader));
 
@@ -36,86 +35,103 @@ public class Parser
     {
         var position = 0;
 
+        var completeds = new HashSet<Trend>(TrendComparer.Default);
+
         foreach (var (utf32, last) in input())
         {
-            var text = char.ConvertFromUtf32(utf32);
+            this.Parse(utf32, last, position, completeds);
+            position += char.ConvertFromUtf32(utf32).Length;
 
-            //terminal and other target phases as bullets
-            var bullets = this.Terminals
-                .Where(terminal => terminal.Accept(utf32))
-                .Distinct()
-                .Select(b => b with { Position = position })
-                .Cast<Phase>()
-                .ToHashSet(PhaseComparer.Default);
-            
-            //all hits here are lexes
-            var hits = bullets
-                .Where(bullet => bullet.Parent.IsInitiator(bullet))
-                .SelectMany(bullet => bullet.Parents).ToHashSet(TrendComparer.Default);
-
-            var previous = new HashSet<Trend>(TrendComparer.Default);
-            while (true)
-            {
-                this.Pool.UnionWith(hits);
-
-                var dones = this.Pool.Where(hit => hit.Advance(bullets, position)).ToHashSet(TrendComparer.Default);
-
-                if (dones.Count == 0 || dones.SetEquals(previous)) break;
-
-                var targets = dones
-                    .SelectMany(done => done.Targets).ToHashSet(PhaseComparer.Default);
-
-                //initiator only
-                hits = targets.SelectMany(target => target.Parents)
-                    .Where(hit => hit.IsAnyInitiator(targets)).ToHashSet(TrendComparer.Default);
-
-                //copy hits
-                hits = hits.Select(hit => hit with
-                {
-                    Identity = Trend.IdentityBase++,
-                    StartPosition = position,
-                    EndPosition = position
-                }).ToHashSet(TrendComparer.Default);
-
-                var hash = bullets.SelectMany(bullet => bullet.Parents).ToHashSet(TrendComparer.Default);
-                foreach (var hit in hits)
-                {
-                    //reconnect the source
-                    foreach (var bit in hit.Line)
-                    {
-                        var bitset = new TrendHashSet();
-                        foreach (var source in bit.Sources)
-                        {
-                            if (hash.Contains(source))
-                                bitset.UnionWith(this.Pool.Where(
-                                    trend => trend.Name == source.Name));
-                        }
-                        if (bitset.Count > 0)
-                        {
-                            bit.Sources = bitset;
-                            foreach (var source in bitset)
-                            {
-                                source.Targets.Add(bit);
-                            }
-                        }
-                    }
-                }
-                this.Pool.ExceptWith(dones.Where(done => !done.IsTop));
-                previous = dones;
-                bullets = dones
-                    .SelectMany(done => done.Targets)
-                    .Select(b => b with { Position = position })
-                    .ToHashSet(PhaseComparer.Default);
-            }
-            position += text.Length;
-            if (last)
-            {
-                previous = Compact(Trim(previous));
-                return [.. previous.OrderBy(p => p.Identity)];
-            }
         }
 
         return [.. this.Pool.OrderBy(p => p.Identity)];
+    }
+    public List<Trend> Parse(int utf32,bool last,int position, HashSet<Trend> completeds)
+    {
+        //terminal and other target phases as bullets
+        var bullet_phases = this.Terminals
+            .Where(terminal => terminal.Accept(utf32))
+            .Distinct()
+            .Select(bullet_phase => bullet_phase with { Position = position, Parents = [bullet_phase.Parent] })
+            .Cast<Phase>()
+            .ToHashSet(PhaseComparer.Default)
+            ;
+        
+        //all hits here are lexes
+        var hit_trends = bullet_phases
+            .Where(bullet => bullet.Parent.IsInitiator(bullet))
+            .SelectMany(bullet => bullet.Parents).ToHashSet(TrendComparer.Default);
+
+        //try to find advanced trends with bullets
+        var advanced_trends = hit_trends.Where(
+            hit_trend => hit_trend.Advance(bullet_phases, position))
+            .ToHashSet(TrendComparer.Default);
+ 
+        //if nothing advanced, exit 
+        if (advanced_trends.Count == 0)
+            return [];
+
+        //get advanced trends' targets
+        bullet_phases = advanced_trends
+            .SelectMany(advanceds => advanceds.Targets).ToHashSet(PhaseComparer.Default);
+
+        //get target trends initiator only
+        hit_trends = bullet_phases.SelectMany(target => target.Parents)
+            .Where(trend => trend.IsAnyInitiator(bullet_phases))
+            .Select(trend => trend with
+            {
+                Identity = Trend.IdentityBase++,
+                StartPosition = position,
+                EndPosition = position
+            })
+            .ToHashSet(TrendComparer.Default);
+
+        var previous_trends = new HashSet<Trend>(TrendComparer.Default);
+
+        while (true)
+        {
+            //build pool
+            this.Pool.UnionWith(hit_trends);
+
+            advanced_trends = this.Pool.Where(
+                hit_trend => hit_trend.Advance(bullet_phases, position))
+                .ToHashSet(TrendComparer.Default);
+
+            //test exit condition
+            if (advanced_trends.Count == 0
+                || advanced_trends.Select(t=>t.ToString())
+                    .ToHashSet().SetEquals(previous_trends.Select(t => t.ToString()))) 
+                break;
+
+            bullet_phases = advanced_trends
+                .SelectMany(trend => trend.Targets).ToHashSet(PhaseComparer.Default);
+            
+            hit_trends = bullet_phases.SelectMany(target => target.Parents)
+                   .Where(trend => trend.IsAnyInitiator(bullet_phases))
+                   .Distinct()
+                   .Select(trend => trend with
+                   {
+                       Identity = Trend.IdentityBase++,
+                       StartPosition = position,
+                       EndPosition = position
+                   })
+                   .ToHashSet(TrendComparer.Default);
+            hit_trends.UnionWith(advanced_trends);
+
+            this.Pool.ExceptWith(advanced_trends.Where(done => !done.IsTop));
+            previous_trends = advanced_trends;
+        }
+        completeds.RemoveWhere(t => !t.IsComplete || t.IsLex);
+        if (last)
+        {
+            previous_trends = Compact(Trim(previous_trends));
+            return [.. previous_trends.OrderBy(p => p.Identity)];
+        }
+        else
+        {
+            return [];
+        }
+
     }
 
     public static HashSet<Trend> Compact(HashSet<Trend> trends)

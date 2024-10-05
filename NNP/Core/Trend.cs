@@ -1,4 +1,5 @@
 ﻿using NNP.ZRF;
+using System.Diagnostics;
 using System.Text;
 
 namespace NNP.Core;
@@ -30,6 +31,7 @@ public record class Trend(string Name = "", Description? Description = null, boo
     public HashSet<Trend> GetBranches(HashSet<Trend> trends)
         => trends.Where(this.IsBranch).ToHashSet();
 
+    public string Formatted => new TrendPrinter().Print(this).ToString();
     public Trend UpdatePosition()
     {
 
@@ -74,7 +76,7 @@ public record class Trend(string Name = "", Description? Description = null, boo
         => this.Flattern(new()).ToString();
 
     public override string ToString()
-        => $"{this.Name} : {string.Join(", ", this.Line)}";
+        => $"{this.Name} : {string.Join(", ", this.Line.Select(line=>line.Name))}";
 
     public string Describe() => $"{this.Name} => Line:{string.Join(",", this.Line)};Targets:{string.Join(",", this.Targets)}";
 
