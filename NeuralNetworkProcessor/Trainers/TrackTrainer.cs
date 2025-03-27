@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Utilities;
 
 namespace NeuralNetworkProcessor.Trainers;
 
 public class Track : List<string> 
 {
-    public static implicit operator Track(string text)=>new() { text };
+    public static implicit operator Track(string text)=>[text];
     public static Track operator +(Track t, string s) => new(t) { s };
     public Track() { }
     public Track(IEnumerable<string> collection) : base(collection) { }
@@ -20,8 +18,8 @@ public class Track : List<string>
 }
 public class TrackTrainer : WordTrainer
 {
-    public HashSet<Track> FreqentlySeenTracks { get; } = new();
-    public Dictionary<Track, int> TracksCount { get; } = new();
+    public HashSet<Track> FreqentlySeenTracks { get; } = [];
+    public Dictionary<Track, int> TracksCount { get; } = [];
     public int MaxTrackLength { get; set; } = DefaultMaxSequenceLength;
     public int MaxExtractedTrackLength { get; set; } = 32;
     public override void Read(int ch, long cpos)
@@ -61,7 +59,7 @@ public class TrackTrainer : WordTrainer
         return words.Count > 0;
     }
 
-    public ListLookups<long, Track> CurrentTracks { get; } = new ();
+    public ListLookups<long, Track> CurrentTracks { get; } = [];
     public void Read(List<(string word,long pos)> words, long pos)
     {
         foreach(var w in words)
@@ -78,7 +76,7 @@ public class TrackTrainer : WordTrainer
                 this.CurrentTracks.Remove(t.Key);
             else 
                 this.CurrentTracks[t.Key].Add(
-                    (t.Value.LastOrDefault() ?? new Track()) + word);
+                    (t.Value.LastOrDefault() ?? []) + word);
         }
         this.CurrentTracks.Add(pos, word);
     }

@@ -6,20 +6,19 @@ using System.Threading.Tasks;
 
 namespace NeuralNetworkProcessor.NT;
 
-public class GStringReader : StringReader, GLocationReader
+public class GStringReader(string text) : StringReader(text), GLocationReader
 {
     protected int line = 0;
     protected int column = 0;
     protected int position = 0;
-    protected int length = 0;
+    protected int length = text?.Length ?? 0;
     protected string text = string.Empty;
     public virtual string Text => this.text;
     public virtual int Line => this.line;
     public virtual int Column => this.column;
     public virtual int Position => this.position;
     public virtual int Length => this.length;
-    public GStringReader(string text) : base(text)
-        => this.length = text?.Length ?? 0;
+
     public GLocationReader Clone() 
         => new GStringReader(this.text) 
         {

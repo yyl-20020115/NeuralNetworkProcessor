@@ -41,9 +41,9 @@ public static class ModelExtractor
         else if (attribute.AsPatterns)
         {
             return attribute.Texts.Select(
-                text => new Description(new () {
+                text => new Description([
                     new ($"\"{text}\"")
-                })).ToList();
+                ])).ToList();
         }
         else if (ExtractValueTupleTypes(type, names))
         {

@@ -115,9 +115,9 @@ public static class Builder
         //we never rebuild anything that is already built
         var blt = pre != null
             ? new HashSet<Definition>(pre.Clusters.Select(c => c.Definition))
-            : new ()
+            : []
             ;
-        GetDefinitionsLooper(top.ToList())(definition =>
+        GetDefinitionsLooper([.. top])(definition =>
         {
             if (blt.Add(definition)) all.Add(
                 BuildCluster(definition, top, all, idict, udict));
@@ -125,7 +125,7 @@ public static class Builder
 
         return new Aggregation(
             knowledge.Topic,
-            all.OrderBy(d => d.Index).ToList()) { Knowledge = knowledge }.BackBind();
+            [.. all.OrderBy(d => d.Index)]) { Knowledge = knowledge }.BackBind();
     }
 
     /// <summary>
@@ -211,34 +211,34 @@ public static class Builder
                     {
                         var points_cells = new List<Cell>();
                         var points = UnicodeHelper.NextPoint(declosed).ToList();
-                        foreach (var point in points)
+                        foreach (var (u, c, len) in points)
                         {
                             TerminalCluster tc = null;
                             string name = string.Empty;
-                            if (point.u == UnicodeClass.Unknown)
+                            if (u == UnicodeClass.Unknown)
                             {
-                                name = "\'" + char.ConvertFromUtf32(point.c) + "\'";
-                                if (!idict.TryGetValue(point.c, out var dict_cluster))
-                                    idict[point.c] = dict_cluster = new CharacterCluster(name, UTF32: point.c) { Index = -1 };
-                                tc = idict[point.c];
+                                name = $"\'{char.ConvertFromUtf32(c)}\'";
+                                if (!idict.TryGetValue(c, out var dict_cluster))
+                                    idict[c] = dict_cluster = new CharacterCluster(name, UTF32: c) { Index = -1 };
+                                tc = idict[c];
                             }
                             else
                             {
-                                if (!udict.TryGetValue(point.u, out var dict_cluster))
+                                if (!udict.TryGetValue(u, out var dict_cluster))
                                 {
-                                    udict[point.u]
+                                    udict[u]
                                         = dict_cluster
                                         = new RangeCluster(
-                                            name = "[" + point.u + "]") { Index = -1 }
+                                            name = $"[{u}]") { Index = -1 }
                                         .TryBindFilter(new()
                                         {
                                             Type = CharRangeType.UnicodeClass,
-                                            Class = point.u,
+                                            Class = u,
                                         });
                                 }
-                                tc = udict[point.u];
+                                tc = udict[u];
                             }
-                            var cell = BuildCellFrom("_" + name, i);
+                            var cell = BuildCellFrom($"_{name}", i);
                             points_cells.Add(cell);
                             tc.BindTarget(cell);
                             all.Add(tc);
@@ -248,24 +248,24 @@ public static class Builder
                         if (points.Count == 1 && description.Phrases.Count == 1)
                         {
                             top_cells[(description, phrase)] = points_cells[0];
-                            points_cells = new();
+                            points_cells = [];
                             need_subcluster = false;
                         }
                         if (need_subcluster)
                         {
                             var dp = new Description(
                                     declosed.Select(
-                                        p => new Phrase("_'" + p + "'")).ToList());
+                                        p => new Phrase($"_'{p}'")).ToList());
 
                             var subdefinition = new Definition(text,
-                                new(){ dp }, true);
+                                [dp], true);
                             
                             dp.Definition = subdefinition;
 
                             top.Add(subdefinition);
                             var subcluster = new CommonCluster(
-                                text, new List<Trend> {
-                                    new (points_cells, dp) }, subdefinition).BackBind();
+                                text, [
+                                    new (points_cells, dp) ], subdefinition).BackBind();
 
                             all.Add(subcluster);
                             var subcell = BuildCellFrom(text, i);
@@ -274,7 +274,7 @@ public static class Builder
                             if (description.Phrases.Count == 1)
                             {
                                 top_cells[(description, phrase)] = subcell;
-                                points_cells = new();
+                                points_cells = [];
                             }
                         }
                     }

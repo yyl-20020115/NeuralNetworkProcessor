@@ -66,9 +66,9 @@ public static class Parser
     {
         if (reader == null) return new ParseResult(ParseStatus.InvalidReader);
         var name = "";
-        var db = new List<Definition>() { Definition.Default };
-        var pb = new List<Description>();
-        var fs = new List<Phrase>();
+        List<Definition> db = [Definition.Default];
+        List<Description> pb = [];
+        List<Phrase> fs = [];
         var i = 0;
         var j = 0;
         var k = 0;
@@ -81,7 +81,7 @@ public static class Parser
             else if (line.EndsWith(':'))
             {
                 name = Trim(line.TrimEnd(':'));
-                db.Add(new(name, pb = new()) { Index = i++ });
+                db.Add(new(name, pb = []) { Index = i++ });
                 j = 0;
             }
             else

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using NeuralNetworkProcessor.ZRF;
 using System.IO;
 
@@ -124,7 +123,7 @@ public partial class FastParser
                 ;
 
             results.Add(new(
-                patterns.ToImmutableArray(),
+                [.. patterns],
                 s, e - s, key))
                 ;
         }
@@ -182,7 +181,7 @@ public class Debuger
         {
             using var writer = new StringWriter();
             text ??= string.Empty;
-            writer.Write(string.Format("[{0:X8}]", Index));
+            writer.Write($"[{Index:X8}]");
             writer.WriteLine(text);
             System.Diagnostics.Debug.Write(writer.ToString());
             Index++;

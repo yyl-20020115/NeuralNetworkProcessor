@@ -1,6 +1,7 @@
 ﻿using NeuralNetworkProcessor.Core;
 
-namespace NeuralNetworkCodeEdit.LUA;
+
+namespace NeuralNetworkProcessorSample.Samples.LUA;
 
 public partial record Node;
 public partial record WhiteSpace(

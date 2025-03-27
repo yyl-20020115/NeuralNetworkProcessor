@@ -15,7 +15,7 @@ public class GPrinter(TextWriter writer = null)
     public int LineCount { get; protected set; } = 0;
     public TextWriter Writer { get; protected set; } = writer ?? new StringWriter();
 
-    protected ListStack<string> stack = new();
+    protected ListStack<string> stack = [];
     protected string Indent => this.stack.Aggregate("",(a, b) => a + b);
     protected void Enter(bool v) => this.stack.Push(v ? VertText : SpacesText);
     protected void Leave() => this.stack.Pop();

@@ -21,7 +21,7 @@ public sealed record Cell(string Text, Phrase Phrase = null) : NeuralEntity
     public bool HasAnyDeepSource => this.Sources.Any(s => s.HasDeepRecurse);
     public bool HasLowerRecurse { get; set; }
     [YamlHasLinks]
-    public HashSet<Cluster> Sources { get; set; } = new();
+    public HashSet<Cluster> Sources { get; set; } = [];
     public Cell() : this("",Phrase.Default) { }
     public Cell Bind(Trend Owner)
     {
@@ -37,7 +37,7 @@ public sealed record Cell(string Text, Phrase Phrase = null) : NeuralEntity
         return this;
     }
     public override string ToString() 
-        => this.Text + (this.Optional ? "?" : "");
+        => $"{this.Text}{(this.Optional ? "?" : "")}";
 
     public Cell Duplicate() 
         => new(this);

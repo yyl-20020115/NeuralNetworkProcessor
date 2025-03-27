@@ -71,7 +71,7 @@ public sealed record MatrixRow
             doAdvance: true);
         var row = dup.ContainerRow = new MatrixRow(this)
         {
-            Stack = new() { dup },
+            Stack = [dup],
             ParentRow = this,
             IsPreset = false,
             IsPrefix = true,

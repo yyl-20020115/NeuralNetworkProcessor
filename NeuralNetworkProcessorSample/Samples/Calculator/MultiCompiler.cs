@@ -4,7 +4,7 @@ using NeuralNetworkProcessor.Core;
 using NeuralNetworkProcessor.Reflection;
 using NeuralNetworkProcessor.ZRF;
 
-namespace NeuralNetworkProcessorSample.Calculator;
+namespace NeuralNetworkProcessorSample.Samples.Calculator;
 
 public class MultiCompiler
 {
@@ -12,7 +12,7 @@ public class MultiCompiler
         = "C:\\Windows\\Microsoft.net\\Framework\\v4.0.30319\\";
 
     public Universe Universe { get; } = new();
-    public FastParser Parser { get; private set; }
+    public FastParser? Parser { get; private set; } = null;
     public MultiCompiler()
     {
         if (ModelExtractor.Extract(
@@ -28,7 +28,7 @@ public class MultiCompiler
         => this.Universe.LoadFile(
              Path.Combine(DefaultGlobalAssembliesCachePath, $"{args.Name}.dll"));
     public virtual List<Results> Parse(string expression)
-        => this.Parser.Parse(expression);
+        => this.Parser?.Parse(expression)??[];
     public virtual Node? Build(List<Results> results)
         => results != null && results.Count > 0
             ? ModelBuilder<Node, InterpretrContext, double>.Build(

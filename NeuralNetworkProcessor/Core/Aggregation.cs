@@ -18,6 +18,6 @@ public sealed record Aggregation(string Name,List<Cluster> Clusters = null,Knowl
     }
 
     public override string ToString()
-        => this.Name + this.Clusters.Aggregate("", (a, b) => a + Environment.NewLine + b);
+        => $"{this.Name}{this.Clusters.Aggregate("", (a, b) => a + Environment.NewLine + b)}";
 
 }

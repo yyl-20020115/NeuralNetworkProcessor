@@ -4,7 +4,7 @@ using NeuralNetworkProcessor.Core;
 using NeuralNetworkProcessor.Reflection;
 using NeuralNetworkProcessor.ZRF;
 
-namespace NeuralNetworkProcessorSample.Calculator;
+namespace NeuralNetworkProcessorSample.Samples.Calculator;
 
 public class FastCompiler
 {

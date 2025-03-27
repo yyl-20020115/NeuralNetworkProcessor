@@ -31,7 +31,7 @@ public class WordTrainer
     public virtual long Position { get; set; } = 0L;
     public virtual void Train(Input input)
     {
-        foreach (var (ch, final) in input()) this.Read(ch, this.Position++);
+        foreach (var (ch, _) in input()) this.Read(ch, this.Position++);
     }
 
     public virtual void Read(int ch, long pos)

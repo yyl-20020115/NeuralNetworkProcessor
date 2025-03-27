@@ -73,7 +73,7 @@ public sealed record MatrixLine(
         ? this.Sequence[this.Pivot]
         : -1
         ;
-    public List<SymbolExtraction> SymbolExtractions { get;  set; } = new();
+    public List<SymbolExtraction> SymbolExtractions { get;  set; } = [];
     public int LastStartPos 
         => this.SymbolExtractions.Count > 0 
         ? this.SymbolExtractions[^1].Position 
@@ -146,7 +146,7 @@ public sealed record MatrixLine(
         this.Shifted = false;
         this.Pivot = 0;
         //NOTICE:if isshared, the shared connection is broken
-        this.SymbolExtractions = new ();
+        this.SymbolExtractions = [];
         this.Shared = false;
         return this;
     }

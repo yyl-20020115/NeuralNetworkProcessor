@@ -42,10 +42,10 @@ public sealed class PatternAttribute : Attribute
             for (int i = 0; i < ts.Length; i++)
                 if (ts[i] == OptionalText)
                     list.Add(i);
-            return list.ToArray();
+            return [.. list];
         }else if(this.Optionals!=null && this.Optionals.Length > 0)
             return this.Optionals;
-        return Array.Empty<int>();
+        return [];
     }
 }
 public interface INode { }

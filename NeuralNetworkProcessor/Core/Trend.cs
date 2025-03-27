@@ -71,5 +71,5 @@ public sealed record Trend(List<Cell> Cells, Description Description = null) : N
         return builder.ToString();
     }
     public override string ToString()
-        => ((this.OwnerCluster?.Name ?? string.Empty) + " : ") + this.Cells.Aggregate("", (a, b) => a + b.ToString() + " ");
+        => $"{(this.OwnerCluster?.Name ?? string.Empty) + " : "}{this.Cells.Aggregate("", (a, b) => a + b.ToString() + " ")}";
 }

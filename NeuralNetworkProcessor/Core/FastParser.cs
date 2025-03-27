@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using Utilities;
@@ -155,21 +154,18 @@ public partial class FastParser
         foreach (var trend in trends)
         {
             var pattern = new Pattern(
-                new SymbolExtraction[]
-                { span.Duplicate() }
-                .ToImmutableArray(),
+                [span.Duplicate()],
                 Position, 
                 span.Length,
                 trend.Description,
                 trend) 
             { Definition = trend.OwnerCluster.Definition };
             var result = new Results(
-                new[] { pattern }
-                .ToImmutableArray(),
+                [pattern],
                 Position, 
                 pattern.Length, 
                 trend.OwnerCluster.Definition.IsDynamicBuilt 
-                ? new ("_'"+span.Text+"'", [])
+                ? new ($"_'{span.Text}'", [])
                 : trend.OwnerCluster.Definition);
             this.InputResults.Add(result);
         }

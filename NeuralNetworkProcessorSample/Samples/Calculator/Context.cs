@@ -1,4 +1,5 @@
-﻿namespace NeuralNetworkProcessorSample.Calculator;
+﻿namespace NeuralNetworkProcessorSample.Samples.Calculator;
+
 public partial record Context
 {
 

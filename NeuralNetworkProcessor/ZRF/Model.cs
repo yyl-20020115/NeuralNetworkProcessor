@@ -61,7 +61,7 @@ public sealed record Description(List<Phrase> Phrases) : Group
 }
 public sealed record Definition(string Text, List<Description> Descriptions,bool IsDynamicBuilt = false) : Symbol, Group
 {
-    public static readonly Definition Default = new("", new List<Description>());
+    public static readonly Definition Default = new("", []);
     public static implicit operator Phrase(Definition definition)
         => new(definition.Text);
 
@@ -83,16 +83,16 @@ public sealed record Definition(string Text, List<Description> Descriptions,bool
         this.Knowledge = Knowledge;
         return this.BackBind();
     }
-    public Definition() : this("", new List<Description>()) { }
+    public Definition() : this("", []) { }
     //public override int GetHashCode() => base.GetHashCode();
     public override string ToString()
-        => this.Text +":"+ this.Descriptions.Aggregate("", (a, b) => a + (string.IsNullOrEmpty(a)?"":"|") + b.ToString()) +";";
+        => $"{this.Text}:{this.Descriptions.Aggregate("", (a, b) => a + (string.IsNullOrEmpty(a)?"":"|") + b.ToString())};";
 }
 public sealed record Knowledge(string Topic, List<Definition> Definitions) :Group
 {
     public const int DefaultMaxOptionals = 6;
-    public static readonly Knowledge Default = new("", new());
-    public List<Definition> Definitions { get; set; } = Definitions ?? new();
+    public static readonly Knowledge Default = new("", []);
+    public List<Definition> Definitions { get; set; } = Definitions ?? [];
     public Knowledge BackBind()
     {
         var i = 0;
@@ -103,7 +103,7 @@ public sealed record Knowledge(string Topic, List<Definition> Definitions) :Grou
         => this.Definitions.SelectMany(d => d.Descriptions).Where(d => d.Phrases.Count(c => c.Optional) > MaxOptionals).ToArray();
     public bool AnyDescriptionsWithMoreOptionalsThan(int MaxOptionals = DefaultMaxOptionals)
         => this.Definitions.SelectMany(d => d.Descriptions).Any(d => d.Phrases.Count(c => c.Optional) > MaxOptionals);
-    public Knowledge() : this("", new List<Definition>()) { }
+    public Knowledge() : this("", []) { }
     //public override int GetHashCode() => base.GetHashCode();
     public override string ToString()
         =>  this.Definitions.Aggregate(this.Topic, (a, b) => a + (string.IsNullOrEmpty(a)?"":" ") + b.ToString());
@@ -118,5 +118,5 @@ public sealed record Knowledge(string Topic, List<Definition> Definitions) :Grou
         return this;
     }
     public Knowledge Copy()
-        => new(this.Topic, new (this.Definitions) { Definition.Default });
+        => new(this.Topic, [.. this.Definitions, Definition.Default]);
 }

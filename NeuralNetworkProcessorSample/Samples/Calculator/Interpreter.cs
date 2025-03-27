@@ -4,7 +4,8 @@ using NeuralNetworkProcessor.Core;
 using NeuralNetworkProcessor.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace NeuralNetworkProcessorSample.Calculator;
+
+namespace NeuralNetworkProcessorSample.Samples.Calculator;
 
 public partial record class Node : INode<Node, InterpretrContext, double>
 {

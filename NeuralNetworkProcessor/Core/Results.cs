@@ -66,7 +66,7 @@ public record TextSpan(string Text, int Position, int Length, Symbol Symbol = nu
 }
 public record Pattern(ImmutableArray<SymbolExtraction> SymbolExtractions, int Position, int Length, Description Description = null,Trend Trend=null) : PatternExtraction
 {
-    public static readonly Pattern Default = new (ImmutableArray<SymbolExtraction>.Empty, 0, 0, Description.Default,Trend.Default);
+    public static readonly Pattern Default = new ([], 0, 0, Description.Default,Trend.Default);
     public static long CurrentSerial { get; protected set; } = 0L;
     public long Serial { get; init; } = CurrentSerial++;
     /// <summary>
@@ -102,7 +102,7 @@ public record Pattern(ImmutableArray<SymbolExtraction> SymbolExtractions, int Po
 }
 public record Results(ImmutableArray<Pattern> Patterns, int Position, int Length, Symbol Symbol) : SymbolExtraction
 {
-    public static readonly Results Default = new (ImmutableArray<Pattern>.Empty, 0, 0, Definition.Default);
+    public static readonly Results Default = new ([], 0, 0, Definition.Default);
     [YamlIgnore]
     public Symbol Symbol { get; init; } = Symbol;
     [YamlIgnore]
@@ -122,9 +122,8 @@ public record Results(ImmutableArray<Pattern> Patterns, int Position, int Length
         return this;
     }
     public override string ToString()
-        => this.Symbol.Text+$"({this.Position},{this.EndPosition})" 
-            + $"=\"{this.Extract()}\"" + this.Patterns.Aggregate("",
-            (a,b)=>a+ (a!="" ? ",":"") +b.ToString());
+        => $"{this.Symbol.Text}({this.Position},{this.EndPosition})=\"{this.Extract()}\"{this.Patterns.Aggregate("",
+            (a,b)=>a+ (a!="" ? ",":"") +b.ToString())}";
     public virtual string Extract() => this.Patterns.Aggregate("",
             (a, b) => a + (a != "" ? "," : "") + b.Extract());
     public Results Include(Results other)

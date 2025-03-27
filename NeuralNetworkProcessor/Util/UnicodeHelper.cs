@@ -35,7 +35,7 @@ public static class UnicodeHelper
     public static bool TryParseUnicode(string text,out int u)
     {
         u = -1;
-        return text.ToLower().StartsWith("\\u") && int.TryParse(text[2..], NumberStyles.HexNumber, null, out u);
+        return text.StartsWith("\\u", System.StringComparison.CurrentCultureIgnoreCase) && int.TryParse(text[2..], NumberStyles.HexNumber, null, out u);
     }
     /// <summary>
     /// \uXXXXXXXX-\uXXXXXXXX

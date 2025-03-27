@@ -51,7 +51,7 @@ public abstract record Cluster(string Name, List<Trend> Trends, Definition Defin
         return this;
     }
     public override string ToString()
-        => this.Name + this.Trends.Aggregate(" : ", (a, b) => a + Environment.NewLine + b.ToString()) + Environment.NewLine;
+        => $"{this.Name}{this.Trends.Aggregate(" : ", (a, b) => a + Environment.NewLine + b.ToString())}{Environment.NewLine}";
 }
 public record CommonCluster(string Name, List<Trend> Trends, Definition Definition = null) : Cluster(Name, Trends, Definition)
 {
@@ -59,7 +59,7 @@ public record CommonCluster(string Name, List<Trend> Trends, Definition Definiti
     public override string ToString()
         => this.Name + this.Trends.Aggregate(" : ", (a, b) => a + Environment.NewLine + b.ToString()) + Environment.NewLine;
 }
-public record TerminalCluster(string Name, Definition Definition = null) : Cluster(Name, new List<Trend>(), Definition)
+public record TerminalCluster(string Name, Definition Definition = null) : Cluster(Name, [], Definition)
 {
     public TerminalCluster() : this("", Definition.Default) { }
     /// <summary>
@@ -137,7 +137,7 @@ public record RangeCluster(string Name, Definition Definition = null) : Terminal
         return accepted;
     }
     public override string ToString()
-        => "[" + this.Filter.ToString() + "]";
+        => $"[{this.Filter}]";
 }
 public enum CharRangeType : uint
 {
