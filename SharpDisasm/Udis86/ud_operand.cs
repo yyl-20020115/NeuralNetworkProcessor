@@ -34,36 +34,30 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // --------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+namespace SharpDisasm.Udis86;
 
-
-namespace SharpDisasm.Udis86
+#pragma warning disable 1591
+/// <summary>
+/// Disassembled instruction Operand.
+/// </summary>
+public struct ud_operand
 {
-    #pragma warning disable 1591
+    public ud_type type;
+    public ushort size;
+    public ud_type @base;
+    public ud_type index;
+    public byte scale;
     /// <summary>
-    /// Disassembled instruction Operand.
+    /// Offset size (8, 16, 32, 64)
     /// </summary>
-    public struct ud_operand
-    {
-        public ud_type type;
-        public ushort size;
-        public ud_type @base;
-        public ud_type index;
-        public byte scale;
-        /// <summary>
-        /// Offset size (8, 16, 32, 64)
-        /// </summary>
-        public byte offset;
-        public ud_lval lval;
+    public byte offset;
+    public ud_lval lval;
 
-        #region internal use only
-        
-        internal ud_operand_code _oprcode;
-        
-        #endregion
-    }
-    #pragma warning restore 1591
+    #region internal use only
+    
+    internal ud_operand_code _oprcode;
+    
+    #endregion
 }
+#pragma warning restore 1591
+

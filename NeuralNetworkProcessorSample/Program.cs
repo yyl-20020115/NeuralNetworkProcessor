@@ -1,15 +1,27 @@
 ﻿using NeuralNetworkProcessor.Core;
-using NeuralNetworkProcessorSample.Calculator;
+using NeuralNetworkProcessorSample.Samples.Calculator;
 using System.Reflection;
 
 namespace NeuralNetworkCodeEdit;
 
 public class ProgramEntry
 {
-    public static void Main(string[] args)
+    public static void DoTests()
+    {
+        for (int it = 0; it < 100; it++)
+        {
+            var dict = new Dictionary<string, double>();
+            var exp = ExpressionGenerator.GenerateRandomVariableExpressionTree(dict, 6, 1.0, true);
+            var expstring = exp.ToString();
+            var result = exp.Calculate(dict);
+
+        }
+
+    }
+    public static void DefaultTests(string path)
     {
         var input = Path.Combine(Environment.CurrentDirectory,
-            args.Length > 0 ? args[0] : "input.txt");
+          path);
 
         using var reader = new StreamReader(input);
         var root = Path.Combine(
@@ -26,8 +38,8 @@ public class ProgramEntry
             if (text.Length == 0 || text.StartsWith('#')) continue;
             lines.Add((text, i++));
         }
-        
-        lines./*AsParallel().ForAll*/ForEach(line => 
+
+        lines./*AsParallel().ForAll*/ForEach(line =>
         {
             var (l, i) = line;
             var output_file = Path.Combine(
@@ -52,7 +64,7 @@ public class ProgramEntry
             writer.Write(printer);
             writer.WriteLine(separator);
 
-            if (compile)
+            if (path != null && compile)
             {
                 compiler.Compile(
                     tree,
@@ -69,5 +81,11 @@ public class ProgramEntry
                 writer.WriteLine($"{l} = {dump} = {@object}");
             }
         });
+    }
+
+
+    public static void Main(string[] args)
+    {
+        DefaultTests(args.Length > 0 ? args[0] : "input.txt");
     }
 }

@@ -34,48 +34,36 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // --------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+namespace SharpDisasm.Helpers;
 
-namespace SharpDisasm.Helpers
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="AssemblyCodeArray" /> class.
+/// </remarks>
+/// <param name="code">The code.</param>
+/// <param name="offset">The offset.</param>
+internal class AssemblyCodeOffset(IAssemblyCode code, int offset) : IAssemblyCode
 {
+    private readonly IAssemblyCode code = code;
+    private readonly int offset = offset;
+
     /// <summary>
-    /// 
+    /// Gets or sets the <see cref="System.Byte"/> at the specified index.
     /// </summary>
-    internal class AssemblyCodeOffset : IAssemblyCode
-    {
-        private IAssemblyCode code;
-        private int offset;
+    /// <value>
+    /// The <see cref="System.Byte"/>.
+    /// </value>
+    /// <param name="index">The index.</param>
+    /// <returns></returns>
+    byte IAssemblyCode.this[int index] => code[index + offset];
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssemblyCodeArray" /> class.
-        /// </summary>
-        /// <param name="code">The code.</param>
-        /// <param name="offset">The offset.</param>
-        public AssemblyCodeOffset(IAssemblyCode code, int offset)
-        {
-            this.code = code;
-            this.offset = offset;
-        }
-
-        /// <summary>
-        /// Gets or sets the <see cref="System.Byte"/> at the specified index.
-        /// </summary>
-        /// <value>
-        /// The <see cref="System.Byte"/>.
-        /// </value>
-        /// <param name="index">The index.</param>
-        /// <returns></returns>
-        byte IAssemblyCode.this[int index] { get { return code[index + offset]; } }
-
-        /// <summary>
-        /// Gets the length.
-        /// </summary>
-        /// <value>
-        /// The length.
-        /// </value>
-        int IAssemblyCode.Length { get { return code.Length - offset; } }
-    }
+    /// <summary>
+    /// Gets the length.
+    /// </summary>
+    /// <value>
+    /// The length.
+    /// </value>
+    int IAssemblyCode.Length => code.Length - offset;
 }

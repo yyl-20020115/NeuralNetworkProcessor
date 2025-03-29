@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace NeuralNetworkProcessorSample.Calculator;
+namespace NeuralNetworkProcessorSample.Samples.Calculator;
 
 public partial record class Node : INode<Node, InterpretrContext, double>
 {

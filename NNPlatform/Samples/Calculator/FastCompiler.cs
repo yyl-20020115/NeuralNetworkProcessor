@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace NeuralNetworkProcessorSample.Calculator;
+namespace NeuralNetworkProcessorSample.Samples.Calculator;
 
 public class FastCompiler
 {

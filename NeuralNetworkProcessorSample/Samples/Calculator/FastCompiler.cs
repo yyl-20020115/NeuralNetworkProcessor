@@ -12,7 +12,7 @@ public class FastCompiler
         = "C:\\Windows\\Microsoft.net\\Framework\\v4.0.30319\\";
 
     public Universe Universe { get; } = new();
-    public FastParser Parser { get; private set; }
+    public FastParser? Parser { get; private set; }
     public FastCompiler()
     {
         if (ModelExtractor.Extract(
@@ -28,14 +28,14 @@ public class FastCompiler
         => this.Universe.LoadFile(
              Path.Combine(DefaultGlobalAssembliesCachePath, $"{args.Name}.dll"));
     public virtual List<Results> Parse(string expression)
-        => this.Parser.Parse(expression);
+        => this.Parser?.Parse(expression)??[];
     public virtual Node? Build(List<Results> results)
         => results != null && results.Count > 0
             ? ModelBuilder<Node, InterpretrContext, double>.Build(
                 results.First(), typeof(Node), typeof(Node).Assembly) as Node
             : null;
 
-    public virtual AssemblyBuilder Compile(
+    public virtual AssemblyBuilder? Compile(
         string expression,
         string fileName,
         string functionName = "CalcFunction",
@@ -43,8 +43,10 @@ public class FastCompiler
         string assemblyName = "Calculator",
         PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
         ImageFileMachine machine = ImageFileMachine.I386)
-        => this.Compile(this.Parse(expression), fileName, functionName, moduleName, assemblyName, kind, machine);
-    public virtual AssemblyBuilder Compile(
+        => this.Compile(
+            this.Parse(expression), 
+            fileName, functionName, moduleName, assemblyName, kind, machine);
+    public virtual AssemblyBuilder? Compile(
         List<Results> results,
         string fileName,
         string functionName = "CalcFunction",
@@ -53,24 +55,27 @@ public class FastCompiler
         PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
         ImageFileMachine machine = ImageFileMachine.I386)
     {
-        var root = ModelBuilder<Node, string, double>.Build(
+        if(ModelBuilder<Node, string, double>.Build(
             results.FirstOrDefault(), typeof(Node),
-            typeof(Node).Assembly, typeof(Node).Namespace) as Node;
-        var builder = this.Emit(
-                root,
-                functionName,
-                moduleName,
-                fileName,
-                assemblyName);
-        builder.Save(fileName, kind, machine);
-        return builder;
+            typeof(Node).Assembly, typeof(Node).Namespace) is Node root)
+        {
+            var builder = this.Emit(
+                    root,
+                    functionName,
+                    moduleName,
+                    fileName,
+                    assemblyName);
+            builder.Save(fileName, kind, machine);
+            return builder;
+        }
+        return null;
     }
-    public virtual AssemblyBuilder Emit(Node root,
+    public virtual AssemblyBuilder Emit(
+        Node root,
         string functionName,
         string moduleName,
         string fileName,
-        string assemblyName)
-    {
+        string assemblyName) {
         var builder =
             this.Universe.DefineDynamicAssembly
             (new(assemblyName),

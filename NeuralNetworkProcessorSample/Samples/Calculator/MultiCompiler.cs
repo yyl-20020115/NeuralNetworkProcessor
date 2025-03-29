@@ -28,14 +28,17 @@ public class MultiCompiler
         => this.Universe.LoadFile(
              Path.Combine(DefaultGlobalAssembliesCachePath, $"{args.Name}.dll"));
     public virtual List<Results> Parse(string expression)
-        => this.Parser?.Parse(expression)??[];
+        => this.Parser?.Parse(expression)??[]
+        ;
+
     public virtual Node? Build(List<Results> results)
         => results != null && results.Count > 0
             ? ModelBuilder<Node, InterpretrContext, double>.Build(
                 results.First(), typeof(Node), typeof(Node).Assembly) as Node
-            : null;
+            : null
+        ;
 
-    public virtual AssemblyBuilder Compile(
+    public virtual AssemblyBuilder? Compile(
         string expression,
         string fileName,
         string functionName = "CalcFunction",
@@ -43,8 +46,10 @@ public class MultiCompiler
         string assemblyName = "Calculator",
         PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
         ImageFileMachine machine = ImageFileMachine.I386)
-        => this.Compile(this.Parse(expression), fileName, functionName, moduleName, assemblyName, kind, machine);
-    public virtual AssemblyBuilder Compile(
+        => this.Compile(this.Parse(expression), fileName, functionName, moduleName, assemblyName, kind, machine)
+        ;
+
+    public virtual AssemblyBuilder? Compile(
         List<Results> results,
         string fileName,
         string functionName = "CalcFunction",
@@ -53,17 +58,20 @@ public class MultiCompiler
         PortableExecutableKinds kind = PortableExecutableKinds.ILOnly,
         ImageFileMachine machine = ImageFileMachine.I386)
     {
-        var root = ModelBuilder<Node, string, double>.Build(
+        if (ModelBuilder<Node, string, double>.Build(
             results.FirstOrDefault(), typeof(Node),
-            typeof(Node).Assembly, typeof(Node).Namespace) as Node;
-        var builder = this.Emit(
-                root,
-                functionName,
-                moduleName,
-                fileName,
-                assemblyName);
-        builder.Save(fileName, kind, machine);
-        return builder;
+            typeof(Node).Assembly, typeof(Node).Namespace) is Node root)
+        {
+            var builder = this.Emit(
+                    root,
+                    functionName,
+                    moduleName,
+                    fileName,
+                    assemblyName);
+            builder.Save(fileName, kind, machine);
+            return builder;
+        }
+        return null;
     }
     public virtual AssemblyBuilder Emit(Node root,
         string functionName,
@@ -80,7 +88,8 @@ public class MultiCompiler
     }
 
     public virtual void Emit(Node root, string functionName, string moduleName, string fileName, AssemblyBuilder asmBuilder)
-        => this.Emit(root, functionName, asmBuilder.DefineDynamicModule(moduleName, fileName));
+        => this.Emit(root, functionName, asmBuilder.DefineDynamicModule(moduleName, fileName))
+        ;
     public virtual void Emit(Node root, string functionName, ModuleBuilder moduleBuilder)
     {
         var methodBuilder = moduleBuilder.DefineGlobalMethod(

@@ -34,45 +34,34 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // --------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+namespace SharpDisasm.Helpers;
 
-namespace SharpDisasm.Helpers
+/// <summary>
+///
+/// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="AssemblyCodeArray"/> class.
+/// </remarks>
+/// <param name="buffer">The buffer.</param>
+internal class AssemblyCodeArray(byte[] buffer) : IAssemblyCode
 {
+    private readonly byte[] buffer = buffer;
+
     /// <summary>
-    ///
+    /// Gets or sets the <see cref="System.Byte"/> at the specified index.
     /// </summary>
-    internal class AssemblyCodeArray : IAssemblyCode
-    {
-        private byte[] buffer;
+    /// <value>
+    /// The <see cref="System.Byte"/>.
+    /// </value>
+    /// <param name="index">The index.</param>
+    /// <returns></returns>
+    byte IAssemblyCode.this[int index] => buffer[index];
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssemblyCodeArray"/> class.
-        /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        public AssemblyCodeArray(byte[] buffer)
-        {
-            this.buffer = buffer;
-        }
-
-        /// <summary>
-        /// Gets or sets the <see cref="System.Byte"/> at the specified index.
-        /// </summary>
-        /// <value>
-        /// The <see cref="System.Byte"/>.
-        /// </value>
-        /// <param name="index">The index.</param>
-        /// <returns></returns>
-        byte IAssemblyCode.this[int index] { get { return buffer[index]; } }
-
-        /// <summary>
-        /// Gets the length.
-        /// </summary>
-        /// <value>
-        /// The length.
-        /// </value>
-        int IAssemblyCode.Length { get { return buffer.Length; } }
-    }
+    /// <summary>
+    /// Gets the length.
+    /// </summary>
+    /// <value>
+    /// The length.
+    /// </value>
+    int IAssemblyCode.Length => buffer.Length;
 }

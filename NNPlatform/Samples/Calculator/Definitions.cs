@@ -1,6 +1,6 @@
 ﻿using NeuralNetworkProcessor.Core;
 
-namespace NeuralNetworkProcessorSample.Calculator;
+namespace NeuralNetworkProcessorSample.Samples.Calculator;
 
 public partial record WhiteSpace(
     [Pattern(

@@ -24,13 +24,7 @@
 #endregion
 using System;
 using System.Collections;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using SharpAssembler.Symbols;
 
 namespace SharpAssembler
@@ -135,20 +129,17 @@ namespace SharpAssembler
 		}
 
 		[NonSerialized]
-		private IDictionary annotations = new Hashtable();
-		/// <inheritdoc />
-		public IDictionary Annotations
-		{
-			get { return annotations; }
-		}
-		#endregion
+		private readonly IDictionary annotations = new Hashtable();
+        /// <inheritdoc />
+        public IDictionary Annotations => annotations;
+        #endregion
 
-		#region Methods
-		/// <summary>
-		/// Accepts the specified visitor.
-		/// </summary>
-		/// <param name="visitor">The <see cref="IObjectFileVisitor"/> visiting.</param>
-		public void Accept(IObjectFileVisitor visitor)
+        #region Methods
+        /// <summary>
+        /// Accepts the specified visitor.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IObjectFileVisitor"/> visiting.</param>
+        public void Accept(IObjectFileVisitor visitor)
 		{
 			visitor.VisitObjectFile(this);
 		}
