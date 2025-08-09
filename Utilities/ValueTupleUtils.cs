@@ -7,10 +7,15 @@ namespace Utilities;
 
 public static class ValueTupleUtils
 {
-    public static T[] Compose<T>(T[] a, T b) => (b != null ? a.Append(b).ToArray() : a);
-    public static T[] Compose<T>(params T[][] arrs) => arrs.SelectMany(a => a).ToArray();
+    public static T[] Compose<T>(T[] a, T b) 
+        => b != null ? [.. a, b] : a
+        ;
+    public static T[] Compose<T>(params T[][] arrs) 
+        => [.. arrs.SelectMany(a => a)]
+        ;
 
-    public static Type CreateValueTupleType(params Type[] types) => types.Length switch
+    public static Type CreateValueTupleType(params Type[] types)
+        => types.Length switch
     {
         0 => typeof(ValueTuple),
         1 => typeof(ValueTuple<>).MakeGenericType(types[0..1]),
@@ -24,10 +29,15 @@ public static class ValueTupleUtils
             Compose(types[0..7], CreateValueTupleType(types[7..]))),
     };
     public static object? CreateValueTupleObject(params object[]? values)
-        => values is null ? null : CreateValueTupleObject(values.Select(v => v?.GetType() ?? typeof(object)).ToArray(), values);
+        => values is null 
+        ? null 
+        : CreateValueTupleObject(
+            [.. values.Select(v => v?.GetType() ?? typeof(object))], values)
+        ;
     public static object? CreateValueTupleObject(Type[] gtypes, params object[] values)
     {
-        if (gtypes.Length == 0 || gtypes.Length != values.Length) return null;
+        if (gtypes.Length == 0 || gtypes.Length != values.Length)
+            return null;
         var types = new List<Type[]>();
         var lists = new List<object[]>();
         for (var i = 0; i < gtypes.Length; i += 7)
@@ -50,8 +60,10 @@ public static class ValueTupleUtils
         return v;
     }
     public static object? GetValueTupleElement(ITuple? valueTuple, int index = 0)
-    {
-        if (valueTuple == null || index < 0 || index >= valueTuple.Length) return null;
-        return valueTuple[index];
-    }
+        => valueTuple == null
+            || index < 0
+            || index >= valueTuple.Length
+            ? null
+            : valueTuple[index]
+            ;
 }

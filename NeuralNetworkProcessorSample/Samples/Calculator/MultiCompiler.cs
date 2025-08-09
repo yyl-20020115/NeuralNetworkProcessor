@@ -133,7 +133,7 @@ public class MultiCompiler
                 break;
         }
     }
-    public virtual void Emit(object tuple, ILGenerator generator)
+    public virtual void Emit(object? tuple, ILGenerator generator)
     {
         switch (tuple)
         {

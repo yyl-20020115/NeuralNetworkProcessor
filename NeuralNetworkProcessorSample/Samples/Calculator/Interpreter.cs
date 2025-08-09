@@ -3,6 +3,7 @@ using NeuralNetworkProcessor.ZRF;
 using NeuralNetworkProcessor.Core;
 using NeuralNetworkProcessor.Reflection;
 using System.Runtime.CompilerServices;
+using System.Data;
 
 
 namespace NeuralNetworkProcessorSample.Samples.Calculator;
@@ -11,7 +12,7 @@ public partial record class Node : INode<Node, InterpretrContext, double>
 {
     //NOTICE: This supports multiple patterns in parallel
     public virtual string PatternName { get; protected set; } = string.Empty;
-    public virtual object PatternTuple { get; protected set; } = null;
+    public virtual object? PatternTuple { get; protected set; } = null;
     public virtual object? this[int index]
         => ValueTupleUtils.GetValueTupleElement(this.PatternTuple as ITuple, index);
     public virtual Node Compose(InterpretrContext context, string pattern, params (int index, string name, object value)[] parameters)
@@ -19,7 +20,7 @@ public partial record class Node : INode<Node, InterpretrContext, double>
         this.PatternName = pattern;
         if (parameters.Length > 0)
             this.PatternTuple = ValueTupleUtils.CreateValueTupleObject(
-                    parameters.Select(parameter => parameter.value).ToArray()) ?? new();
+                    parameters.Select(parameter => parameter.value).ToArray());
         return this;
     }
     public virtual double Process(InterpretrContext context, double value)
@@ -29,7 +30,7 @@ public partial record class Node : INode<Node, InterpretrContext, double>
 }
 public partial record class Digit : Node
 {
-    public override string ToString() => _;
+    public override string ToString() => null;
 }
 public partial record class Integer : Node
 {
@@ -99,12 +100,14 @@ public partial record class Interpreter
 
     public Interpreter()
     {
-        if (ModelExtractor.Extract(
+        this.Parser = ModelExtractor.Extract(
             typeof(FastCompiler).Assembly,
             typeof(Node),
             typeof(Node).Namespace,
-            nameof(Calculator)) is Knowledge knowledge)
-            this.Parser = new FastParser().Bind(Builder.Rebuild(knowledge));
+            nameof(Calculator)) is Knowledge knowledge
+            ? new FastParser().Bind(Builder.Rebuild(knowledge))
+            : throw new InvalidExpressionException(nameof(this.Parser))
+            ;
     }
 
     public virtual List<Results> Parse(string expression)
@@ -123,19 +126,27 @@ public partial record class Interpreter
         };
     }
     public virtual double Run(List<Results> results)
-        => this.Run(results, new() { Interpreter = this });
+        => this.Run(results, new() { Interpreter = this })
+        ;
+
     public virtual double Run(List<Results> results, InterpretrContext context)
         => this.BuildFirstResult(results) is Node node
         ? ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN)
-        : double.NaN ;
+        : double.NaN 
+        ;
 
     public virtual double Run(Node node)
-        => this.Run(node, new() { Interpreter = this });
+        => this.Run(node, new() { Interpreter = this })
+        ;
+
     public virtual double Run(Node node, InterpretrContext context)
-        => ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN);
+        => ModelBuilder<Node, InterpretrContext, double>.Process(node, context, double.NaN)
+        ;
+
     public virtual Node? BuildFirstResult(List<Results> results)
         => results != null && results.Count > 0
             ? ModelBuilder<Node, string, double>.Build(
                 results.First(), typeof(Node), typeof(Node).Assembly) as Node
-            : null;
+            : null
+        ;
 }

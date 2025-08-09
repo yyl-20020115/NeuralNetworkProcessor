@@ -15,12 +15,12 @@ public static class ModelExtractor
             type => (string.IsNullOrEmpty(@namespace) || @namespace == type.Namespace)
             && type.IsSubclassOf(baseType ?? typeof(INode))), name).Compact().BackBind();
     public static Knowledge Extract(IEnumerable<Type> types, string name = "")
-        => new(name, types.Select(
+        => new(name, [.. types.Select(
             type => new Definition(
                 type.Name,
                 type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .SelectMany(p => ExtractProperty(p)).ToList()
-            )).ToList());
+            ))]);
     public static T ExtractAttribute<T>(PropertyInfo property) where T:Attribute
         =>  property.GetCustomAttribute<T>() is T pt
             ? pt

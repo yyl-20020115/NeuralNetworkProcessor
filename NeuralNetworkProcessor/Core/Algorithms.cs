@@ -89,7 +89,8 @@ public static class Algorithms
     /// <param name="aggregation"></param>
     /// <returns></returns>
     public static HashSet<Cluster> GetTops(Aggregation aggregation) 
-        => GetTops(aggregation.Clusters);
+        => GetTops(aggregation.Clusters)
+        ;
     public static HashSet<Cluster> GetTops(List<Cluster> all)
     {
         var cells = all.SelectMany(a => a.Trends.SelectMany(t => t.Cells)).ToList();
@@ -104,13 +105,17 @@ public static class Algorithms
     /// <param name="aggregation"></param>
     /// <returns></returns>
     public static HashSet<Cluster> GetAtoms(Aggregation aggregation)
-        => GetAtoms(aggregation.Clusters);
+        => GetAtoms(aggregation.Clusters)
+        ;
     public static HashSet<Cluster> GetAtoms(IEnumerable<Cluster> clusters) 
-        => [.. clusters.Where(c => c is TerminalCluster)];
+        => [.. clusters.Where(c => c is TerminalCluster)]
+        ;
     public static HashSet<Cluster> GetAbove(Aggregation aggregation,HashSet<Cluster> atoms)
-        => GetAboveAtoms(aggregation.Clusters,atoms);
+        => GetAboveAtoms(aggregation.Clusters,atoms)
+        ;
     public static HashSet<Cluster> GetAboveAtoms(IEnumerable<Cluster> clusters, HashSet<Cluster> atoms)
         => [.. clusters.Where(
             c => c.Trends.SelectMany(t => t.Cells).Any(s => s.Sources.Any(u =>
-            atoms.Contains(u))))];
+            atoms.Contains(u))))]
+        ;
 }

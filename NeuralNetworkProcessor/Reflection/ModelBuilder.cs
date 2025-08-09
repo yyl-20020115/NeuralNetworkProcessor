@@ -118,9 +118,7 @@ public static class ModelBuilder<N, C, V> where N : class
         return o;
     }
     public static PropertyInfo[] GetPatternProperties(Type type)
-        => type.GetProperties()
-        .Where(p => ModelExtractor.ExtractAttribute<PatternAttribute>(p) != null)
-        .ToArray();
+        => [.. type.GetProperties().Where(p => ModelExtractor.ExtractAttribute<PatternAttribute>(p) != null)];
 
     public static PropertyInfo GetPatternPropertyInfoAt(Type type, int index)
     {

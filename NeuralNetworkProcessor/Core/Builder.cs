@@ -17,19 +17,23 @@ public static class Builder
     public static string Serialize(Aggregation aggregation)
         => new SerializerBuilder(aggregation.GetType().Namespace)
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build().Serialize(aggregation);
+            .Build().Serialize(aggregation)
+        ;
     public static Aggregation Deserialize(string text)
         => new DeserializerBuilder(typeof(Aggregation).Namespace, typeof(Aggregation).Assembly)
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build().Deserialize<Aggregation>(text);
+            .Build().Deserialize<Aggregation>(text)
+        ;
     public static string SerializeResults(Results results)
         => new SerializerBuilder(results.GetType().Namespace)
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build().Serialize(results);
+            .Build().Serialize(results)
+        ;
     public static Results DeserializeResults(string text)
         => new DeserializerBuilder(typeof(Results).Namespace, typeof(Results).Assembly)
             .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build().Deserialize<Results>(text);
+            .Build().Deserialize<Results>(text)
+        ;
     //There should always be a limit on optionals
     //otherwise it will result in a great amount of expansion of trends
     //if you need more optionals than the limit,
