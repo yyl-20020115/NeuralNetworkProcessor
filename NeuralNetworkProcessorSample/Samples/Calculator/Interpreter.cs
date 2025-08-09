@@ -19,7 +19,7 @@ public partial record class Node : INode<Node, InterpretrContext, double>
         this.PatternName = pattern;
         if (parameters.Length > 0)
             this.PatternTuple = ValueTupleUtils.CreateValueTupleObject(
-                    parameters.Select(parameter => parameter.value).ToArray());
+                    parameters.Select(parameter => parameter.value).ToArray()) ?? new();
         return this;
     }
     public virtual double Process(InterpretrContext context, double value)
