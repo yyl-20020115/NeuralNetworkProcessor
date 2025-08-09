@@ -16,6 +16,8 @@
   <ItemGroup>
     <ProjectReference Include="..\ikvm\reflect\IKVM.Reflection.csproj" />
     <ProjectReference Include="..\NeuralNetworkProcessor\NeuralNetworkProcessor.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\YamlDotNet\YamlDotNet.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -77,7 +77,6 @@ public static class UnicodeHelper
 
     public static IEnumerable<(UnicodeClass u, int c, int len)> NextPoint(string Text)
     {
-        var text = string.Empty;
         var builder = new StringBuilder();
         for (int i = 0, len = Text.Length; i < len; i++)
         {
@@ -90,6 +89,7 @@ public static class UnicodeHelper
                     else
                     { builder.Append(Text[i]); }
 
+                string text;
                 if ((text = builder.ToString().Trim()).Length > 0)
                 {
                     if ((text[0] is 'x' or 'X')

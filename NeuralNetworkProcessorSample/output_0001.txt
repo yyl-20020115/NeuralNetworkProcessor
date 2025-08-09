@@ -8,7 +8,7 @@ Tree:
                         ├──  Term:(0,3)
                         │      └──  Factor:(0,3)
                         │              └──  Integer:(0,3)
-                        │                      └──  Integer Digit:(0,3)
+                        │                      └──  Integer D·igit:(0,3)
                         │                              ├──  Integer Digit:(0,2)
                         │                              │      ├──  Digit:(0,1)
                         │                              │      │      └──  "1":(0,1)

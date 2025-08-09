@@ -331,8 +331,7 @@ public class ConcurrentBag<T> : IProducerConsumerCollection<T>, IReadOnlyCollect
     {
         // If the destination is actually a T[], use the strongly-typed
         // overload that doesn't allocate/copy an extra array.
-        var szArray = array as T[];
-        if (szArray != null)
+        if (array is T[] szArray)
         {
             CopyTo(szArray, index);
             return;
@@ -353,7 +352,7 @@ public class ConcurrentBag<T> : IProducerConsumerCollection<T>, IReadOnlyCollect
     {
         if (_workStealingQueues != null)
         {
-            bool lockTaken = false;
+            var lockTaken = false;
             try
             {
                 FreezeBag(ref lockTaken);
@@ -512,7 +511,7 @@ public class ConcurrentBag<T> : IProducerConsumerCollection<T>, IReadOnlyCollect
     {
         get
         {
-            int count = 0;
+            var count = 0;
             for (var queue = _workStealingQueues; queue != null; queue = queue._nextQueue)
                 checked { count += queue.DangerousCount; }
 

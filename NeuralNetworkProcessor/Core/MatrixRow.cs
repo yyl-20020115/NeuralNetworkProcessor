@@ -26,7 +26,7 @@ public sealed record MatrixRow
         }
     }
     public List<(MatrixRow, MatrixLine)> Closure => this.Top.Closure;
-    public ListStack<MatrixLine> Stack { get; init; } = new();
+    public ListStack<MatrixLine> Stack { get; init; } = [];
     public MatrixLine Top => this.Stack.Top;
     public int Pivot => this.Top.Pivot;
     public bool IsBeforeLast => this.Pivot + 1 < this.SequenceLength;
@@ -83,7 +83,7 @@ public sealed record MatrixRow
     {
         var row = new MatrixRow(this)
         {
-            Stack = new(this.Stack),
+            Stack = [.. this.Stack],
             ParentRow = this,
             IsPreset = false,
             IsPrefix = false,

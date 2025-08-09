@@ -21,7 +21,8 @@ public class LinkedListQueue<T> : LinkedList<T>, IRangeCollection<T>
     }
     public T Dequeue()
     {
-        if (this.Count == 0) throw new InvalidOperationException(nameof(Dequeue));
+        if (this.Count == 0) 
+            throw new InvalidOperationException(nameof(Dequeue));
         var top = this.First;
         this.RemoveFirst();
         return top.Value;

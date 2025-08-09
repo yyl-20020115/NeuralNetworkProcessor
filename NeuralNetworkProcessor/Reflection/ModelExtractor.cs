@@ -40,10 +40,10 @@ public static class ModelExtractor
             return [];
         else if (attribute.AsPatterns)
         {
-            return attribute.Texts.Select(
+            return [.. attribute.Texts.Select(
                 text => new Description([
                     new ($"\"{text}\"")
-                ])).ToList();
+                ]))];
         }
         else if (ExtractValueTupleTypes(type, names))
         {
@@ -61,7 +61,7 @@ public static class ModelExtractor
                 foreach (var i in attribute.Optionals)
                     if (i >= 0 && i < phases.Count)
                         phases[i].Optional = true;
-            return new (){ new(phases) };
+            return [new(phases)];
         }
         else //ty is simple type
         {

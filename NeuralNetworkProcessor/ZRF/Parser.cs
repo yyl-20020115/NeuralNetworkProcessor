@@ -28,8 +28,8 @@ public static class Parser
         => text?.Trim(' ', '\t', '\r', '\n');
     public static IEnumerable<string> NextPart(string line)
     {
-        var text = string.Empty;
         var builder = new StringBuilder();
+        string text;
         for (int i = 0, len = line.Length; i < len; i++)
         {
             var c = line[i];

@@ -37,7 +37,7 @@ public sealed record Phrase(string Text, bool Optional = false) : Symbol
 }
 public sealed record Description(List<Phrase> Phrases) : Group
 {
-    public static readonly Description Default = new(new List<Phrase>());
+    public static readonly Description Default = new([]);
     [YamlIgnore]
     public int Index { get; set; } = 0;
     public List<Phrase> Phrases { get; set; } = Phrases;
@@ -54,10 +54,10 @@ public sealed record Description(List<Phrase> Phrases) : Group
         this.Definition = Definition;
         return this.BackBind();
     }
-    public Description() : this(new List<Phrase>()) { }
+    public Description() : this([]) { }
     //public override int GetHashCode() => base.GetHashCode();
     public override string ToString()
-         => this.Phrases.Aggregate("", (a, b) => a + (string.IsNullOrEmpty(a) ? "":" ") + b.ToString());
+         => this.Phrases.Aggregate(string.Empty, (a, b) => a + (string.IsNullOrEmpty(a) ? "":" ") + b.ToString());
 }
 public sealed record Definition(string Text, List<Description> Descriptions,bool IsDynamicBuilt = false) : Symbol, Group
 {
@@ -113,8 +113,7 @@ public sealed record Knowledge(string Topic, List<Definition> Definitions) :Grou
         this.Definitions.Clear();
         defs.Select(d => d.Text).Distinct().ToList().ForEach(
             name => this.Definitions.Add(new (name,
-                    defs.Where(d => d.Text == name)
-                    .SelectMany(d => d.Descriptions).ToList())));
+                    [.. defs.Where(d => d.Text == name).SelectMany(d => d.Descriptions)])));
         return this;
     }
     public Knowledge Copy()

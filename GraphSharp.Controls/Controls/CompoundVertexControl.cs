@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using GraphSharp.Algorithms.Layout.Compound;
 using WPFExtensions.AttachedBehaviours;
+//using WPFExtensions.AttachedBehaviours;
 
 namespace GraphSharp.Controls
 {

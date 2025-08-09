@@ -184,24 +184,17 @@ public class CCompiler
         return exe;
     }
 
-    class FunctionToCompile
+    class FunctionToCompile(CompiledFunction function, EmitContext context)
     {
-        public readonly CompiledFunction Function;
-        public readonly EmitContext Context;
-
-        public FunctionToCompile (CompiledFunction function, EmitContext context)
-        {
-            Function = function;
-            Context = context;
-        }
+        public readonly CompiledFunction Function = function;
+        public readonly EmitContext Context = context;
     }
 
     void AddStatementDeclarations (BlockContext context)
     {
         var block = context.Block;
-        foreach (var s in block.Statements) {
-            s.AddDeclarationToBlock (context);
-        }
+        foreach (var s in block.Statements) 
+            s.AddDeclarationToBlock (context);       
     }
 
     FunctionDeclarator? GetFunctionDeclarator (Declarator? d) => d == null

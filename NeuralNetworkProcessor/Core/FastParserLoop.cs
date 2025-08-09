@@ -25,7 +25,7 @@ public partial class FastParser
         foreach (var trend in additions)
             matrix.Add(new(
                 trend,
-                trend.Cells.Select(c => c.Text).ToArray(),
+                [.. trend.Cells.Select(c => c.Text)],
                 trend.Cells.Select(c => this.GetSymbolValue(c.Text)).ToArray())
             { IsPreset = true });
         return matrix;

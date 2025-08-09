@@ -35,7 +35,7 @@ namespace YamlDotNet.RepresentationModel
     /// </summary>
     public sealed class YamlMappingNode : YamlNode, IEnumerable<KeyValuePair<YamlNode, YamlNode>>, IYamlConvertible
     {
-        private readonly IOrderedDictionary<YamlNode, YamlNode> children = new OrderedDictionary<YamlNode, YamlNode>();
+        private readonly IOrderedDictionary<YamlNode, YamlNode> children = new YamlDotNet.Helpers.OrderedDictionary<YamlNode, YamlNode>();
 
         /// <summary>
         /// Gets the children of the current node.

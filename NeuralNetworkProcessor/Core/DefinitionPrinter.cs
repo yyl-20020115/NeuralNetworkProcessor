@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NeuralNetworkProcessor;
+namespace NeuralNetworkProcessor.Core;
 
 public static class DefinitionPrinter
 {

@@ -51,9 +51,9 @@ public partial class FastParser
     {
         if ((this.Aggregation = Aggregation) != null)
         {
-            this.InputAccepters = this.Aggregation.Clusters
+            this.InputAccepters = [.. this.Aggregation.Clusters
                 .Where(c => c is TerminalCluster)
-                .Cast<TerminalCluster>().ToList();
+                .Cast<TerminalCluster>()];
             this.Tops.UnionWith(Algorithms.GetTops(this.Aggregation));
             this.TopNames.UnionWith(Tops.Select(t => t.Name));
             this.Atoms.UnionWith(Algorithms.GetAtoms(this.Aggregation));

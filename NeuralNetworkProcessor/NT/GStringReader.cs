@@ -103,7 +103,7 @@ public class GStringReader(string text) : StringReader(text), GLocationReader
     }
     public override int Read(Span<char> buffer)
     {
-        if (buffer == null)
+        if (buffer.IsEmpty)
             throw new ArgumentNullException(nameof(buffer));
         var length = buffer.Length;
         var count = this.length - this.position;
